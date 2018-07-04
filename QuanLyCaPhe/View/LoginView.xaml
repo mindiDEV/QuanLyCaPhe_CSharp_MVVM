@@ -1,0 +1,153 @@
+﻿<Window x:Class="QuanLyCaPhe.View.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrol="clr-namespace:QuanLyCaPhe.UserController"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        mc:Ignorable="d"
+        Title="LoginView" Height="450" Width="800"
+        WindowState="Normal"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        DataContext="{StaticResource LoginViewModel}"
+        Name="loginView">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <!--Control Bar-->
+        <Grid Grid.Row="0">
+        </Grid>
+        <!--Content-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Image
+                    Stretch="UniformToFill"
+                    Source="/Imagines/specialtea_master.png"></Image>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Label Content="Login"
+                               FontFamily="Cooper Black"
+                               FontSize="35"
+                               Margin="50 30 0 0"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left" />
+                    </Grid>
+
+                    <!--Username-->
+                    <Grid Grid.Row="1">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="AccountCircle"
+                                                     VerticalAlignment="Center"
+                                                     Margin="50 30 0 0"
+                                                     Foreground="Blue" />
+                            <TextBox materialDesign:HintAssist.Hint="Username"
+                                     Width="270"
+                                     Text="{Binding TenTaiKhoan,UpdateSourceTrigger=PropertyChanged}"
+                                     FontSize="15"
+                                     Margin="10 30 0 0" />
+                        </WrapPanel>
+                    </Grid>
+
+                    <!--Password-->
+                    <Grid Grid.Row="2">
+                        <WrapPanel>
+                            <materialDesign:PackIcon Kind="Key"
+                                                     VerticalAlignment="Center"
+                                                     Margin="50 30 0 0"
+                                                     Foreground="Blue" />
+                            <PasswordBox x:Name="FloatingPasswordBox"
+                                         materialDesign:HintAssist.Hint="Password"
+                                         Margin="10 30 0 0"
+                                         Width="270"
+                                         FontSize="15"
+                                         Style="{StaticResource MaterialDesignFloatingHintPasswordBox}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="PasswordChanged">
+                                        <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}"
+                                   CommandParameter="{Binding ElementName=FloatingPasswordBox}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </PasswordBox>
+                        </WrapPanel>
+                    </Grid>
+
+                    <!--Button Login-->
+                    <Grid Grid.Row="3">
+                        <Button Command="{Binding LoginWindowCommand}"
+                                CommandParameter="{Binding ElementName=loginView}"
+                                HorizontalAlignment="Left"
+                                Content="LOGIN"
+                                IsDefault="True"
+                                FontFamily="Impact"
+                                FontSize="18"
+                                Width="270"
+                                Margin="80 30 0 0"
+                                Background="#FF307CD6"
+                                BorderBrush="#FF307CD6" />
+                    </Grid>
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="307*" />
+                            <ColumnDefinition Width="93*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                                Command="{Binding LoginByQrCode}"
+                                CommandParameter="{Binding ElementName=loginView,UpdateSourceTrigger=PropertyChanged}"
+                                HorizontalAlignment="Center"
+                                Content="Login by QR Code"
+                                FontFamily="Segoe UI Black"
+                                FontSize="10"
+                                Width="auto"
+                                BorderBrush="Transparent"
+                                Margin="156,6,33,0"
+                                Foreground="BlueViolet"
+                                Background="Transparent" />
+                    </Grid>
+                    <Grid Grid.Row="5">
+                        <ProgressBar Width="200"
+                                     Name="ProgessBar"
+                                     Height="20"
+                                     Margin="30 0 0 0"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center">
+                        </ProgressBar>
+                        <TextBlock Text="{Binding ElementName=ProgessBar,Path=Value, StringFormat={}{0:0}%}"
+                                   HorizontalAlignment="Center"
+                                   Margin="40 0 0 0"
+                                   FontSize="10"
+                                   VerticalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

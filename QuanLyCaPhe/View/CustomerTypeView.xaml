@@ -1,0 +1,172 @@
+﻿<UserControl x:Class="QuanLyCaPhe.View.CustomerTypeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:QuanLyCaPhe.View"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             DataContext="{StaticResource CustomerTypeViewModel}"
+             Name="customerTypeView">
+
+    <Grid Background="#293541">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <!--Language-->
+                    <Grid Height="40">
+                        <StackPanel HorizontalAlignment="Left" Margin="10 0">
+                            <ComboBox FontSize="15" Width="50" Foreground="#F2F4F5" SelectedIndex="0" VerticalAlignment="Center">
+                                <ComboBoxItem Content="EN" />
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+
+                    <!--Control Bar-->
+                    <Grid Height="70">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10 0">
+
+                            <!--Add-->
+                            <Button Command="{Binding AddCustomerTypeCommand}"
+                        CommandParameter="{Binding ElementName=customerTypeView,UpdateSourceTrigger=PropertyChanged}"
+                        Width="150"
+                        Content="Thêm"
+                        Height="50"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+
+                            <!--Update-->
+                            <Button
+                        Command="{Binding UpdatCustomerTypeCommand}"
+                        CommandParameter="{Binding ElementName=customerTypeView,UpdateSourceTrigger=PropertyChanged}"
+                        Width="150"
+                        Content="Sửa"
+                        Height="50"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+
+                            <!--Delete-->
+                            <Button
+                            Command="{Binding DeleteCustomerTypeCommand}"
+                            CommandParameter="{Binding ElementName=customerTypeView,UpdateSourceTrigger=PropertyChanged}"
+                            Width="150"
+                            Content="Xoá"
+                            Height="50"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="#F2F4F5" />
+
+                            <!--Undo-->
+                            <Button
+                            Command="{Binding CreateNewCustomerTypeCommand}"
+                            CommandParameter="{Binding ElementName=customerTypeView,UpdateSourceTrigger=PropertyChanged}"
+                            Width="150"
+                            Content="Làm Mới"
+                            Height="50"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="#F2F4F5" />
+
+                            <!--Help-->
+                            <Button
+                        Width="150"
+                        Content="Trợ giúp"
+                        Height="50"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+                        </StackPanel>
+
+                        <!--Move bar-->
+                        <Grid x:Name="GridCursor"
+                        Width="150" Height="5"
+                        Background="#FF2196F3"
+                        HorizontalAlignment="Left"
+                        Margin="10 15 0 0 " />
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+
+                <!--Content-->
+                <Grid x:Name="GridMain"
+                      Height="700"
+                      Background="#E1DDDF">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <!--Header-->
+                    <Grid Grid.Row="0" Margin="0 10 0 0">
+                        <materialDesign:PackIcon Kind="AccountSwitch" Margin="30 0 0 0" VerticalAlignment="Center" Height="50" Width="50" />
+                        <TextBlock Text= "Loại Khách Hàng"  FontSize="30" Margin="90 0 0 0" FontFamily="Saigonese"></TextBlock>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <WrapPanel>
+                            <TextBox
+                             Width="200"
+                             Margin="35 5 15 5"
+                             materialDesign:HintAssist.Hint="Mã loại khách hàng ( * )"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Text="{Binding MaLoaiKhachHang,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        </WrapPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <WrapPanel>
+                            <TextBox
+                             Width="200"
+                             Margin="35 5 15 5"
+                             materialDesign:HintAssist.Hint="Tên loại khách hàng ( * )"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Text="{Binding TenLoaiKhachHang,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+                            <TextBox
+                             Width="200"
+                             Margin="35 5 15 5"
+                             materialDesign:HintAssist.Hint="Ghi chú"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Text="{Binding GhiChu,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        </WrapPanel>
+                    </Grid>
+
+                    <!--Content-->
+                    <Grid Grid.Row="3" Margin="0 20 0 0" Height="500">
+                        <ListView
+                               ScrollViewer.HorizontalScrollBarVisibility="Auto"    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                               ItemsSource="{Binding List,UpdateSourceTrigger=PropertyChanged}"
+                               SelectedItem="{Binding SelectedItem,UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Mã loại khách hàng" Width="auto" DisplayMemberBinding="{Binding MaLoaiKhachHang}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Tên loại khách hàng" Width="auto" DisplayMemberBinding="{Binding TenLoaiKhachHang}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Ghi chú" Width="auto" DisplayMemberBinding="{Binding GhiChu}"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,687 @@
+﻿<UserControl x:Class="QuanLyCaPhe.View.BillView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:QuanLyCaPhe.View"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             DataContext="{StaticResource BilViewModel}"
+             Name="billView"
+             Height="800">
+
+    <UserControl.Resources>
+        <Style x:Key="VerticalSeparatorStyle"
+       TargetType="{x:Type Separator}"
+       BasedOn="{StaticResource {x:Type Separator}}">
+            <Setter Property="Margin"
+                    Value="0 0 25 0" />
+            <Setter
+                Property="LayoutTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <TransformGroup.Children>
+                            <TransformCollection>
+                                <RotateTransform Angle="90" />
+                            </TransformCollection>
+                        </TransformGroup.Children>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+
+    <Grid Background="#293541">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <!--Language-->
+                    <Grid Height="24">
+                        <StackPanel HorizontalAlignment="Left" Margin="10 0">
+                            <ComboBox FontSize="15" Width="50" Foreground="#F2F4F5" SelectedIndex="0" VerticalAlignment="Center">
+                                <ComboBoxItem Content="EN" />
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+
+                    <!--Control Bar-->
+                    <Grid Height="45">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10 0" Uid="{Binding Uid}">
+
+
+                            <Button Command="{Binding PayCommand}"
+                        CommandParameter="{Binding ElementName=billView,UpdateSourceTrigger=PropertyChanged}"
+                        Width="150"
+                        Content="Thanh toán"
+                        Height="40"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+
+
+                            <Button
+                        Command="{Binding CancelMenuCommand}"
+                        CommandParameter="{Binding ElementName=billView,UpdateSourceTrigger=PropertyChanged}"
+                        Width="150"
+                        Content="Huỷ hoá đơn"
+                        Height="40"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+                        </StackPanel>
+
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+
+                <!--Content-->
+                <Grid x:Name="GridMain"
+              Height="700"
+              Background="#E1DDDF">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition Width="30"></ColumnDefinition>
+                        <ColumnDefinition ></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Cột trái-->
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <!--Chi tiết hoá đơn-->
+                        <Grid Grid.Row="0" Margin="0 20 0 0">
+                            <WrapPanel>
+                                <materialDesign:PackIcon Kind="Database" Margin="30 0 0 0" VerticalAlignment="Center" Height="50" Width="50" />
+                                <TextBlock Text= "Chi Tiết Hoá Đơn"  FontSize="30" Margin="0 0 0 0" FontFamily="Saigonese"></TextBlock>
+                            </WrapPanel>
+
+                        </Grid>
+                        <!--Khách hàng-->
+                        <Grid Grid.Row="1">
+                            <WrapPanel>
+                                <ComboBox materialDesign:HintAssist.Hint="Loại khách hàng"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Width="120"
+                                      FontSize="13"
+                                      ItemsSource="{Binding CustomerTypeList, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedItem="{Binding SelectedCustomerType, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedIndex="{Binding SelectedIndexCustomerType,UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMemberPath="TenLoaiKhachHang"
+                                      IsEditable="False"
+                                        IsEnabled ="{Binding IsEnabledCustomerType,UpdateSourceTrigger =PropertyChanged}"
+                                      Margin="15 5 15 5">
+                                </ComboBox>
+
+                                <ComboBox materialDesign:HintAssist.Hint="Tên khách hàng"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Width="250"
+                                      FontSize="13"
+                                      ItemsSource="{Binding CustomerNameList, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedItem="{Binding SelectedCustomerName, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMemberPath="TenKhachHang"
+                                      SelectedIndex="{Binding SelectedIndexCustomerName,UpdateSourceTrigger=PropertyChanged}"
+                                      IsEditable="False"
+                                      IsEnabled="{Binding IsEnabledCustomerName,UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="35 5 15 5">
+                                </ComboBox>
+
+                                <Button Margin="15 15 5 5"
+                                        Command="{Binding DiscountByQRCodeCommand,UpdateSourceTrigger=PropertyChanged}"
+                                        CommandParameter="{Binding ElementName=billView}"
+                                        Background="#E1DDDF" 
+                                        Foreground="Black"
+                                        BorderBrush="Transparent"
+                                        BorderThickness="1"
+                                        IsEnabled="{Binding IsEnabledDiscountByQRCode,UpdateSourceTrigger=PropertyChanged}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.Column="0">
+                                            <materialDesign:PackIcon
+                                                Kind="Plus"
+                                                Foreground="#B280E7"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Left"
+                                                Margin="0 0 10 0" />
+                                        </Grid>
+                                        <Grid Grid.Column="1">
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontFamily="Calibri"
+                                                Text="Khuyến mãi khác" >
+                                                
+                                            </TextBlock>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+
+
+                            </WrapPanel>
+                        </Grid>
+
+                        <!--Menu-->
+                        <Grid Grid.Row="2">
+                            <materialDesign:Card Background="Aqua" Width="550" Height="40" Margin="10 10 0 0" HorizontalAlignment="Left">
+                                <WrapPanel>
+                                    <Button 
+                                        Background="{x:Null}" 
+                                        Foreground="Black" 
+                                        BorderBrush="{x:Null}"
+                                        Command="{Binding FavoriteMenuCommand,UpdateSourceTrigger=PropertyChanged}" 
+                                        CommandParameter="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Grid.Column="0">
+                                                <materialDesign:PackIcon
+                                                        Kind="Heart"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="0 0 10 0" />
+                                            </Grid>
+                                            <Grid Grid.Column="1">
+                                                <TextBlock Text="Hay dùng" HorizontalAlignment="Right" ></TextBlock>
+                                            </Grid>
+                                        </Grid>
+                                    </Button>
+
+                                    <Button Background="{x:Null}"
+                                                Foreground="Black"
+                                                BorderBrush="{x:Null}"
+                                                Command="{Binding FoodListCommand,UpdateSourceTrigger=PropertyChanged}"
+                                                CommandParameter="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Grid.Column="0">
+                                                <materialDesign:PackIcon
+                                                        Kind="FoodForkDrink"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="0 0 10 0" />
+                                            </Grid>
+                                            <Grid Grid.Column="1">
+                                                <TextBlock Text="Món ăn" HorizontalAlignment="Right" ></TextBlock>
+                                            </Grid>
+                                        </Grid>
+                                    </Button>
+
+                                    <Button Background="{x:Null}"
+                                                Foreground="Black"
+                                                BorderBrush="{x:Null}"
+                                                Command="{Binding DrinkListCommand, UpdateSourceTrigger=PropertyChanged}"
+                                                CommandParameter="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Grid.Column="0">
+                                                <materialDesign:PackIcon
+                                                        Kind="Heart"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="0 0 10 0" />
+                                            </Grid>
+                                            <Grid Grid.Column="1">
+                                                <TextBlock Text="Đồ uống" HorizontalAlignment="Right" ></TextBlock>
+                                            </Grid>
+                                        </Grid>
+                                    </Button>
+                                </WrapPanel>
+                            </materialDesign:Card>
+                        </Grid>
+                        <!--Tìm kiếm-->
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="323*"/>
+                                <ColumnDefinition Width="307*"/>
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:ColorZone Background="#DEDEDE" Grid.ColumnSpan="2">
+                                <DockPanel>
+                                    <StackPanel
+                                            Orientation="Horizontal"
+                                            materialDesign:RippleAssist.IsCentered="True">
+                                        <materialDesign:ColorZone
+                                                Mode="Standard"
+                                                CornerRadius="2"
+                                                Panel.ZIndex="1"
+                                                Width="540"
+                                                 Margin="20 20 0 0"
+                                                materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                                            <Grid>
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Button Style="{DynamicResource MaterialDesignToolButton}">
+                                                </Button>
+                                                <TextBox Grid.Column="1"
+                                                             Name="TextBoxSearch"
+                                                             Margin="8 0 0 0"
+                                                             Text="{Binding InputSearchText,UpdateSourceTrigger=PropertyChanged}"
+                                                             materialDesign:HintAssist.Hint="Nhập mã/ Tên món ăn cần tìm"
+                                                             materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                                                             BorderThickness="0"
+                                                             MinWidth="250"
+                                                             VerticalAlignment="Center">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger
+                                                                EventName="TextChanged">
+                                                            <i:InvokeCommandAction
+                                                                    Command="{Binding TextChangedSearchCommand}"
+                                                                    CommandParameter="{Binding ElementName=TextBoxSearch}" />
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                                
+                                                <Button
+                                                        Style="{DynamicResource MaterialDesignToolButton}" Grid.Column="2">
+                                                    <materialDesign:PackIcon Kind="Magnify" Opacity=".56" />
+                                                </Button>
+                                            </Grid>
+
+                                        </materialDesign:ColorZone>
+                                    </StackPanel>
+                                </DockPanel>
+                            </materialDesign:ColorZone>
+
+                        </Grid>
+                        <!--Các button món ăn - đồ uống-->
+                        <Grid Grid.Row="4">
+                            <Grid>
+                                <!--<Border BorderBrush="Black" BorderThickness="1" Margin="10 20 10 20"></Border>-->
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10 20 10 50">
+                                    <ItemsControl x:Name="activitiesControl"
+                                                  Margin="10 10 -15 0"
+                                                  Width="600"
+                                                  ItemsSource="{Binding MenuList,UpdateSourceTrigger=PropertyChanged}">
+                                        <ItemsControl.Template>
+                                            <ControlTemplate>
+                                                <WrapPanel  FlowDirection="LeftToRight"
+                                                            IsItemsHost="true">
+                                                </WrapPanel>
+                                            </ControlTemplate>
+                                        </ItemsControl.Template>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Width="180"
+                                                        Height="130"
+                                                        BorderBrush="{x:Null}"
+                                                        Margin="5"
+                                                        Background="WhiteSmoke"
+                                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},Path=DataContext.btnMenuClick}"
+                                                        CommandParameter="{Binding}">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="70"></RowDefinition>
+                                                            <RowDefinition Height="auto"></RowDefinition>
+                                                            <RowDefinition></RowDefinition>
+                                                        </Grid.RowDefinitions>
+                                                        <Grid Grid.Row="0">
+                                                            <Image
+                                                                   Source="{Binding HinhDaiDien}"
+                                                                   Stretch="UniformToFill" />
+                                                        </Grid>
+
+                                                        <Grid Grid.Row="1">
+                                                            <TextBlock VerticalAlignment="Center"
+                                                                       Foreground="Black"
+                                                                       FontFamily="Arial"
+                                                                       HorizontalAlignment="Center" Margin="0 7 0 7"
+                                                                       Text="{Binding TenMon}">
+                                                            </TextBlock>
+                                                        </Grid>
+
+                                                        <Grid Grid.Row="2">
+                                                            <TextBlock VerticalAlignment="Center"
+                                                                       Foreground="Black"
+                                                                       FontFamily="Arial"
+                                                                       HorizontalAlignment="Center"
+                                                                       Margin="0 5 0 5"
+                                                                       FontSize="10"
+                                                                       FontWeight="DemiBold"
+                                                                       Text="{Binding GiaBan,StringFormat={}{0:n0} VND}">
+                                                            </TextBlock>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    <!--Cột giữa-->
+                    <Grid Grid.Column="1">
+                        <Separator Style="{DynamicResource VerticalSeparatorStyle}">
+                        </Separator>
+                    </Grid>
+                    <!--Cột phải-->
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"></RowDefinition>
+                            <RowDefinition Height="1.5*"></RowDefinition>
+                            <RowDefinition Height="1*"></RowDefinition>
+                            <RowDefinition ></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <!--Danh sách các khuyến mãi-->
+                        <Grid Grid.Row="0">
+                            <ListView
+                                    Margin="-25 5 10 0"
+                                    BorderBrush="Black"
+                                    HorizontalAlignment="Left"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    ItemsSource="{Binding PromotionNameList,UpdateSourceTrigger=PropertyChanged}">
+
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Tên chương trình"
+                                                            DisplayMemberBinding="{Binding TenCTKM}"
+                                                            Width="auto">
+
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Sản phẩm tặng" 
+                                                            Width="auto" 
+                                                            DisplayMemberBinding="{Binding SanPhamTang}">
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Sản phẩm mua" 
+                                                            Width="auto" 
+                                                            DisplayMemberBinding="{Binding MaMon}">
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Ngày bắt đầu" Width="auto" DisplayMemberBinding="{Binding NgayBDKM,StringFormat=dd/MM/yyyy}"></GridViewColumn>
+
+                                        <GridViewColumn Header="Ngày kết thúc" Width="auto" DisplayMemberBinding="{Binding NgayKTKM,StringFormat=dd/MM/yyyy}"></GridViewColumn>
+
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Grid>
+                        <!--Danh sách các món ăn chờ thanh toán-->
+                        <Grid Grid.Row="1">
+                            <ListView
+                                    Margin="-25 5 10 0"
+                                    BorderBrush="Black"
+                                    HorizontalAlignment="Stretch"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    ItemsSource="{Binding List,UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedItem ="{Binding SelectedItemMenuList, UpdateSourceTrigger=PropertyChanged}">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                        <Setter Property="Margin" Value="10 0 10 0"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn  Header="Mã món"
+                                                             Width="auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding MaMon}"
+                                                                   TextAlignment="Left"
+                                                                   Width="140" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Tên món" Width="auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding TenMon}"
+                                                                   TextAlignment="Left"
+                                                                   Width="140" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn  Header="Số lượng">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBox Text="{Binding SoLuong}" 
+                                                                     x:Name="TextSoLuong"
+                                                                     TextAlignment="Center"
+                                                                     Width="auto">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="TextChanged">
+                                                                    <i:InvokeCommandAction
+                                                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl},Mode=FindAncestor},Path=DataContext.IncreaseNumberCommand}" CommandParameter="{Binding ElementName=TextSoLuong}">
+                                                                    </i:InvokeCommandAction>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                        </TextBox>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn  Header="Thành tiền" Width="auto" DisplayMemberBinding="{Binding ThanhTien,StringFormat={}{0:n0} VND}"></GridViewColumn>
+
+                                        <!--Xoá món-->
+                                        <GridViewColumn Width="auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},Path=DataContext.RemoveMenuCommand}" CommandParameter="{Binding}"  Content="X" Foreground="Black" Background="Transparent"  BorderBrush="{x:Null}"></Button>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!--Giam mon-->
+                                        <GridViewColumn Width="auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},Path=DataContext.ReduceMenuCommand}" CommandParameter="{Binding}"  Content="-" Foreground="Black" Background="Transparent"  BorderBrush="{x:Null}"></Button>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Grid>
+                        <!--Danh sách món ăn - đồ uống được khuyến mãi hoặc giảm giá-->
+                        <Grid Grid.Row="2">
+                            <ListView
+                                    Margin="-25 5 10 0"
+                                    BorderBrush="Black"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    ItemsSource="{Binding PromotionDetailList,UpdateSourceTrigger=PropertyChanged}">
+                                
+                                <ListView.View>
+                                    <GridView>
+
+                                        <GridViewColumn Header="Sản phẩm mua" Width="auto" DisplayMemberBinding="{Binding TenMon}"></GridViewColumn>
+
+                                        <GridViewColumn Header="Sản phẩm tặng"
+                                                            Width="auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding SanPhamTang}"
+                                                                   TextAlignment="Left"
+                                                                   Width="100" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Số lượng" Width="auto" DisplayMemberBinding="{Binding SoLuong}"></GridViewColumn>
+
+                                        <GridViewColumn Header="Giảm giá" Width="auto" DisplayMemberBinding="{Binding GiamGia}"></GridViewColumn>
+
+                                        <GridViewColumn Header="Thành tiền" Width="auto" DisplayMemberBinding="{Binding ThanhTien,StringFormat={}{0:n0} VND}"></GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Grid>
+                        <!--Tổng tiền - tiền thừa - tiền thanh toán-->
+                        <Grid Grid.Row="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <WrapPanel>
+                                    <TextBlock
+                                            Text="Tiền khách trả :"
+                                            Margin="30 15 30 0"
+                                            FontSize="15"
+                                            FontWeight="Bold"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top">
+                                    </TextBlock>
+
+                                    <TextBox
+                                        Name="TextMoneyCustomer"
+                                        Width="100"
+                                        Height="40"
+                                        Margin="-20 -5 0 0"
+                                        HorizontalAlignment="Left"
+                                        FontSize="14"
+                                        FontFamily="Bold"
+                                        VerticalAlignment="Top"
+                                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                        Text="{Binding TienKhachTra,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="TextChanged">
+                                                <i:InvokeCommandAction Command="{Binding TextChangedMoneyCustomerCommand}"
+                                   CommandParameter="{Binding ElementName=TextMoneyCustomer}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <WrapPanel>
+                                        <TextBlock
+                                            Text="Tiền thừa :"
+                                            Margin="30 20 30 0"
+                                            FontSize="15"
+                                            FontWeight="Bold"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top">
+                                        </TextBlock>
+                                        <TextBox
+                                        Width="100"
+                                        Height="40"
+                                        IsEnabled="False"
+                                        Margin="-20 -5 30 0"
+                                        FontWeight="Bold"
+                                        Foreground="Black"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        FontSize="14"
+                                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                        Text="{Binding TienThua,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                        </TextBox>
+                                    </WrapPanel>
+
+                                </WrapPanel>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <WrapPanel>
+                                    <TextBlock
+                                            Text="Tổng tiền :"
+                                            Margin="30 10 30 0"
+                                            FontSize="15"
+                                            FontWeight="Bold"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top">
+                                    </TextBlock>
+
+                                    <TextBox
+                                        Name="TextTotal"
+                                        Width="150"
+                                        IsEnabled="False"
+                                        Height="40"
+                                        Margin="-20 -6 30 0"
+                                        FontWeight="Bold"
+                                        Foreground="Black"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        FontSize="18"
+                                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                        Text="{Binding TongTien,UpdateSourceTrigger=PropertyChanged}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="TextChanged">
+                                                <i:InvokeCommandAction Command="{Binding TextTotalCommand}"
+                                   CommandParameter="{Binding ElementName=TextTotal}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                </WrapPanel>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <WrapPanel>
+                                    <TextBlock
+                                            Text="THANH TOÁN :"
+                                            Margin="30 15 30 0"
+                                            FontSize="18"
+                                            FontWeight="Bold"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top">
+                                    </TextBlock>
+
+                                    <TextBox
+                                        Name="TextThanhToan"
+                                        Width="150"
+                                        Height="40"
+                                        IsEnabled="False"
+                                        Margin="-20 -5 30 0"
+                                        FontWeight="Bold"
+                                        Foreground="Black"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        FontSize="18"
+                                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                        Text="{Binding ThanhToan, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="TextChanged">
+                                                <i:InvokeCommandAction Command="{Binding TextPayCommand}"
+                                   CommandParameter="{Binding ElementName=TextThanhToan}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                </WrapPanel>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</UserControl>

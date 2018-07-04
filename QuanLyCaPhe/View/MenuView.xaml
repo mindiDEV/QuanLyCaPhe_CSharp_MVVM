@@ -1,0 +1,269 @@
+﻿<UserControl x:Class="QuanLyCaPhe.View.MenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:QuanLyCaPhe.View"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             DataContext="{StaticResource MenuViewModel}"
+             Name="menuView">
+
+    <Grid Background="#293541">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <!--Language-->
+                    <Grid Height="40">
+                        <StackPanel HorizontalAlignment="Left" Margin="10 0">
+                            <ComboBox FontSize="15" Width="50" Foreground="#F2F4F5" SelectedIndex="0" VerticalAlignment="Center">
+                                <ComboBoxItem Content="EN" />
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+
+                    <!--Control Bar-->
+                    <Grid Height="70">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10 0">
+
+                            <!--Add-->
+                            <Button Command="{Binding AddMenuCommand}"
+                        CommandParameter="{Binding ElementName=menuView,UpdateSourceTrigger=PropertyChanged}"
+                        Width="150"
+                        Content="Thêm"
+                        Height="50"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+
+                            <!--Update-->
+                            <Button
+                        Command="{Binding UpdateMenuCommand}"
+                        CommandParameter="{Binding ElementName=menuView,UpdateSourceTrigger=PropertyChanged}"
+                        Width="150"
+                        Content="Sửa"
+                        Height="50"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+
+                            <!--Delete-->
+                            <Button
+                            Command="{Binding DeleteMenuCommand}"
+                            CommandParameter="{Binding ElementName=menuView,UpdateSourceTrigger=PropertyChanged}"
+                            Width="150"
+                            Content="Xoá"
+                            Height="50"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="#F2F4F5" />
+
+                            <!--Undo-->
+                            <Button
+                            Command="{Binding CreateNewMenuCommand}"
+                            CommandParameter="{Binding ElementName=menuView,UpdateSourceTrigger=PropertyChanged}"
+                            Width="150"
+                            Content="Làm mới"
+                            Height="50"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="#F2F4F5" />
+
+                            <!--Help-->
+                            <Button
+                                Command="{Binding OpenExplorerCommand}"
+                                CommandParameter="{Binding ElementName=menuView,UpdateSourceTrigger=PropertyChanged}"
+                                Width="150"
+                                Content="Thêm ảnh"
+                                Height="50"
+                                Background="{x:Null}"
+                                BorderBrush="{x:Null}"
+                                Foreground="#F2F4F5" />
+
+                            <Button
+                                Command="{Binding DeleteImageCommand}"
+                                CommandParameter="{Binding ElementName=menuView,UpdateSourceTrigger=PropertyChanged}"
+                                Width="150"
+                                Content="Xoá ảnh"
+                                Height="50"
+                                Background="{x:Null}"
+                                BorderBrush="{x:Null}"
+                                Foreground="#F2F4F5" />
+
+                            <Button
+                        Width="150"
+                        Content="Trợ giúp"
+                        Height="50"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+                        </StackPanel>
+
+                        <!--Move bar-->
+                        <Grid x:Name="GridCursor"
+                        Width="150" Height="5"
+                        Background="#FF2196F3"
+                        HorizontalAlignment="Left"
+                        Margin="10 15 0 0 " />
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <!--Content-->
+                <Grid x:Name="GridMain"
+              Height="700"
+              Background="#E1DDDF">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <!-- Tiêu đề -->
+                    <Grid Grid.Row="0" Margin="0 10 0 0">
+                        <materialDesign:PackIcon Kind="Food" Margin="30 0 0 0" VerticalAlignment="Center" Height="50" Width="50" />
+                        <TextBlock Text= "Thực Đơn"  FontSize="30" Margin="90 0 0 0" FontFamily="Saigonese"></TextBlock>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition ></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <WrapPanel>
+                                    <ComboBox materialDesign:HintAssist.Hint="{Binding TenHienThi_LoaiThucDon}"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Width="200"
+                                      IsEditable="False"
+                                      ItemsSource="{Binding MenuTypeList}"
+                                      DisplayMemberPath="TenLoaiThucDon"
+                                      SelectedItem="{Binding SelectedMenuType,UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="35 5 15 5">
+                                    </ComboBox>
+                                </WrapPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <WrapPanel>
+                                    <TextBox
+                             Width="200"
+                             Margin="35 5 15 5"
+                             materialDesign:HintAssist.Hint="{Binding MaHienThi_ThucDon}"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Text="{Binding MaMon,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+                                    <TextBox
+                             Width="200"
+                             Margin="35 5 15 5"
+                             materialDesign:HintAssist.Hint="{Binding TenHienThi_ThucDon}"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Text="{Binding TenMon,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                </WrapPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <WrapPanel>
+                                    <ComboBox materialDesign:HintAssist.Hint="Nhóm thực đơn"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Width="200"
+                                      ItemsSource="{Binding MenuGroupList}"
+                                      DisplayMemberPath="TenNhomThucDon"
+                                      SelectedItem="{Binding SelectedMenuGroup,UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="35 5 15 5">
+                                    </ComboBox>
+                                </WrapPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="3">
+                                <WrapPanel>
+                                    <ComboBox materialDesign:HintAssist.Hint="Đơn vị tính"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Width="200"
+                                      ItemsSource="{Binding UnitList}"
+                                      DisplayMemberPath="TenDonViTinh"
+                                      SelectedItem="{Binding SelectedUnit,UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="35 5 15 5"></ComboBox>
+
+                                    <TextBox Width="200"
+                                             Margin="35 5 15 5"
+                                             materialDesign:HintAssist.Hint="Giá bán ( * )"
+                                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                             Text="{Binding GiaBan,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                </WrapPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="4">
+                                <WrapPanel>
+                                    <TextBox Width="450" Margin="35 5 15 5" materialDesign:HintAssist.Hint="Ghi chú" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Text="{Binding GhiChu,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                </WrapPanel>
+                            </Grid>
+                        </Grid>
+
+                        <!-- Hình đại diện-->
+                        <Grid Grid.Column="1">
+                            <Grid Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Image Source="{Binding ImageSource}"
+                                       Width="350"
+                                       Height="250"
+                                       Stretch="UniformToFill"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Row="2" Margin="0 20 0 0" Height="300">
+
+                        <ListView
+                               ScrollViewer.HorizontalScrollBarVisibility="Auto"    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                               ItemsSource="{Binding List,UpdateSourceTrigger=PropertyChanged}"
+                               SelectedItem="{Binding SelectedItem ,UpdateSourceTrigger=PropertyChanged}">
+
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Tên thực đơn" Width="auto" DisplayMemberBinding="{Binding NhomThucDon.LoaiThucDon.TenLoaiThucDon}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Nhóm thực đơn" Width="auto" DisplayMemberBinding="{Binding NhomThucDon.TenNhomThucDon}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Mã món" Width="auto" DisplayMemberBinding="{Binding MaMon}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Tên món" Width="auto" DisplayMemberBinding="{Binding TenMon}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Giá bán" Width="auto" DisplayMemberBinding="{Binding GiaBan}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Đơn vị" Width="auto" DisplayMemberBinding="{Binding DonViTinh.TenDonViTinh}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Ghi chú" Width="auto" DisplayMemberBinding="{Binding GhiChu}"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

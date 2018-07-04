@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:viewmodel="clr-namespace:QuanLyCaPhe.ViewModel"
+                    xmlns:converters="clr-namespace:QuanLyCaPhe.ClassSupport">
+    <viewmodel:MainViewModel x:Key="MainViewModel"></viewmodel:MainViewModel>
+    <viewmodel:LoginViewModel x:Key="LoginViewModel"></viewmodel:LoginViewModel>
+    <viewmodel:UnitViewModel x:Key="UnitViewModel"></viewmodel:UnitViewModel>
+    <viewmodel:MenuTypeViewModel x:Key="MenuTypeViewModel"></viewmodel:MenuTypeViewModel>
+    <viewmodel:CustomerTypeViewModel x:Key="CustomerTypeViewModel"></viewmodel:CustomerTypeViewModel>
+    <viewmodel:MenuGroupViewModel x:Key="MenuGroupViewModel"></viewmodel:MenuGroupViewModel>
+    <viewmodel:ControlBarViewModel x:Key="ControlBarViewModel"></viewmodel:ControlBarViewModel>
+    <viewmodel:MenuViewModel x:Key="MenuViewModel"></viewmodel:MenuViewModel>
+    <viewmodel:CustomerViewModel x:Key="CustomerViewModel"></viewmodel:CustomerViewModel>
+    <viewmodel:BillViewModel x:Key="BilViewModel"></viewmodel:BillViewModel>
+    <viewmodel:EmployeeViewModel x:Key="EmployeeViewModel"></viewmodel:EmployeeViewModel>
+    <viewmodel:PromotionViewModel x:Key="PromotionViewModel"></viewmodel:PromotionViewModel>
+    <converters:InputValidationRule x:Key="InputValidationRule"></converters:InputValidationRule>
+    <viewmodel:HomeViewModel x:Key="HomeViewModel"></viewmodel:HomeViewModel>
+    <viewmodel:WebcamViewModel x:Key="WebcamViewModel"></viewmodel:WebcamViewModel>
+    <viewmodel:ScanQRCodeDiscountViewModel x:Key="ScanQRCodeDiscountViewModel"></viewmodel:ScanQRCodeDiscountViewModel>
+    <viewmodel:PromotionDetailViewModel x:Key="PromotionDetailViewModel"></viewmodel:PromotionDetailViewModel>
+    <converters:IndexConverter x:Key="IndexConverter"></converters:IndexConverter>
+</ResourceDictionary>

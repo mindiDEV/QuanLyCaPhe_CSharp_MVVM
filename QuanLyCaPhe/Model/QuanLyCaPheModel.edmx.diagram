@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="4594dbcb92454f48bb74d8aaafe328a0" Name="Diagram1" ZoomLevel="66">
+        <EntityTypeShape EntityType="QuanLyCaPheModel.Ban" Width="1.5" PointX="0.75" PointY="7.5" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.ChiTietHoaDon" Width="1.5" PointX="10.5" PointY="3.5" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.ChiTietKhuyenMai" Width="1.5" PointX="7.5" PointY="3.375" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.ChuongTrinhKhuyenMai" Width="1.5" PointX="5.25" PointY="15.5" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.DonViTinh" Width="1.5" PointX="3" PointY="0.75" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.HoaDon" Width="1.5" PointX="8.25" PointY="10.125" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.KhachHang" Width="1.5" PointX="6" PointY="12.25" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.LoaiKhachHang" Width="1.5" PointX="3.75" PointY="12.625" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.LoaiThucDon" Width="1.5" PointX="0.75" PointY="3.875" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.NhanVien" Width="1.5" PointX="6" PointY="8.125" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.NhatKyDangNhap" Width="1.5" PointX="10.5" PointY="6.875" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.NhomThucDon" Width="1.5" PointX="3" PointY="3.5" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.sysdiagram" Width="1.5" PointX="2.75" PointY="7.5" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.TaiKhoan" Width="1.5" PointX="8.25" PointY="6.875" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.ThucDon" Width="1.5" PointX="5.25" PointY="3.125" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietHoaDon_HoaDon" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietHoaDon_ThucDon" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ThucDon" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ThucDon_DonViTinh" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_HoaDon_KhachHang" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_HoaDon_NhanVien" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_KhachHang_LoaiKhachHang" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_NhomThucDon_LoaiThucDon" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_TaiKhoan_NhanVien" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_NhatKyDangNhap_TaiKhoan" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ThucDon_NhomThucDon" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

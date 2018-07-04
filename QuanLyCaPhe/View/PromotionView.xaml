@@ -1,0 +1,200 @@
+﻿<UserControl x:Class="QuanLyCaPhe.View.PromotionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:QuanLyCaPhe.View"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             DataContext="{StaticResource PromotionViewModel}"
+             Name="promotionView">
+
+    <Grid Background="#293541">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <!--Language-->
+                    <Grid Height="40">
+                        <StackPanel HorizontalAlignment="Left" Margin="10 0">
+                            <ComboBox FontSize="15" Width="50" Foreground="#F2F4F5" SelectedIndex="0" VerticalAlignment="Center">
+                                <ComboBoxItem Content="EN" />
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+
+                    <!--Control Bar-->
+                    <Grid Height="70">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10 0" Uid="{Binding Uid}">
+
+                            <!--Add-->
+                            <Button Command="{Binding AddPromotionCommand}"
+                        CommandParameter="{Binding ElementName=promotionView,UpdateSourceTrigger=PropertyChanged}"
+                        Width="150"
+                        Content="Thêm"
+                        Height="50"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+
+                            <!--Update-->
+                            <Button
+                        Command="{Binding UpdatePromotionCommand}"
+                        CommandParameter="{Binding ElementName=promotionView,UpdateSourceTrigger=PropertyChanged}"
+                        Width="150"
+                        Content="Sửa"
+                        Height="50"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+
+                            <!--Delete-->
+                            <Button
+                            Command="{Binding DeletePromotionCommand}"
+                            CommandParameter="{Binding ElementName=promotionView,UpdateSourceTrigger=PropertyChanged}"
+                            Width="150"
+                            Content="Xoá"
+                            Height="50"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="#F2F4F5" />
+
+                            <!--Undo-->
+                            <Button
+                            Command="{Binding CreateNewPromotionCommand}"
+                            CommandParameter="{Binding ElementName=promotionView,UpdateSourceTrigger=PropertyChanged}"
+                            Width="150"
+                            Content="Làm Mới"
+                            Height="50"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="#F2F4F5" />
+
+                            <!--Help-->
+                            <Button
+                        Width="150"
+                        Content="Trợ giúp"
+                        Height="50"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Foreground="#F2F4F5" />
+                        </StackPanel>
+
+                        <!--Move bar-->
+                        <Grid x:Name="GridCursor"
+                        Width="150" Height="5"
+                        Background="#FF2196F3"
+                        HorizontalAlignment="Left"
+                        Margin="10 15 0 0 " />
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+
+                <!--Content-->
+                <Grid x:Name="GridMain"
+              Height="700"
+              Background="#E1DDDF">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <!--Header-->
+                    <Grid Grid.Row="0" Margin="0 10 0 0">
+                        <materialDesign:PackIcon Kind="Popcorn" Margin="30 0 0 0" VerticalAlignment="Center" Height="50" Width="50" />
+                        <TextBlock Text= "Chương trình khuyến mãi"  FontSize="30" Margin="90 0 0 0" FontFamily="Saigonese"></TextBlock>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <WrapPanel>
+                            <TextBox
+                             Width="300"
+                             Margin="35 5 15 5"
+                             materialDesign:HintAssist.Hint="Mã chương trình  ( * )"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Text="{Binding MaCTKM,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        </WrapPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <WrapPanel>
+                            <TextBox
+                             Width="300"
+                             Margin="35 5 15 5"
+                             materialDesign:HintAssist.Hint="Tên chương trình ( * )"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Text="{Binding TenCTKM,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+                            <TextBox
+                             Text="{Binding MoTaCTKM,UpdateSourceTrigger=PropertyChanged}"
+                             Width="350"
+                             Margin="35 5 15 5"
+                             materialDesign:HintAssist.Hint="Mô tả chương trình"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                            </TextBox>
+                        </WrapPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <WrapPanel>
+                           
+                        </WrapPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="3">
+                        <WrapPanel>
+                            <DatePicker Width="300"
+                                        Margin="35 20 15 5"
+                                        SelectedDate="{Binding NgayBDKM,UpdateSourceTrigger=PropertyChanged,StringFormat=dd/MM/yyyy}"
+                                        materialDesign:HintAssist.Hint="Ngày bắt đầu ( * )"
+                                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+
+                            <DatePicker Width="350"
+                                        Margin="35 20 15 5"
+                                        SelectedDate="{Binding NgayKTKM,UpdateSourceTrigger=PropertyChanged,StringFormat=dd/MM/yyyy}"
+                                        materialDesign:HintAssist.Hint="Ngày kết thúc ( * )"
+                                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                        </WrapPanel>
+                    </Grid>
+
+                    <!--Content-->
+                    <Grid Grid.Row="4" Margin="0 20 0 0" Height="500">
+                        <ListView
+                               ScrollViewer.HorizontalScrollBarVisibility="Auto"    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                               ItemsSource="{Binding List,UpdateSourceTrigger=PropertyChanged}"
+                               SelectedItem="{Binding SelectedItem,UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Mã chương trình" Width="auto" DisplayMemberBinding="{Binding MaCTKM}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Tên chương trình" Width="auto" DisplayMemberBinding="{Binding TenCTKM}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Mô tả" Width="auto" DisplayMemberBinding="{Binding MoTaCTKM}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Ngày bắt đầu" Width="auto" DisplayMemberBinding="{Binding NgayBDKM,StringFormat=dd/MM/yyyy}"></GridViewColumn>
+
+                                    <GridViewColumn Header="Ngày kết thúc" Width="auto" DisplayMemberBinding="{Binding NgayKTKM,StringFormat=dd/MM/yyyy}"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

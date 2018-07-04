@@ -1,0 +1,179 @@
+﻿using QuanLyCaPhe.Model;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
+
+namespace QuanLyCaPhe.ViewModel
+{
+    public class CustomerTypeViewModel : BaseViewModel
+    {
+        #region Property
+
+        private ObservableCollection<LoaiKhachHang> _List;
+        public ObservableCollection<LoaiKhachHang> List { get => _List; set { _List = value; } }
+
+        private string _tenLoaiKhachHang;
+
+        private string _maLoaiKhachHang;
+
+        private string _ghiChu;
+
+        public string TenLoaiKhachHang { get => _tenLoaiKhachHang; set { if (_tenLoaiKhachHang != value) _tenLoaiKhachHang = value; RaisePropertyChanged("TenLoaiKhachHang"); } }
+
+        public string MaLoaiKhachHang { get => _maLoaiKhachHang; set { if (_maLoaiKhachHang != value) _maLoaiKhachHang = value; RaisePropertyChanged("MaLoaiKhachHang"); } }
+
+        public string GhiChu { get => _ghiChu; set { if (_ghiChu != value) _ghiChu = value; RaisePropertyChanged("GhiChu"); } }
+
+        private LoaiKhachHang _SelectedItem;
+
+        public LoaiKhachHang SelectedItem { get => _SelectedItem; set { _SelectedItem = value; RaisePropertyChanged(); if (SelectedItem != null) { MaLoaiKhachHang = SelectedItem.MaLoaiKhachHang; TenLoaiKhachHang = SelectedItem.TenLoaiKhachHang; GhiChu = SelectedItem.GhiChu; } } }
+
+        #endregion Property
+
+        #region Command Property
+
+        private ICommand addCustomerTypeCommand;
+        public ICommand AddCustomerTypeCommand { get => addCustomerTypeCommand; set { addCustomerTypeCommand = value; RaisePropertyChanged(); } }
+
+        private ICommand updateCustomerTypeCommand;
+        public ICommand UpdatCustomerTypeCommand { get => updateCustomerTypeCommand; set { updateCustomerTypeCommand = value; RaisePropertyChanged(); } }
+
+        private ICommand deleteCustomerTypeCommand;
+
+        public ICommand DeleteCustomerTypeCommand { get => deleteCustomerTypeCommand; set { deleteCustomerTypeCommand = value; RaisePropertyChanged(); } }
+
+        private ICommand createNewCustomerTypeCommand;
+        public ICommand CreateNewCustomerTypeCommand { get => createNewCustomerTypeCommand; set { createNewCustomerTypeCommand = value; RaisePropertyChanged(); } }
+
+        #endregion Command Property
+
+        #region Constructor
+
+        public CustomerTypeViewModel()
+        {
+            MaLoaiKhachHang = "LKH";
+
+            List = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs);
+
+            AddCustomerTypeCommand = new RelayCommand<object>((p) =>
+            {
+                if (string.IsNullOrEmpty(MaLoaiKhachHang) || string.IsNullOrEmpty(TenLoaiKhachHang))
+                {
+                    return false;
+                }
+                if ((!isSymbolAndNumber(MaLoaiKhachHang)) || (!isSymbolAndNumber(TenLoaiKhachHang)))
+                {
+                    return false;
+                }
+
+                var list = DataProvider.Instance.Database.LoaiKhachHangs.Where(x => x.TenLoaiKhachHang == TenLoaiKhachHang && x.MaLoaiKhachHang == MaLoaiKhachHang).Count();
+                if (list != 0)
+                {
+                    return false;
+                }
+                return true;
+            }, (p) =>
+            {
+                AddCustomerType_Execute();
+            });
+
+            UpdatCustomerTypeCommand = new RelayCommand<object>((p) =>
+            {
+                if ((string.IsNullOrEmpty(MaLoaiKhachHang) || string.IsNullOrEmpty(TenLoaiKhachHang)) || SelectedItem == null)
+                    return false;
+
+                if ((!isSymbolAndNumber(MaLoaiKhachHang)) || (!isSymbolAndNumber(TenLoaiKhachHang)))
+                {
+                    return false;
+                }
+                var list = DataProvider.Instance.Database.LoaiKhachHangs.Where(x => x.TenLoaiKhachHang == TenLoaiKhachHang && x.MaLoaiKhachHang == MaLoaiKhachHang && x.GhiChu == GhiChu).Count();
+                if (list != 0)
+                {
+                    return false;
+                }
+                return true;
+            },
+              (p) =>
+              {
+                  UpdateCustomerType_Execute();
+              });
+
+            DeleteCustomerTypeCommand = new RelayCommand<object>((p) =>
+            {
+                if (SelectedItem == null)
+                    return false;
+                return true;
+            }, (p) =>
+            {
+                DeleteCustomerType_Execute();
+            });
+
+            CreateNewCustomerTypeCommand = new RelayCommand<object>((p) =>
+            {
+                if (string.IsNullOrEmpty(MaLoaiKhachHang))
+                {
+                    return false;
+                }
+                return true;
+            }, (p) =>
+            {
+                ClearTextBox();
+            });
+        }
+
+        private bool ClearTextBox()
+        {
+            if (TenLoaiKhachHang != null && GhiChu != null)
+            {
+                MaLoaiKhachHang = "LKH";
+                TenLoaiKhachHang = string.Empty;
+                GhiChu = string.Empty;
+
+                return true;
+            }
+            return false;
+        }
+
+        private void AddCustomerType_Execute()
+        {
+            var customerType = new LoaiKhachHang() { MaLoaiKhachHang = MaLoaiKhachHang, TenLoaiKhachHang = TenLoaiKhachHang, GhiChu = GhiChu };
+            DataProvider.Instance.Database.LoaiKhachHangs.Add(customerType);
+            DataProvider.Instance.Database.SaveChanges();
+            List.Add(customerType);
+            ClearTextBox();
+        }
+
+        private void DeleteCustomerType_Execute()
+        {
+            if (ConfirmDialog("Bạn có chắc chắn muốn xoá loại khách hàng <<" + SelectedItem.TenLoaiKhachHang + ">> không ? "))
+            {
+                var customerType = DataProvider.Instance.Database.LoaiKhachHangs.SingleOrDefault(x => x.MaLoaiKhachHang == SelectedItem.MaLoaiKhachHang);
+                List.Remove(customerType);
+
+                DataProvider.Instance.Database.LoaiKhachHangs.Remove(customerType);
+                DataProvider.Instance.Database.SaveChanges();
+                RaisePropertyChanged("List");
+                ClearTextBox();
+            }
+            else
+            {
+                ClearTextBox();
+            }
+        }
+
+        private void UpdateCustomerType_Execute()
+        {
+            var res = DataProvider.Instance.Database.LoaiKhachHangs.SingleOrDefault(x => x.TenLoaiKhachHang == SelectedItem.TenLoaiKhachHang && x.MaLoaiKhachHang == SelectedItem.MaLoaiKhachHang);
+            if (res != null)
+            {
+                res.MaLoaiKhachHang = MaLoaiKhachHang;
+                res.TenLoaiKhachHang = TenLoaiKhachHang;
+                res.GhiChu = GhiChu;
+                DataProvider.Instance.Database.SaveChanges();
+                ClearTextBox();
+            }
+        }
+
+        #endregion Constructor
+    }
+}
