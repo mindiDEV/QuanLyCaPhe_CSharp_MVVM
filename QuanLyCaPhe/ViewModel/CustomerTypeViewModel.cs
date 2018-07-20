@@ -26,7 +26,21 @@ namespace QuanLyCaPhe.ViewModel
 
         private LoaiKhachHang _SelectedItem;
 
-        public LoaiKhachHang SelectedItem { get => _SelectedItem; set { _SelectedItem = value; RaisePropertyChanged(); if (SelectedItem != null) { MaLoaiKhachHang = SelectedItem.MaLoaiKhachHang; TenLoaiKhachHang = SelectedItem.TenLoaiKhachHang; GhiChu = SelectedItem.GhiChu; } } }
+        public LoaiKhachHang SelectedItem { get => _SelectedItem; set { _SelectedItem = value; RaisePropertyChanged(); if (SelectedItem != null) { MaLoaiKhachHang = SelectedItem.MaLoaiKhachHang; TenLoaiKhachHang = SelectedItem.TenLoaiKhachHang; GhiChu = SelectedItem.GhiChu; IsEnabledCustomerTypeCode = false; } } }
+
+        private bool _isEnabledCustomerTypeCode;
+        public bool IsEnabledCustomerTypeCode
+        {
+            get => _isEnabledCustomerTypeCode;
+            set
+            {
+                if (_isEnabledCustomerTypeCode != value)
+                {
+                    _isEnabledCustomerTypeCode = value;
+                    RaisePropertyChanged("IsEnabledCustomerTypeCode");
+                }
+            }
+        }
 
         #endregion Property
 
@@ -51,6 +65,8 @@ namespace QuanLyCaPhe.ViewModel
 
         public CustomerTypeViewModel()
         {
+            IsEnabledCustomerTypeCode = true;
+
             MaLoaiKhachHang = "LKH";
 
             List = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs);
@@ -66,7 +82,7 @@ namespace QuanLyCaPhe.ViewModel
                     return false;
                 }
 
-                var list = DataProvider.Instance.Database.LoaiKhachHangs.Where(x => x.TenLoaiKhachHang == TenLoaiKhachHang && x.MaLoaiKhachHang == MaLoaiKhachHang).Count();
+                var list = DataProvider.Instance.Database.LoaiKhachHangs.Where(x => x.MaLoaiKhachHang == MaLoaiKhachHang).Count();
                 if (list != 0)
                 {
                     return false;
@@ -79,15 +95,14 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdatCustomerTypeCommand = new RelayCommand<object>((p) =>
             {
-                if ((string.IsNullOrEmpty(MaLoaiKhachHang) || string.IsNullOrEmpty(TenLoaiKhachHang)) || SelectedItem == null)
+                if ((string.IsNullOrEmpty(MaLoaiKhachHang) && string.IsNullOrEmpty(TenLoaiKhachHang)) || SelectedItem == null)
                     return false;
 
                 if ((!isSymbolAndNumber(MaLoaiKhachHang)) || (!isSymbolAndNumber(TenLoaiKhachHang)))
                 {
                     return false;
                 }
-                var list = DataProvider.Instance.Database.LoaiKhachHangs.Where(x => x.TenLoaiKhachHang == TenLoaiKhachHang && x.MaLoaiKhachHang == MaLoaiKhachHang && x.GhiChu == GhiChu).Count();
-                if (list != 0)
+                if (DataProvider.Instance.Database.LoaiKhachHangs.Where(x => x.TenLoaiKhachHang == TenLoaiKhachHang && x.MaLoaiKhachHang == MaLoaiKhachHang && x.GhiChu == GhiChu).Count() != 0)
                 {
                     return false;
                 }
@@ -121,14 +136,15 @@ namespace QuanLyCaPhe.ViewModel
             });
         }
 
-        private bool ClearTextBox()
+        public bool ClearTextBox()
         {
-            if (TenLoaiKhachHang != null && GhiChu != null)
+            if (MaLoaiKhachHang != null)
             {
                 MaLoaiKhachHang = "LKH";
                 TenLoaiKhachHang = string.Empty;
                 GhiChu = string.Empty;
-
+                SelectedItem = null;
+                IsEnabledCustomerTypeCode = true;
                 return true;
             }
             return false;
@@ -137,6 +153,10 @@ namespace QuanLyCaPhe.ViewModel
         private void AddCustomerType_Execute()
         {
             var customerType = new LoaiKhachHang() { MaLoaiKhachHang = MaLoaiKhachHang, TenLoaiKhachHang = TenLoaiKhachHang, GhiChu = GhiChu };
+            if (customerType.GhiChu == null)
+            {
+                customerType.GhiChu = @"Không có";
+            }
             DataProvider.Instance.Database.LoaiKhachHangs.Add(customerType);
             DataProvider.Instance.Database.SaveChanges();
             List.Add(customerType);

@@ -93,6 +93,7 @@
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -140,10 +141,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClassSupport\BitmapHelpers.cs" />
+    <Compile Include="ClassSupport\DragMoveBehavior.cs" />
     <Compile Include="ClassSupport\HoaDon_DTO.cs" />
     <Compile Include="ClassSupport\IndexConverter.cs" />
     <Compile Include="ClassSupport\InputValidationRule.cs" />
     <Compile Include="ClassSupport\KhuyenMai_DTO.cs" />
+    <Compile Include="ClassSupport\PasswordBehaviors.cs" />
     <Compile Include="HoaDonReport.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -167,6 +170,9 @@
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\HoaDon.cs">
+      <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\InPhieuThanhToan_Result.cs">
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\KhachHang.cs">
@@ -270,6 +276,10 @@
       <DependentUpon>WebcamView.xaml</DependentUpon>
     </Compile>
     <Page Include="ResourceXAML\MainResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResourceXAML\Simple Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -421,6 +431,8 @@
     <Resource Include="Imagines\prodcutos.png" />
     <Resource Include="Imagines\ventas.png" />
     <Resource Include="Imagines\specialtea_master.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Model\QuanLyCaPheModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>QuanLyCaPheModel.edmx</DependentUpon>

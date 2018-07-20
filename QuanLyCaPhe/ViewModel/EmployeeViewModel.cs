@@ -23,21 +23,21 @@ namespace QuanLyCaPhe.ViewModel
 
         private string _CMND;
 
-        private DateTime _ngayCap;
+        private DateTime? _ngayCap;
 
-        private string _noiCap;
+        private string _noiCapCMND;
 
         private string _dienThoaiDiDong;
 
-        private DateTime _ngaySinh;
+        private DateTime? _ngaySinh;
 
         private string _trangThaiLamViec;
 
-        private int _IsSelectedSex;
+        private int? _IsSelectedSex;
 
-        private int _IsSelectedStatus;
+        private int? _IsSelectedStatus;
 
-        public int IsSelectedStatus
+        public int? IsSelectedStatus
         {
             get => _IsSelectedStatus;
             set
@@ -51,7 +51,7 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
-        public int IsSelectedSex
+        public int? IsSelectedSex
         {
             get => _IsSelectedSex;
             set
@@ -140,7 +140,7 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
-        public DateTime NgayCap
+        public DateTime? NgayCap
         {
             get => _ngayCap;
             set
@@ -164,19 +164,19 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
-        public string NoiCap
+        public string NoiCapCMND
         {
-            get => _noiCap;
+            get => _noiCapCMND;
             set
             {
-                if (_noiCap != value)
+                if (_noiCapCMND != value)
                 {
-                    _noiCap = value; RaisePropertyChanged("NoiCap");
+                    _noiCapCMND = value; RaisePropertyChanged("NoiCapCMND");
                 }
             }
         }
 
-        public DateTime NgaySinh
+        public DateTime? NgaySinh
         {
             get => _ngaySinh;
             set
@@ -222,7 +222,7 @@ namespace QuanLyCaPhe.ViewModel
                         DiaChi = SelectedItem.DiaChi;
                         CMND = SelectedItem.CMND;
                         NgayCap = Convert.ToDateTime(SelectedItem.NgayCap);
-                        NoiCap = SelectedItem.NoiCapCMND;
+                        NoiCapCMND = SelectedItem.NoiCapCMND;
                         NgaySinh = Convert.ToDateTime(SelectedItem.NgaySinh);
                         DienThoaiDiDong = SelectedItem.DienThoaiDiDong;
                         if (SelectedItem.TrangThaiLamViec == "Nghỉ việc")
@@ -322,18 +322,24 @@ namespace QuanLyCaPhe.ViewModel
 
         #region Methods
 
-        private bool ClearTextBox()
+        public bool ClearTextBox()
         {
-            MaNhanVien = string.Empty;
-            TenNhanVien = string.Empty;
-            DiaChi = string.Empty;
-            GioiTinh = null;
-            TrangThaiLamViec = null;
-            CMND = null;
-            DienThoaiDiDong = null;
-            TrangThaiLamViec = null;
-            NoiCap = null;
-            return true;
+            if(MaNhanVien!=null)
+            {
+                MaNhanVien = string.Empty;
+                TenNhanVien = string.Empty;
+                DiaChi = string.Empty;
+                CMND = string.Empty;
+                DienThoaiDiDong = string.Empty;
+                IsSelectedStatus = null;
+                IsSelectedSex = null;
+                NoiCapCMND = string.Empty;
+                NgayCap = null;
+                NgaySinh = null;
+                SelectedItem = null;
+                return true;
+            }
+            return false;
         }
 
         private void GetListEmployee()
@@ -349,7 +355,7 @@ namespace QuanLyCaPhe.ViewModel
             nv.DiaChi = DiaChi;
             nv.CMND = CMND;
             nv.NgayCap = NgayCap;
-            nv.NoiCapCMND = NoiCap;
+            nv.NoiCapCMND = NoiCapCMND;
             nv.NgaySinh = NgaySinh;
             nv.DienThoaiDiDong = DienThoaiDiDong;
             if (IsSelectedSex == 0)
@@ -382,7 +388,7 @@ namespace QuanLyCaPhe.ViewModel
             employeeUpdate.DiaChi = DiaChi;
             employeeUpdate.CMND = CMND;
             employeeUpdate.NgayCap = NgayCap;
-            employeeUpdate.NoiCapCMND = NoiCap;
+            employeeUpdate.NoiCapCMND = NoiCapCMND;
             employeeUpdate.DienThoaiDiDong = DienThoaiDiDong;
             if (IsSelectedSex == 1)
             {

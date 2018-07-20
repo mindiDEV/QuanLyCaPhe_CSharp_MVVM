@@ -1,6 +1,8 @@
 ﻿using QuanLyCaPhe.Model;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace QuanLyCaPhe.ViewModel
@@ -15,7 +17,7 @@ namespace QuanLyCaPhe.ViewModel
         private ObservableCollection<LoaiKhachHang> _CustomerTypeList;
         public ObservableCollection<LoaiKhachHang> CustomerTypeList { get => _CustomerTypeList; set { _CustomerTypeList = value; RaisePropertyChanged("CustomerTypeList"); } }
 
-        private int _maKhachHang;
+        private int? _maKhachHang;
 
         private string _tenKhachHang;
 
@@ -29,9 +31,9 @@ namespace QuanLyCaPhe.ViewModel
 
         private string _maLoaiKhachHang;
 
-        private int _IsSelectedSex;
+        private int? _IsSelectedSex;
 
-        public int IsSelectedSex
+        public int? IsSelectedSex
         {
             get => _IsSelectedSex;
             set
@@ -45,7 +47,7 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
-        public int MaKhachHang
+        public int? MaKhachHang
         {
             get => _maKhachHang;
             set
@@ -209,6 +211,12 @@ namespace QuanLyCaPhe.ViewModel
         private ICommand _createNewCustomerCommand;
         public ICommand CreateNewCustomerCommand { get => _createNewCustomerCommand; set { _createNewCustomerCommand = value; RaisePropertyChanged(); } }
 
+       
+
+        
+
+        
+
         #endregion Command Property
 
         #region Constructor
@@ -216,21 +224,21 @@ namespace QuanLyCaPhe.ViewModel
         public CustomerViewModel()
         {
             GetListCustomer();
+
             GetListCustomerType();
 
             AddCustomerCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(TenKhachHang) || string.IsNullOrEmpty(TenLoaiKhachHang))
+                if (string.IsNullOrEmpty(TenLoaiKhachHang) || string.IsNullOrEmpty(TenKhachHang) || string.IsNullOrEmpty(DienThoaiDiDong))
                 {
                     return false;
                 }
-                else if (!isSymbol(TenKhachHang))
+                if (!isNumber(DienThoaiDiDong))
                 {
                     return false;
                 }
 
-                var list = DataProvider.Instance.Database.KhachHangs.Where(x => x.TenKhachHang == TenKhachHang && x.MaKhachHang == MaKhachHang).Count();
-                if (list != 0)
+                if (DataProvider.Instance.Database.KhachHangs.Where(x => x.MaKhachHang == MaKhachHang).Count() != 0)
                 {
                     return false;
                 }
@@ -242,6 +250,24 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdateCustomerCommand = new RelayCommand<object>((p) =>
             {
+                string sex = "";
+
+                sex = IsSelectedSex == 0 ? "Nam" : "Nữ";
+
+                if (((string.IsNullOrEmpty(TenLoaiKhachHang) && string.IsNullOrEmpty(DiaChi) && string.IsNullOrEmpty(DienThoaiDiDong)) || SelectedItem == null))
+                    return false;
+
+                if (!isNumber(DienThoaiDiDong))
+                {
+                    return false;
+                }
+
+               
+
+                if (DataProvider.Instance.Database.KhachHangs.Where(x => x.TenKhachHang == TenKhachHang && x.DienThoaiDiDong == DienThoaiDiDong && x.DiaChi == DiaChi && x.MaLoaiKhachHang == SelectedCustomerType.MaLoaiKhachHang && x.GioiTinh == sex).Count() != 0)
+                {
+                    return false;
+                }
                 return true;
             },
               (p) =>
@@ -266,21 +292,28 @@ namespace QuanLyCaPhe.ViewModel
             {
                 ClearTextBox();
             });
+
+           
+            
         }
+
+       
 
         #endregion Constructor
 
         #region Methods
 
-        private bool ClearTextBox()
+        public bool ClearTextBox()
         {
             if (TenKhachHang != null)
             {
-                //MaKhachHang = null;
+                MaKhachHang = null;
                 TenKhachHang = string.Empty;
                 DienThoaiDiDong = string.Empty;
                 DiaChi = string.Empty;
+                IsSelectedSex = null;
                 SelectedCustomerType = null;
+                SelectedItem = null;
             }
             return false;
         }
@@ -298,11 +331,11 @@ namespace QuanLyCaPhe.ViewModel
         private void AddCustomer_Execute()
         {
             string sex = "";
+
             sex = IsSelectedSex == 0 ? "Nam" : "Nữ";
 
             var Customer = new KhachHang()
             {
-                MaKhachHang = MaKhachHang,
                 TenKhachHang = TenKhachHang,
                 DiaChi = DiaChi,
                 GioiTinh = sex,
@@ -320,7 +353,6 @@ namespace QuanLyCaPhe.ViewModel
             var res = DataProvider.Instance.Database.KhachHangs.SingleOrDefault(x => x.MaKhachHang == SelectedItem.MaKhachHang);
             if (res != null)
             {
-                res.MaKhachHang = MaKhachHang;
                 res.TenKhachHang = TenKhachHang;
                 res.DiaChi = DiaChi;
                 if (IsSelectedSex == 0)

@@ -14,6 +14,8 @@ namespace QuanLyCaPhe.ViewModel
             public string TenNhomThucDon { get; set; }
             public string GhiChu { get; set; }
             public bool IsEnabled { get; set; }
+
+
         }
 
         #region Property
@@ -52,6 +54,8 @@ namespace QuanLyCaPhe.ViewModel
 
         private string _tenHienThi_NhomThucDon;
 
+        private bool _isEnabledMenuGroupCode;
+
         public string TenLoaiThucDon { get => _tenLoaiThucDon; set { if (_tenLoaiThucDon != value) _tenLoaiThucDon = value; RaisePropertyChanged("TenLoaiThucDon"); } }
 
         public string TenNhomThucDon { get => _tenNhomThucDon; set { if (_tenNhomThucDon != value) _tenNhomThucDon = value; RaisePropertyChanged("TenNhomThucDon"); } }
@@ -81,8 +85,20 @@ namespace QuanLyCaPhe.ViewModel
                         TenNhomThucDon = SelectedItem.TenNhomThucDon;
                         GhiChu = SelectedItem.GhiChu;
                         SelectedMenuType = SelectedItem.LoaiThucDon;
+                        IsEnabledMenuGroupCode = false;
                     }
                 }
+            }
+        }
+
+        public bool IsEnabledMenuGroupCode
+        {
+            get => _isEnabledMenuGroupCode;
+            set
+            {
+                _isEnabledMenuGroupCode = value;
+                RaisePropertyChanged();
+                
             }
         }
 
@@ -147,6 +163,8 @@ namespace QuanLyCaPhe.ViewModel
             //GetMenuDetails();
             //GetComboBoxOfMenuType();
 
+            IsEnabledMenuGroupCode = true;
+
             MaHienThi_NhomThucDon = "Mã nhóm ( * )";
 
             TenHienThi_NhomThucDon = "Tên nhóm ( * )";
@@ -158,12 +176,12 @@ namespace QuanLyCaPhe.ViewModel
 
             AddMenuGroupCommand = new RelayCommand<object>((p) =>
             {
-                if (SelectedItem == null && SelectedMenuType == null)
+                if (string.IsNullOrEmpty(TenNhomThucDon) || string.IsNullOrEmpty(MaNhomThucDon) || SelectedMenuType==null)
                 {
                     return false;
                 }
 
-                if (!isSymbol(MaNhomThucDon) && (!isSymbolAndNumber(TenNhomThucDon)))
+                if (!isSymbolAndNumber(MaNhomThucDon) && !isSymbolAndNumber(TenNhomThucDon))
                 {
                     return false;
                 }
@@ -180,15 +198,16 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdateMenuGroupCommand = new RelayCommand<object>((p) =>
             {
-                if (SelectedItem == null && SelectedMenuType == null)
+                if (((string.IsNullOrEmpty(TenHienThi_NhomThucDon) && string.IsNullOrEmpty(MaHienThi_NhomThucDon))|| SelectedItem == null))
                 {
                     return false;
                 }
-                if (!isSymbol(MaNhomThucDon) && (!isSymbolAndNumber(TenNhomThucDon)))
+                if (!isSymbolAndNumber(MaNhomThucDon) && !isSymbol(TenNhomThucDon))
                 {
                     return false;
                 }
-                var checkId = DataProvider.Instance.Database.NhomThucDons.Where(x => x.TenNhomThucDon == TenNhomThucDon && x.GhiChu == GhiChu).Count();
+
+                var checkId = DataProvider.Instance.Database.NhomThucDons.Where(x =>x.MaNhomThucDon == MaNhomThucDon && x.TenNhomThucDon == TenNhomThucDon && x.GhiChu == GhiChu && x.MaLoaiThucDon == SelectedMenuType.MaLoaiThucDon).Count();
                 if (checkId != 0)
                 {
                     return false;
@@ -203,10 +222,7 @@ namespace QuanLyCaPhe.ViewModel
             DeleteMenuGroupCommand = new RelayCommand<object>(
                 (p) =>
                 {
-                    if (SelectedItem == null && SelectedMenuType == null)
-                    {
-                        return false;
-                    }
+                    
                     return true;
                 },
                 (p) =>
@@ -261,19 +277,31 @@ namespace QuanLyCaPhe.ViewModel
         private void AddMenuGroup()
         {
             var menuGroup = new NhomThucDon() { MaNhomThucDon = MaNhomThucDon, TenNhomThucDon = TenNhomThucDon, GhiChu = GhiChu, MaLoaiThucDon = SelectedMenuType.MaLoaiThucDon };
+            if (menuGroup.GhiChu == null)
+            {
+                menuGroup.GhiChu = "Không có";
+            }   
+            
+
             DataProvider.Instance.Database.NhomThucDons.Add(menuGroup);
             DataProvider.Instance.Database.SaveChanges();
             List.Add(menuGroup);
+            ClearTextBox();
         }
 
         private void UpdateMenuGroup()
         {
             var menuGroup = DataProvider.Instance.Database.NhomThucDons.Where(x => x.MaNhomThucDon == SelectedItem.MaNhomThucDon).SingleOrDefault();
-            menuGroup.MaNhomThucDon = MaNhomThucDon;
-            menuGroup.TenNhomThucDon = TenNhomThucDon;
-            menuGroup.GhiChu = GhiChu;
-            menuGroup.MaLoaiThucDon = SelectedMenuType.MaLoaiThucDon;
-            DataProvider.Instance.Database.SaveChanges();
+            if(menuGroup!=null)
+            {
+                IsEnabledMenuGroupCode = false;
+                menuGroup.TenNhomThucDon = TenNhomThucDon;
+                menuGroup.GhiChu = GhiChu;
+                menuGroup.MaLoaiThucDon = SelectedMenuType.MaLoaiThucDon;
+                DataProvider.Instance.Database.SaveChanges();
+                ClearTextBox();
+            }
+           
         }
 
         private bool GetListMenuGroup()
@@ -296,13 +324,16 @@ namespace QuanLyCaPhe.ViewModel
             return false;
         }
 
-        private bool ClearTextBox()
+        public bool ClearTextBox()
         {
-            if (TenNhomThucDon != null && GhiChu != null)
+            if (MaNhomThucDon != null)
             {
                 MaNhomThucDon = "NTD";
                 TenNhomThucDon = string.Empty;
                 GhiChu = string.Empty;
+                SelectedItem = null;
+                SelectedMenuType = null;
+                IsEnabledMenuGroupCode = true;
                 return true;
             }
             return false;

@@ -1,6 +1,10 @@
 ﻿using QuanLyCaPhe.Model;
+using QuanLyCaPhe.View;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace QuanLyCaPhe.ViewModel
@@ -17,6 +21,9 @@ namespace QuanLyCaPhe.ViewModel
         private string _ghiChu;
 
         private string _maDonViTinh;
+
+
+        private bool _isEnabledUnitCode;
 
         public string TenDonViTinh
         {
@@ -37,9 +44,38 @@ namespace QuanLyCaPhe.ViewModel
 
         public string GhiChu { get => _ghiChu; set { if (_ghiChu != value) _ghiChu = value; RaisePropertyChanged("GhiChu"); } }
 
+        public bool IsEnabledUnitCode
+        {
+            get => _isEnabledUnitCode;
+            set
+            {
+                if (_isEnabledUnitCode != value)
+                {
+                    _isEnabledUnitCode = value;
+                    RaisePropertyChanged("IsEnabledUnitCode");
+                }
+            }
+        }
+
+
         private DonViTinh _SelectedItem;
 
-        public DonViTinh SelectedItem { get => _SelectedItem; set { _SelectedItem = value; RaisePropertyChanged(); if (SelectedItem != null) { MaDonViTinh = SelectedItem.MaDonViTinh; TenDonViTinh = SelectedItem.TenDonViTinh; GhiChu = SelectedItem.GhiChu; } } }
+        public DonViTinh SelectedItem
+        {
+            get => _SelectedItem;
+            set
+            {
+                _SelectedItem = value;
+                RaisePropertyChanged();
+                if (SelectedItem != null)
+                {
+                    MaDonViTinh = SelectedItem.MaDonViTinh;
+                    TenDonViTinh = SelectedItem.TenDonViTinh;
+                    GhiChu = SelectedItem.GhiChu;
+                    IsEnabledUnitCode = false;
+                }
+            }
+        }
 
         #endregion Property
 
@@ -58,24 +94,32 @@ namespace QuanLyCaPhe.ViewModel
         private ICommand _createNewUnitCommand;
         public ICommand CreateNewUnitCommand { get => _createNewUnitCommand; set { _createNewUnitCommand = value; RaisePropertyChanged(); } }
 
+
         #endregion Command Property
 
-        #region Constructor
-
+        #region Constructor 
         public UnitViewModel()
         {
+            IsEnabledUnitCode = true;
+
             MaDonViTinh = "DVT";
 
-            List = new ObservableCollection<DonViTinh>(DataProvider.Instance.Database.DonViTinhs);
+            LoadUnitList();
 
             AddUnitCommand = new RelayCommand<object>((p) =>
             {
+                //Ghi chú có thể null
                 if (string.IsNullOrEmpty(MaDonViTinh) || string.IsNullOrEmpty(TenDonViTinh))
                 {
                     return false;
                 }
 
-                var list = DataProvider.Instance.Database.DonViTinhs.Where(x => x.TenDonViTinh == TenDonViTinh && x.MaDonViTinh == MaDonViTinh).Count();
+                if (!isSymbolAndNumber(MaDonViTinh) && (!isSymbolAndNumber(TenDonViTinh)))
+                {
+                    return false;
+                }
+
+                var list = DataProvider.Instance.Database.DonViTinhs.Where(x => x.MaDonViTinh == MaDonViTinh).Count();
                 if (list != 0)
                 {
                     return false;
@@ -88,15 +132,14 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdateUnitCommand = new RelayCommand<object>((p) =>
             {
-                if ((string.IsNullOrEmpty(MaDonViTinh) || string.IsNullOrEmpty(TenDonViTinh)) && SelectedItem == null)
+                if (((string.IsNullOrEmpty(MaDonViTinh) && string.IsNullOrEmpty(TenDonViTinh)) || SelectedItem == null))
                     return false;
 
-                if (!isSymbolAndNumber(TenDonViTinh))
+                if (!isSymbolAndNumber(MaDonViTinh) && (!isSymbolAndNumber(TenDonViTinh)))
                 {
                     return false;
                 }
-
-                var list = DataProvider.Instance.Database.DonViTinhs.Where(x => x.MaDonViTinh == MaDonViTinh && x.TenDonViTinh == TenDonViTinh && x.GhiChu == GhiChu).Count();
+                var list = DataProvider.Instance.Database.DonViTinhs.Where(x => x.GhiChu == GhiChu && x.TenDonViTinh == TenDonViTinh).Count();
                 if (list != 0)
                 {
                     return false;
@@ -120,7 +163,7 @@ namespace QuanLyCaPhe.ViewModel
 
             CreateNewUnitCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaDonViTinh))
+                if (string.IsNullOrEmpty(MaDonViTinh) && string.IsNullOrEmpty(TenDonViTinh))
                 {
                     return false;
                 }
@@ -129,19 +172,30 @@ namespace QuanLyCaPhe.ViewModel
             {
                 ClearTextBox();
             });
+
+            
+
+            
         }
 
+       
+       
         #endregion Constructor
 
         #region Methods
-
+        private void LoadUnitList()
+        {
+            List = new ObservableCollection<DonViTinh>(DataProvider.Instance.Database.DonViTinhs);
+        }
         private bool ClearTextBox()
         {
-            if (MaDonViTinh != null && TenDonViTinh != null && GhiChu != null)
+            if (MaDonViTinh != null)
             {
                 MaDonViTinh = "DVT";
                 TenDonViTinh = string.Empty;
                 GhiChu = string.Empty;
+                IsEnabledUnitCode = true;
+                SelectedItem = null;
                 return true;
             }
             return false;
@@ -150,6 +204,10 @@ namespace QuanLyCaPhe.ViewModel
         private void AddUnit_Execute()
         {
             var unit = new DonViTinh() { MaDonViTinh = MaDonViTinh, TenDonViTinh = TenDonViTinh, GhiChu = GhiChu };
+            if(unit.GhiChu == null)
+            {
+                unit.GhiChu = "Không có";
+            }
             DataProvider.Instance.Database.DonViTinhs.Add(unit);
             DataProvider.Instance.Database.SaveChanges();
             List.Add(unit);
@@ -161,7 +219,7 @@ namespace QuanLyCaPhe.ViewModel
             var res = DataProvider.Instance.Database.DonViTinhs.SingleOrDefault(x => x.MaDonViTinh == SelectedItem.MaDonViTinh);
             if (res != null)
             {
-                res.MaDonViTinh = MaDonViTinh;
+                
                 res.TenDonViTinh = TenDonViTinh;
                 res.GhiChu = GhiChu;
                 DataProvider.Instance.Database.SaveChanges();

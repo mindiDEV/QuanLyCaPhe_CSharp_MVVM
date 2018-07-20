@@ -414,10 +414,11 @@ E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.cspro
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.csproj.CopyComplete
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.exe
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.pdb
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.csprojAssemblyReference.cache
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EPPlus.dll
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EPPlus.xml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\ScanQRCodeDiscountView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\ScanQRCodeDiscountView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\PromotionDetailView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\PromotionDetailView.baml
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.csprojAssemblyReference.cache
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\ResourceXAML\Simple Styles.baml

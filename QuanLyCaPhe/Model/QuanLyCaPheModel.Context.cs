@@ -15,10 +15,10 @@ namespace QuanLyCaPhe.Model
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class QuanLyQuanCaPheEntities : DbContext
+    public partial class QuanLyCaPheEntities1 : DbContext
     {
-        public QuanLyQuanCaPheEntities()
-            : base("name=QuanLyQuanCaPheEntities")
+        public QuanLyCaPheEntities1()
+            : base("name=QuanLyCaPheEntities1")
         {
         }
     
@@ -42,6 +42,15 @@ namespace QuanLyCaPhe.Model
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TaiKhoan> TaiKhoans { get; set; }
         public virtual DbSet<ThucDon> ThucDons { get; set; }
+    
+        public virtual ObjectResult<InPhieuThanhToan_Result> InPhieuThanhToan(string maHoaDon)
+        {
+            var maHoaDonParameter = maHoaDon != null ?
+                new ObjectParameter("MaHoaDon", maHoaDon) :
+                new ObjectParameter("MaHoaDon", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<InPhieuThanhToan_Result>("InPhieuThanhToan", maHoaDonParameter);
+        }
     
         public virtual ObjectResult<TimKiemThucDon_Result> TimKiemThucDon(string tenMon)
         {

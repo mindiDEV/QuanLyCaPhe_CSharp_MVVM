@@ -197,10 +197,15 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        
         #endregion Properties
 
         #region Command Property
         public ICommand ReportBill { get; set; }
+
+        public ICommand SelectedChangedNgayBatDau { get; set; }
+
+        public ICommand SelectedChangedNgayKetThuc { get; set; }
 
         #endregion
 
@@ -345,6 +350,27 @@ namespace QuanLyCaPhe.ViewModel
                      MessageBox.Show("Có lỗi khi lưu file!",EE.Message);
                  }
              });
+
+            SelectedChangedNgayBatDau = new RelayCommand<object>((p) =>
+            {
+                return true;
+            },
+             (p) =>
+             {
+                 LoadBillList(_ngayBatDau, _ngayKetThuc);
+
+
+             });
+
+            SelectedChangedNgayKetThuc = new RelayCommand<object>((p) =>
+            {
+                return true;
+            },
+             (p) =>
+             {
+                 LoadBillList(_ngayBatDau,_ngayKetThuc);
+
+             });
         }
 
         #endregion Constructor
@@ -363,14 +389,15 @@ namespace QuanLyCaPhe.ViewModel
             CountEmployee = ListEmployee.Count();
         }
 
-        public void LoadBillList()
+        public void LoadBillList(DateTime? ngayBatDau =null, DateTime? ngayKetThuc=null)
         {
-  
+            ngayBatDau = _ngayBatDau;
+            ngayKetThuc = _ngayKetThuc;
             ListBill = new ObservableCollection<HoaDon>(DataProvider.Instance.Database.HoaDons.Where(x=>
-            ((x.NgayXuatHoaDon.Value.Month > NgayBatDau.Month)||
-            (x.NgayXuatHoaDon.Value.Month == NgayBatDau.Month && x.NgayXuatHoaDon.Value.Day >= NgayBatDau.Day)) && 
-            ((x.NgayXuatHoaDon.Value.Month < NgayKetThuc.Month) || 
-            (x.NgayXuatHoaDon.Value.Month == NgayKetThuc.Month) && x.NgayXuatHoaDon.Value.Day <= NgayKetThuc.Day)).ToList());
+            ((x.NgayXuatHoaDon.Value.Month > ngayBatDau.Value.Month)||
+            (x.NgayXuatHoaDon.Value.Month == ngayBatDau.Value.Month && x.NgayXuatHoaDon.Value.Day >= ngayBatDau.Value.Day)) && 
+            ((x.NgayXuatHoaDon.Value.Month < ngayKetThuc.Value.Month) || 
+            (x.NgayXuatHoaDon.Value.Month == ngayKetThuc.Value.Month) && x.NgayXuatHoaDon.Value.Day <= ngayKetThuc.Value.Day)).ToList());
 
             CountBill = ListBill.Count();
         }   

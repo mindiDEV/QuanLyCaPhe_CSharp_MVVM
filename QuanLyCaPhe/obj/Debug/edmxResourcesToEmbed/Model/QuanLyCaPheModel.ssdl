@@ -54,6 +54,8 @@
     </Key>
     <Property Name="MaHoaDon" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="NgayXuatHoaDon" Type="date" />
+    <Property Name="TienKhachTra" Type="money" />
+    <Property Name="TienThua" Type="money" />
     <Property Name="TongHoaDon" Type="money" />
     <Property Name="TrangThai" Type="bit" />
     <Property Name="MaNhanVien" Type="nvarchar" MaxLength="200" Nullable="false" />
@@ -135,6 +137,7 @@
     <Property Name="TenTaiKhoan" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="MatKhau" Type="varchar" MaxLength="200" Nullable="false" />
     <Property Name="MaNhanVien" Type="nvarchar" MaxLength="200" />
+    <Property Name="QRCode" Type="varchar" MaxLength="100" />
   </EntityType>
   <EntityType Name="ThucDon">
     <Key>
@@ -292,6 +295,9 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="InPhieuThanhToan" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="MaHoaDon" Type="nvarchar" Mode="In" />
+  </Function>
   <Function Name="TimKiemThucDon" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="TenMon" Type="nvarchar" Mode="In" />
   </Function>

@@ -140,6 +140,7 @@
                              Margin="35 5 15 5"
                              materialDesign:HintAssist.Hint="{Binding MaHienThi_NhomThucDon}"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             IsEnabled="{Binding IsEnabledMenuGroupCode,UpdateSourceTrigger=PropertyChanged}"
                              Text="{Binding MaNhomThucDon,UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         </WrapPanel>
                     </Grid>

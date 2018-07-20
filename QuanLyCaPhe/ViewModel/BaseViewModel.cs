@@ -28,6 +28,12 @@ namespace QuanLyCaPhe.ViewModel
             return res == MessageBoxResult.OK ? true : false;
         }
 
+
+        public bool isNumber(string str)
+        {
+            return Regex.IsMatch(str, @"^[0-9]*$");
+        }
+
         public bool isSymbol(string str)
         {
             return Regex.IsMatch(str, @"^[a-zA-Z0-9 ]*$");
@@ -49,7 +55,7 @@ namespace QuanLyCaPhe.ViewModel
     {
         private readonly Predicate<T> _canExecute;
         private readonly Action<T> _execute;
-
+        public static Key GestureKey { get; set; }
         public RelayCommand(Predicate<T> canExecute, Action<T> execute)
         {
             if (execute == null)

@@ -18,7 +18,7 @@
         <!--Column Left-->
         <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
@@ -30,8 +30,8 @@
 
                 <!--Nguyên vật liệu-->
                 <Grid Grid.Row="0">
-                    <materialDesign:PackIcon VerticalAlignment="Center" Kind="Cart" Margin="30 10 0 0" Height="30" Width="50" />
-                    <TextBlock Text= "Nguyên vật liệu"  FontSize="20" Margin="100 10 0 0" VerticalAlignment="Center" FontFamily="Saigonese"></TextBlock>
+                    <materialDesign:PackIcon VerticalAlignment="Center" Kind="Cart" Margin="30 -50 0 0" Height="30" Width="50" />
+                    <TextBlock Text= "Nguyên vật liệu"  FontSize="20" Margin="100 -50 0 0" VerticalAlignment="Center" FontFamily="Saigonese"></TextBlock>
                 </Grid>
 
                 <!--Danh sách nguyên vật liệu-->
@@ -42,21 +42,7 @@
                         SelectionChanged="ListMaterial_SelectionChanged">
 
                         <!--Kho-->
-                        <ListViewItem x:Name="ItemInventory"
-                                      Height="60">
-                            <StackPanel Orientation="Horizontal" Margin="100 0 0 0">
-                                <materialDesign:PackIcon
-                                    Kind="Basket"
-                                    Height="25"
-                                    Width="25"
-                                    Margin="20 10" />
-                                <TextBlock
-                                    Text="Kho"
-                                    FontFamily="Saigonese"
-                                    VerticalAlignment="Center"
-                                    Margin="20 10" />
-                            </StackPanel>
-                        </ListViewItem>
+                        
 
                         <!--Đơn vị tính-->
                         <ListViewItem x:Name="ItemUnit"
@@ -86,7 +72,7 @@
                 <!--Thực đơn-->
                 <Grid Grid.Row="0">
                     <materialDesign:PackIcon VerticalAlignment="Center" Kind="FoodForkDrink" Margin="30 10 0 0" Height="30" Width="50" />
-                    <TextBlock Text= "Thực đơn"  FontSize="20" Margin="100 10 0 0" VerticalAlignment="Center" FontFamily="Saigonese"></TextBlock>
+                    <TextBlock Text= "Thực đơn"  FontSize="20" Margin="100 1 0 0" VerticalAlignment="Center" FontFamily="Saigonese"></TextBlock>
                 </Grid>
                 <!--Danh sách thực đơn-->
                 <Grid Grid.Row="1">

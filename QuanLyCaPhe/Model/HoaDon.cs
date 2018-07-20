@@ -9,105 +9,29 @@
 
 namespace QuanLyCaPhe.Model
 {
-    using QuanLyCaPhe.ViewModel;
     using System;
     using System.Collections.Generic;
     
-    public partial class HoaDon:BaseViewModel
+    public partial class HoaDon
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public HoaDon()
         {
             this.ChiTietHoaDons = new HashSet<ChiTietHoaDon>();
         }
-
-        private string _maHoaDon;
-
-        private Nullable<System.DateTime> _ngayXuatHoaDon;
-
-        private Nullable<decimal> _tongHoaDon;
-
-        private Nullable<bool> _trangThai;
-
-        private string _maNhanVien;
-
-        private int _maKhachHang;
+    
+        public string MaHoaDon { get; set; }
+        public Nullable<System.DateTime> NgayXuatHoaDon { get; set; }
+        public Nullable<decimal> TienKhachTra { get; set; }
+        public Nullable<decimal> TienThua { get; set; }
+        public Nullable<decimal> TongHoaDon { get; set; }
+        public Nullable<bool> TrangThai { get; set; }
+        public string MaNhanVien { get; set; }
+        public int MaKhachHang { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; }
         public virtual KhachHang KhachHang { get; set; }
         public virtual NhanVien NhanVien { get; set; }
-        public DateTime? NgayXuatHoaDon
-        {
-            get
-            {
-               return _ngayXuatHoaDon;
-            }
-            set
-            {
-                _ngayXuatHoaDon = value;
-                RaisePropertyChanged("NgayXuatHoaDon");
-            }
-        }
-        public string MaHoaDon
-        {
-            get
-            {
-                return _maHoaDon;
-            }
-            set
-            {
-                _maHoaDon = value;
-                RaisePropertyChanged("MaHoaDon");
-            }
-        }
-        public bool? TrangThai
-        {
-            get
-            {
-                return _trangThai;
-            }
-            set
-            {
-                _trangThai = value;
-                RaisePropertyChanged("TrangThai");
-            }
-        }
-        public string MaNhanVien
-        {
-            get
-            {
-                return _maNhanVien;
-            }
-            set
-            {
-                _maNhanVien = value;
-                RaisePropertyChanged("MaNhanVien");
-            }
-        }
-        public int MaKhachHang
-        {
-            get
-            {
-                return _maKhachHang;
-            }
-            set
-            {
-                _maKhachHang = value;
-                RaisePropertyChanged("MaKhachHang");
-            }
-        }
-        public decimal? TongHoaDon
-        {
-            get
-            {
-                return _tongHoaDon;
-            }
-            set
-            {
-                _tongHoaDon = value;
-                RaisePropertyChanged("TongHoaDon");
-            }
-        }
     }
 }

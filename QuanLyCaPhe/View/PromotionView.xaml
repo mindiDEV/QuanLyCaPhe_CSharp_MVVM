@@ -127,6 +127,7 @@
                              Margin="35 5 15 5"
                              materialDesign:HintAssist.Hint="Mã chương trình  ( * )"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             IsEnabled="{Binding IsEnabledPromotionCode,UpdateSourceTrigger=PropertyChanged}"
                              Text="{Binding MaCTKM,UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         </WrapPanel>
                     </Grid>

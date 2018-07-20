@@ -4,10 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:QuanLyCaPhe.View"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              mc:Ignorable="d"
              DataContext="{StaticResource UnitViewModel}"
              Name="unitView">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="KeyDown">
+            <i:InvokeCommandAction Command="{Binding KeyDownCommand}" CommandParameter="{Binding ElementName=unitView}"></i:InvokeCommandAction>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
 
     <Grid Background="#293541">
         <Grid>
@@ -78,7 +88,9 @@
                             Height="50"
                             Background="{x:Null}"
                             BorderBrush="{x:Null}"
-                            Foreground="#F2F4F5" />
+                            Foreground="#F2F4F5">
+                                
+                            </Button>
 
                             <!--Help-->
                             <Button
@@ -126,6 +138,7 @@
                              Margin="35 5 15 5"
                              materialDesign:HintAssist.Hint="Mã đơn vị tính (*)"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             IsEnabled="{Binding IsEnabledUnitCode,UpdateSourceTrigger=PropertyChanged}"
                              Text="{Binding MaDonViTinh,UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         </WrapPanel>
                     </Grid>

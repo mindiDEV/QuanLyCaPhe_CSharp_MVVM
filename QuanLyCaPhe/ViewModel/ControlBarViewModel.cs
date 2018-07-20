@@ -19,12 +19,12 @@ namespace QuanLyCaPhe.ViewModel
         {
             CloseWindowCommand = new RelayCommand<UserControl>((p) => { return p == null ? false : true; }, (p) =>
             {
-                FrameworkElement mainWindow = GetParentWindow(p);
-                var window = (mainWindow as Window);
+                //FrameworkElement mainWindow = GetParentWindow(p);
+                //var window = (mainWindow as Window);
 
-                if (window != null)
+                if (MessageBox.Show("Do you want to exit?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    window.Close();
+                    Application.Current.Shutdown();
                 }
             });
 

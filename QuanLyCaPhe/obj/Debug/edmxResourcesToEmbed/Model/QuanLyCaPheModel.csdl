@@ -1,78 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="QuanLyCaPheModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-  <EntityContainer Name="QuanLyQuanCaPheEntities" annotation:LazyLoadingEnabled="true">
-    <FunctionImport Name="TimKiemThucDon" ReturnType="Collection(QuanLyCaPheModel.TimKiemThucDon_Result)">
-      <Parameter Name="TenMon" Mode="In" Type="String" />
-    </FunctionImport>
-    <EntitySet Name="Bans" EntityType="QuanLyCaPheModel.Ban" />
-    <EntitySet Name="ChiTietHoaDons" EntityType="QuanLyCaPheModel.ChiTietHoaDon" />
-    <EntitySet Name="ChiTietKhuyenMais" EntityType="QuanLyCaPheModel.ChiTietKhuyenMai" />
-    <EntitySet Name="ChuongTrinhKhuyenMais" EntityType="QuanLyCaPheModel.ChuongTrinhKhuyenMai" />
-    <EntitySet Name="DonViTinhs" EntityType="QuanLyCaPheModel.DonViTinh" />
-    <EntitySet Name="HoaDons" EntityType="QuanLyCaPheModel.HoaDon" />
-    <EntitySet Name="KhachHangs" EntityType="QuanLyCaPheModel.KhachHang" />
-    <EntitySet Name="LoaiKhachHangs" EntityType="QuanLyCaPheModel.LoaiKhachHang" />
-    <EntitySet Name="LoaiThucDons" EntityType="QuanLyCaPheModel.LoaiThucDon" />
-    <EntitySet Name="NhanViens" EntityType="QuanLyCaPheModel.NhanVien" />
-    <EntitySet Name="NhatKyDangNhaps" EntityType="QuanLyCaPheModel.NhatKyDangNhap" />
-    <EntitySet Name="NhomThucDons" EntityType="QuanLyCaPheModel.NhomThucDon" />
-    <EntitySet Name="sysdiagrams" EntityType="QuanLyCaPheModel.sysdiagram" />
-    <EntitySet Name="TaiKhoans" EntityType="QuanLyCaPheModel.TaiKhoan" />
-    <EntitySet Name="ThucDons" EntityType="QuanLyCaPheModel.ThucDon" />
-    <AssociationSet Name="FK_ChiTietHoaDon_HoaDon" Association="QuanLyCaPheModel.FK_ChiTietHoaDon_HoaDon">
-      <End Role="HoaDon" EntitySet="HoaDons" />
-      <End Role="ChiTietHoaDon" EntitySet="ChiTietHoaDons" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ChiTietHoaDon_ThucDon" Association="QuanLyCaPheModel.FK_ChiTietHoaDon_ThucDon">
-      <End Role="ThucDon" EntitySet="ThucDons" />
-      <End Role="ChiTietHoaDon" EntitySet="ChiTietHoaDons" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai" Association="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai">
-      <End Role="ChuongTrinhKhuyenMai" EntitySet="ChuongTrinhKhuyenMais" />
-      <End Role="ChiTietKhuyenMai" EntitySet="ChiTietKhuyenMais" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ChiTietKhuyenMai_ThucDon" Association="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ThucDon">
-      <End Role="ThucDon" EntitySet="ThucDons" />
-      <End Role="ChiTietKhuyenMai" EntitySet="ChiTietKhuyenMais" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ThucDon_DonViTinh" Association="QuanLyCaPheModel.FK_ThucDon_DonViTinh">
-      <End Role="DonViTinh" EntitySet="DonViTinhs" />
-      <End Role="ThucDon" EntitySet="ThucDons" />
-    </AssociationSet>
-    <AssociationSet Name="FK_HoaDon_KhachHang" Association="QuanLyCaPheModel.FK_HoaDon_KhachHang">
-      <End Role="KhachHang" EntitySet="KhachHangs" />
-      <End Role="HoaDon" EntitySet="HoaDons" />
-    </AssociationSet>
-    <AssociationSet Name="FK_HoaDon_NhanVien" Association="QuanLyCaPheModel.FK_HoaDon_NhanVien">
-      <End Role="NhanVien" EntitySet="NhanViens" />
-      <End Role="HoaDon" EntitySet="HoaDons" />
-    </AssociationSet>
-    <AssociationSet Name="FK_KhachHang_LoaiKhachHang" Association="QuanLyCaPheModel.FK_KhachHang_LoaiKhachHang">
-      <End Role="LoaiKhachHang" EntitySet="LoaiKhachHangs" />
-      <End Role="KhachHang" EntitySet="KhachHangs" />
-    </AssociationSet>
-    <AssociationSet Name="FK_NhomThucDon_LoaiThucDon" Association="QuanLyCaPheModel.FK_NhomThucDon_LoaiThucDon">
-      <End Role="LoaiThucDon" EntitySet="LoaiThucDons" />
-      <End Role="NhomThucDon" EntitySet="NhomThucDons" />
-    </AssociationSet>
-    <AssociationSet Name="FK_TaiKhoan_NhanVien" Association="QuanLyCaPheModel.FK_TaiKhoan_NhanVien">
-      <End Role="NhanVien" EntitySet="NhanViens" />
-      <End Role="TaiKhoan" EntitySet="TaiKhoans" />
-    </AssociationSet>
-    <AssociationSet Name="FK_NhatKyDangNhap_TaiKhoan" Association="QuanLyCaPheModel.FK_NhatKyDangNhap_TaiKhoan">
-      <End Role="TaiKhoan" EntitySet="TaiKhoans" />
-      <End Role="NhatKyDangNhap" EntitySet="NhatKyDangNhaps" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ThucDon_NhomThucDon" Association="QuanLyCaPheModel.FK_ThucDon_NhomThucDon">
-      <End Role="NhomThucDon" EntitySet="NhomThucDons" />
-      <End Role="ThucDon" EntitySet="ThucDons" />
-    </AssociationSet>
-  </EntityContainer>
-  <ComplexType Name="TimKiemThucDon_Result">
-    <Property Type="String" Name="MaMon" Nullable="false" MaxLength="200" />
-    <Property Type="String" Name="TenMon" Nullable="true" MaxLength="200" />
-    <Property Type="Decimal" Name="GiaBan" Nullable="true" Precision="19" />
-  </ComplexType>
   <EntityType Name="Ban">
     <Key>
       <PropertyRef Name="MaBan" />
@@ -86,96 +13,98 @@
       <PropertyRef Name="MaHoaDon" />
       <PropertyRef Name="MaMon" />
     </Key>
-    <Property Name="MaHoaDon" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="MaMon" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaHoaDon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="MaMon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="SoLuong" Type="Int32" />
     <Property Name="GhiChu" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="TongCong" Type="Decimal" Precision="19" Scale="4" />
-    <NavigationProperty Name="HoaDon" Relationship="QuanLyCaPheModel.FK_ChiTietHoaDon_HoaDon" FromRole="ChiTietHoaDon" ToRole="HoaDon" />
-    <NavigationProperty Name="ThucDon" Relationship="QuanLyCaPheModel.FK_ChiTietHoaDon_ThucDon" FromRole="ChiTietHoaDon" ToRole="ThucDon" />
+    <NavigationProperty Name="HoaDon" Relationship="Self.FK_ChiTietHoaDon_HoaDon" FromRole="ChiTietHoaDon" ToRole="HoaDon" />
+    <NavigationProperty Name="ThucDon" Relationship="Self.FK_ChiTietHoaDon_ThucDon" FromRole="ChiTietHoaDon" ToRole="ThucDon" />
   </EntityType>
   <EntityType Name="ChiTietKhuyenMai">
     <Key>
       <PropertyRef Name="MaChiTietKM" />
     </Key>
-    <Property Name="MaChiTietKM" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaChiTietKM" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="GiamGia" Type="Single" />
     <Property Name="SanPhamTang" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="MaCTKM" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="MaMon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="DieuKien" Type="Int32" />
-    <NavigationProperty Name="ChuongTrinhKhuyenMai" Relationship="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai" FromRole="ChiTietKhuyenMai" ToRole="ChuongTrinhKhuyenMai" />
-    <NavigationProperty Name="ThucDon" Relationship="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ThucDon" FromRole="ChiTietKhuyenMai" ToRole="ThucDon" />
+    <NavigationProperty Name="ChuongTrinhKhuyenMai" Relationship="Self.FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai" FromRole="ChiTietKhuyenMai" ToRole="ChuongTrinhKhuyenMai" />
+    <NavigationProperty Name="ThucDon" Relationship="Self.FK_ChiTietKhuyenMai_ThucDon" FromRole="ChiTietKhuyenMai" ToRole="ThucDon" />
   </EntityType>
   <EntityType Name="ChuongTrinhKhuyenMai">
     <Key>
       <PropertyRef Name="MaCTKM" />
     </Key>
-    <Property Name="MaCTKM" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaCTKM" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="TenCTKM" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="MoTaCTKM" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="NgayBDKM" Type="DateTime" Precision="0" />
     <Property Name="NgayKTKM" Type="DateTime" Precision="0" />
-    <NavigationProperty Name="ChiTietKhuyenMais" Relationship="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai" FromRole="ChuongTrinhKhuyenMai" ToRole="ChiTietKhuyenMai" />
+    <NavigationProperty Name="ChiTietKhuyenMais" Relationship="Self.FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai" FromRole="ChuongTrinhKhuyenMai" ToRole="ChiTietKhuyenMai" />
   </EntityType>
   <EntityType Name="DonViTinh">
     <Key>
       <PropertyRef Name="MaDonViTinh" />
     </Key>
-    <Property Name="MaDonViTinh" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaDonViTinh" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="TenDonViTinh" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="GhiChu" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="ThucDons" Relationship="QuanLyCaPheModel.FK_ThucDon_DonViTinh" FromRole="DonViTinh" ToRole="ThucDon" />
+    <NavigationProperty Name="ThucDons" Relationship="Self.FK_ThucDon_DonViTinh" FromRole="DonViTinh" ToRole="ThucDon" />
   </EntityType>
   <EntityType Name="HoaDon">
     <Key>
       <PropertyRef Name="MaHoaDon" />
     </Key>
-    <Property Name="MaHoaDon" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaHoaDon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="NgayXuatHoaDon" Type="DateTime" Precision="0" />
+    <Property Name="TienKhachTra" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="TienThua" Type="Decimal" Precision="19" Scale="4" />
     <Property Name="TongHoaDon" Type="Decimal" Precision="19" Scale="4" />
     <Property Name="TrangThai" Type="Boolean" />
-    <Property Name="MaNhanVien" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaNhanVien" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="MaKhachHang" Type="Int32" Nullable="false" />
-    <NavigationProperty Name="ChiTietHoaDons" Relationship="QuanLyCaPheModel.FK_ChiTietHoaDon_HoaDon" FromRole="HoaDon" ToRole="ChiTietHoaDon" />
-    <NavigationProperty Name="KhachHang" Relationship="QuanLyCaPheModel.FK_HoaDon_KhachHang" FromRole="HoaDon" ToRole="KhachHang" />
-    <NavigationProperty Name="NhanVien" Relationship="QuanLyCaPheModel.FK_HoaDon_NhanVien" FromRole="HoaDon" ToRole="NhanVien" />
+    <NavigationProperty Name="ChiTietHoaDons" Relationship="Self.FK_ChiTietHoaDon_HoaDon" FromRole="HoaDon" ToRole="ChiTietHoaDon" />
+    <NavigationProperty Name="KhachHang" Relationship="Self.FK_HoaDon_KhachHang" FromRole="HoaDon" ToRole="KhachHang" />
+    <NavigationProperty Name="NhanVien" Relationship="Self.FK_HoaDon_NhanVien" FromRole="HoaDon" ToRole="NhanVien" />
   </EntityType>
   <EntityType Name="KhachHang">
     <Key>
       <PropertyRef Name="MaKhachHang" />
     </Key>
     <Property Name="MaKhachHang" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="TenKhachHang" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="TenKhachHang" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="DiaChi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="GioiTinh" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="DienThoaiDiDong" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <Property Name="MaLoaiKhachHang" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="HoaDons" Relationship="QuanLyCaPheModel.FK_HoaDon_KhachHang" FromRole="KhachHang" ToRole="HoaDon" />
-    <NavigationProperty Name="LoaiKhachHang" Relationship="QuanLyCaPheModel.FK_KhachHang_LoaiKhachHang" FromRole="KhachHang" ToRole="LoaiKhachHang" />
+    <Property Name="MaLoaiKhachHang" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="HoaDons" Relationship="Self.FK_HoaDon_KhachHang" FromRole="KhachHang" ToRole="HoaDon" />
+    <NavigationProperty Name="LoaiKhachHang" Relationship="Self.FK_KhachHang_LoaiKhachHang" FromRole="KhachHang" ToRole="LoaiKhachHang" />
   </EntityType>
   <EntityType Name="LoaiKhachHang">
     <Key>
       <PropertyRef Name="MaLoaiKhachHang" />
     </Key>
-    <Property Name="MaLoaiKhachHang" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaLoaiKhachHang" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="TenLoaiKhachHang" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="GhiChu" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="KhachHangs" Relationship="QuanLyCaPheModel.FK_KhachHang_LoaiKhachHang" FromRole="LoaiKhachHang" ToRole="KhachHang" />
+    <NavigationProperty Name="KhachHangs" Relationship="Self.FK_KhachHang_LoaiKhachHang" FromRole="LoaiKhachHang" ToRole="KhachHang" />
   </EntityType>
   <EntityType Name="LoaiThucDon">
     <Key>
       <PropertyRef Name="MaLoaiThucDon" />
     </Key>
-    <Property Name="MaLoaiThucDon" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaLoaiThucDon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="TenLoaiThucDon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="NhomThucDons" Relationship="QuanLyCaPheModel.FK_NhomThucDon_LoaiThucDon" FromRole="LoaiThucDon" ToRole="NhomThucDon" />
+    <NavigationProperty Name="NhomThucDons" Relationship="Self.FK_NhomThucDon_LoaiThucDon" FromRole="LoaiThucDon" ToRole="NhomThucDon" />
   </EntityType>
   <EntityType Name="NhanVien">
     <Key>
       <PropertyRef Name="MaNhanVien" />
     </Key>
-    <Property Name="MaNhanVien" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaNhanVien" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="TenNhanVien" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="GioiTinh" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="DiaChi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
@@ -185,8 +114,8 @@
     <Property Name="NgaySinh" Type="DateTime" Precision="0" />
     <Property Name="DienThoaiDiDong" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
     <Property Name="TrangThaiLamViec" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="HoaDons" Relationship="QuanLyCaPheModel.FK_HoaDon_NhanVien" FromRole="NhanVien" ToRole="HoaDon" />
-    <NavigationProperty Name="TaiKhoans" Relationship="QuanLyCaPheModel.FK_TaiKhoan_NhanVien" FromRole="NhanVien" ToRole="TaiKhoan" />
+    <NavigationProperty Name="HoaDons" Relationship="Self.FK_HoaDon_NhanVien" FromRole="NhanVien" ToRole="HoaDon" />
+    <NavigationProperty Name="TaiKhoans" Relationship="Self.FK_TaiKhoan_NhanVien" FromRole="NhanVien" ToRole="TaiKhoan" />
   </EntityType>
   <EntityType Name="NhatKyDangNhap">
     <Key>
@@ -195,25 +124,25 @@
     <Property Name="MaNhatKy" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="NgayDangNhap" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="NgayDangXuat" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="TenTaiKhoan" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="TaiKhoan" Relationship="QuanLyCaPheModel.FK_NhatKyDangNhap_TaiKhoan" FromRole="NhatKyDangNhap" ToRole="TaiKhoan" />
+    <Property Name="TenTaiKhoan" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="TaiKhoan" Relationship="Self.FK_NhatKyDangNhap_TaiKhoan" FromRole="NhatKyDangNhap" ToRole="TaiKhoan" />
   </EntityType>
   <EntityType Name="NhomThucDon">
     <Key>
       <PropertyRef Name="MaNhomThucDon" />
     </Key>
-    <Property Name="MaNhomThucDon" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaNhomThucDon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="TenNhomThucDon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="GhiChu" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="MaLoaiThucDon" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="LoaiThucDon" Relationship="QuanLyCaPheModel.FK_NhomThucDon_LoaiThucDon" FromRole="NhomThucDon" ToRole="LoaiThucDon" />
-    <NavigationProperty Name="ThucDons" Relationship="QuanLyCaPheModel.FK_ThucDon_NhomThucDon" FromRole="NhomThucDon" ToRole="ThucDon" />
+    <Property Name="MaLoaiThucDon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="LoaiThucDon" Relationship="Self.FK_NhomThucDon_LoaiThucDon" FromRole="NhomThucDon" ToRole="LoaiThucDon" />
+    <NavigationProperty Name="ThucDons" Relationship="Self.FK_ThucDon_NhomThucDon" FromRole="NhomThucDon" ToRole="ThucDon" />
   </EntityType>
   <EntityType Name="sysdiagram">
     <Key>
       <PropertyRef Name="diagram_id" />
     </Key>
-    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="principal_id" Type="Int32" Nullable="false" />
     <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="version" Type="Int32" />
@@ -223,31 +152,32 @@
     <Key>
       <PropertyRef Name="TenTaiKhoan" />
     </Key>
-    <Property Name="TenTaiKhoan" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="MatKhau" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="TenTaiKhoan" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="MatKhau" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="MaNhanVien" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="NhanVien" Relationship="QuanLyCaPheModel.FK_TaiKhoan_NhanVien" FromRole="TaiKhoan" ToRole="NhanVien" />
-    <NavigationProperty Name="NhatKyDangNhaps" Relationship="QuanLyCaPheModel.FK_NhatKyDangNhap_TaiKhoan" FromRole="TaiKhoan" ToRole="NhatKyDangNhap" />
+    <Property Name="QRCode" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="NhanVien" Relationship="Self.FK_TaiKhoan_NhanVien" FromRole="TaiKhoan" ToRole="NhanVien" />
+    <NavigationProperty Name="NhatKyDangNhaps" Relationship="Self.FK_NhatKyDangNhap_TaiKhoan" FromRole="TaiKhoan" ToRole="NhatKyDangNhap" />
   </EntityType>
   <EntityType Name="ThucDon">
     <Key>
       <PropertyRef Name="MaMon" />
     </Key>
-    <Property Name="MaMon" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="MaMon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="TenMon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="GiaBan" Type="Decimal" Precision="19" Scale="4" />
     <Property Name="HinhDaiDien" Type="Binary" MaxLength="Max" FixedLength="false" />
     <Property Name="GhiChu" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="MaDonViTinh" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="MaNhomThucDon" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="ChiTietHoaDons" Relationship="QuanLyCaPheModel.FK_ChiTietHoaDon_ThucDon" FromRole="ThucDon" ToRole="ChiTietHoaDon" />
-    <NavigationProperty Name="ChiTietKhuyenMais" Relationship="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ThucDon" FromRole="ThucDon" ToRole="ChiTietKhuyenMai" />
-    <NavigationProperty Name="DonViTinh" Relationship="QuanLyCaPheModel.FK_ThucDon_DonViTinh" FromRole="ThucDon" ToRole="DonViTinh" />
-    <NavigationProperty Name="NhomThucDon" Relationship="QuanLyCaPheModel.FK_ThucDon_NhomThucDon" FromRole="ThucDon" ToRole="NhomThucDon" />
+    <Property Name="MaNhomThucDon" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="ChiTietHoaDons" Relationship="Self.FK_ChiTietHoaDon_ThucDon" FromRole="ThucDon" ToRole="ChiTietHoaDon" />
+    <NavigationProperty Name="ChiTietKhuyenMais" Relationship="Self.FK_ChiTietKhuyenMai_ThucDon" FromRole="ThucDon" ToRole="ChiTietKhuyenMai" />
+    <NavigationProperty Name="DonViTinh" Relationship="Self.FK_ThucDon_DonViTinh" FromRole="ThucDon" ToRole="DonViTinh" />
+    <NavigationProperty Name="NhomThucDon" Relationship="Self.FK_ThucDon_NhomThucDon" FromRole="ThucDon" ToRole="NhomThucDon" />
   </EntityType>
   <Association Name="FK_ChiTietHoaDon_HoaDon">
-    <End Type="QuanLyCaPheModel.HoaDon" Role="HoaDon" Multiplicity="1" />
-    <End Type="QuanLyCaPheModel.ChiTietHoaDon" Role="ChiTietHoaDon" Multiplicity="*" />
+    <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="1" />
+    <End Role="ChiTietHoaDon" Type="Self.ChiTietHoaDon" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="HoaDon">
         <PropertyRef Name="MaHoaDon" />
@@ -258,8 +188,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ChiTietHoaDon_ThucDon">
-    <End Type="QuanLyCaPheModel.ThucDon" Role="ThucDon" Multiplicity="1" />
-    <End Type="QuanLyCaPheModel.ChiTietHoaDon" Role="ChiTietHoaDon" Multiplicity="*" />
+    <End Role="ThucDon" Type="Self.ThucDon" Multiplicity="1" />
+    <End Role="ChiTietHoaDon" Type="Self.ChiTietHoaDon" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ThucDon">
         <PropertyRef Name="MaMon" />
@@ -270,8 +200,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai">
-    <End Type="QuanLyCaPheModel.ChuongTrinhKhuyenMai" Role="ChuongTrinhKhuyenMai" Multiplicity="0..1" />
-    <End Type="QuanLyCaPheModel.ChiTietKhuyenMai" Role="ChiTietKhuyenMai" Multiplicity="*" />
+    <End Role="ChuongTrinhKhuyenMai" Type="Self.ChuongTrinhKhuyenMai" Multiplicity="0..1" />
+    <End Role="ChiTietKhuyenMai" Type="Self.ChiTietKhuyenMai" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ChuongTrinhKhuyenMai">
         <PropertyRef Name="MaCTKM" />
@@ -282,8 +212,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ChiTietKhuyenMai_ThucDon">
-    <End Type="QuanLyCaPheModel.ThucDon" Role="ThucDon" Multiplicity="0..1" />
-    <End Type="QuanLyCaPheModel.ChiTietKhuyenMai" Role="ChiTietKhuyenMai" Multiplicity="*" />
+    <End Role="ThucDon" Type="Self.ThucDon" Multiplicity="0..1" />
+    <End Role="ChiTietKhuyenMai" Type="Self.ChiTietKhuyenMai" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ThucDon">
         <PropertyRef Name="MaMon" />
@@ -294,8 +224,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ThucDon_DonViTinh">
-    <End Type="QuanLyCaPheModel.DonViTinh" Role="DonViTinh" Multiplicity="0..1" />
-    <End Type="QuanLyCaPheModel.ThucDon" Role="ThucDon" Multiplicity="*" />
+    <End Role="DonViTinh" Type="Self.DonViTinh" Multiplicity="0..1" />
+    <End Role="ThucDon" Type="Self.ThucDon" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="DonViTinh">
         <PropertyRef Name="MaDonViTinh" />
@@ -306,8 +236,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_HoaDon_KhachHang">
-    <End Type="QuanLyCaPheModel.KhachHang" Role="KhachHang" Multiplicity="1" />
-    <End Type="QuanLyCaPheModel.HoaDon" Role="HoaDon" Multiplicity="*" />
+    <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="1" />
+    <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="KhachHang">
         <PropertyRef Name="MaKhachHang" />
@@ -318,8 +248,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_HoaDon_NhanVien">
-    <End Type="QuanLyCaPheModel.NhanVien" Role="NhanVien" Multiplicity="1" />
-    <End Type="QuanLyCaPheModel.HoaDon" Role="HoaDon" Multiplicity="*" />
+    <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="1" />
+    <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="NhanVien">
         <PropertyRef Name="MaNhanVien" />
@@ -330,8 +260,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_KhachHang_LoaiKhachHang">
-    <End Type="QuanLyCaPheModel.LoaiKhachHang" Role="LoaiKhachHang" Multiplicity="1" />
-    <End Type="QuanLyCaPheModel.KhachHang" Role="KhachHang" Multiplicity="*" />
+    <End Role="LoaiKhachHang" Type="Self.LoaiKhachHang" Multiplicity="1" />
+    <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="LoaiKhachHang">
         <PropertyRef Name="MaLoaiKhachHang" />
@@ -342,8 +272,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_NhomThucDon_LoaiThucDon">
-    <End Type="QuanLyCaPheModel.LoaiThucDon" Role="LoaiThucDon" Multiplicity="1" />
-    <End Type="QuanLyCaPheModel.NhomThucDon" Role="NhomThucDon" Multiplicity="*" />
+    <End Role="LoaiThucDon" Type="Self.LoaiThucDon" Multiplicity="1" />
+    <End Role="NhomThucDon" Type="Self.NhomThucDon" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="LoaiThucDon">
         <PropertyRef Name="MaLoaiThucDon" />
@@ -354,8 +284,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_TaiKhoan_NhanVien">
-    <End Type="QuanLyCaPheModel.NhanVien" Role="NhanVien" Multiplicity="0..1" />
-    <End Type="QuanLyCaPheModel.TaiKhoan" Role="TaiKhoan" Multiplicity="*" />
+    <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="0..1" />
+    <End Role="TaiKhoan" Type="Self.TaiKhoan" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="NhanVien">
         <PropertyRef Name="MaNhanVien" />
@@ -366,8 +296,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_NhatKyDangNhap_TaiKhoan">
-    <End Type="QuanLyCaPheModel.TaiKhoan" Role="TaiKhoan" Multiplicity="1" />
-    <End Type="QuanLyCaPheModel.NhatKyDangNhap" Role="NhatKyDangNhap" Multiplicity="*" />
+    <End Role="TaiKhoan" Type="Self.TaiKhoan" Multiplicity="1" />
+    <End Role="NhatKyDangNhap" Type="Self.NhatKyDangNhap" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="TaiKhoan">
         <PropertyRef Name="TenTaiKhoan" />
@@ -378,8 +308,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ThucDon_NhomThucDon">
-    <End Type="QuanLyCaPheModel.NhomThucDon" Role="NhomThucDon" Multiplicity="1" />
-    <End Type="QuanLyCaPheModel.ThucDon" Role="ThucDon" Multiplicity="*" />
+    <End Role="NhomThucDon" Type="Self.NhomThucDon" Multiplicity="1" />
+    <End Role="ThucDon" Type="Self.ThucDon" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="NhomThucDon">
         <PropertyRef Name="MaNhomThucDon" />
@@ -389,4 +319,91 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityContainer Name="QuanLyCaPheEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Bans" EntityType="Self.Ban" />
+    <EntitySet Name="ChiTietHoaDons" EntityType="Self.ChiTietHoaDon" />
+    <EntitySet Name="ChiTietKhuyenMais" EntityType="Self.ChiTietKhuyenMai" />
+    <EntitySet Name="ChuongTrinhKhuyenMais" EntityType="Self.ChuongTrinhKhuyenMai" />
+    <EntitySet Name="DonViTinhs" EntityType="Self.DonViTinh" />
+    <EntitySet Name="HoaDons" EntityType="Self.HoaDon" />
+    <EntitySet Name="KhachHangs" EntityType="Self.KhachHang" />
+    <EntitySet Name="LoaiKhachHangs" EntityType="Self.LoaiKhachHang" />
+    <EntitySet Name="LoaiThucDons" EntityType="Self.LoaiThucDon" />
+    <EntitySet Name="NhanViens" EntityType="Self.NhanVien" />
+    <EntitySet Name="NhatKyDangNhaps" EntityType="Self.NhatKyDangNhap" />
+    <EntitySet Name="NhomThucDons" EntityType="Self.NhomThucDon" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="TaiKhoans" EntityType="Self.TaiKhoan" />
+    <EntitySet Name="ThucDons" EntityType="Self.ThucDon" />
+    <AssociationSet Name="FK_ChiTietHoaDon_HoaDon" Association="Self.FK_ChiTietHoaDon_HoaDon">
+      <End Role="HoaDon" EntitySet="HoaDons" />
+      <End Role="ChiTietHoaDon" EntitySet="ChiTietHoaDons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ChiTietHoaDon_ThucDon" Association="Self.FK_ChiTietHoaDon_ThucDon">
+      <End Role="ThucDon" EntitySet="ThucDons" />
+      <End Role="ChiTietHoaDon" EntitySet="ChiTietHoaDons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai" Association="Self.FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai">
+      <End Role="ChuongTrinhKhuyenMai" EntitySet="ChuongTrinhKhuyenMais" />
+      <End Role="ChiTietKhuyenMai" EntitySet="ChiTietKhuyenMais" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ChiTietKhuyenMai_ThucDon" Association="Self.FK_ChiTietKhuyenMai_ThucDon">
+      <End Role="ThucDon" EntitySet="ThucDons" />
+      <End Role="ChiTietKhuyenMai" EntitySet="ChiTietKhuyenMais" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThucDon_DonViTinh" Association="Self.FK_ThucDon_DonViTinh">
+      <End Role="DonViTinh" EntitySet="DonViTinhs" />
+      <End Role="ThucDon" EntitySet="ThucDons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_HoaDon_KhachHang" Association="Self.FK_HoaDon_KhachHang">
+      <End Role="KhachHang" EntitySet="KhachHangs" />
+      <End Role="HoaDon" EntitySet="HoaDons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_HoaDon_NhanVien" Association="Self.FK_HoaDon_NhanVien">
+      <End Role="NhanVien" EntitySet="NhanViens" />
+      <End Role="HoaDon" EntitySet="HoaDons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_KhachHang_LoaiKhachHang" Association="Self.FK_KhachHang_LoaiKhachHang">
+      <End Role="LoaiKhachHang" EntitySet="LoaiKhachHangs" />
+      <End Role="KhachHang" EntitySet="KhachHangs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NhomThucDon_LoaiThucDon" Association="Self.FK_NhomThucDon_LoaiThucDon">
+      <End Role="LoaiThucDon" EntitySet="LoaiThucDons" />
+      <End Role="NhomThucDon" EntitySet="NhomThucDons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TaiKhoan_NhanVien" Association="Self.FK_TaiKhoan_NhanVien">
+      <End Role="NhanVien" EntitySet="NhanViens" />
+      <End Role="TaiKhoan" EntitySet="TaiKhoans" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NhatKyDangNhap_TaiKhoan" Association="Self.FK_NhatKyDangNhap_TaiKhoan">
+      <End Role="TaiKhoan" EntitySet="TaiKhoans" />
+      <End Role="NhatKyDangNhap" EntitySet="NhatKyDangNhaps" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThucDon_NhomThucDon" Association="Self.FK_ThucDon_NhomThucDon">
+      <End Role="NhomThucDon" EntitySet="NhomThucDons" />
+      <End Role="ThucDon" EntitySet="ThucDons" />
+    </AssociationSet>
+    <FunctionImport Name="InPhieuThanhToan" ReturnType="Collection(QuanLyCaPheModel.InPhieuThanhToan_Result)">
+      <Parameter Name="MaHoaDon" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="TimKiemThucDon" ReturnType="Collection(QuanLyCaPheModel.TimKiemThucDon_Result)">
+      <Parameter Name="TenMon" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="InPhieuThanhToan_Result">
+    <Property Type="DateTime" Name="NgayXuatHoaDon" Nullable="true" />
+    <Property Type="String" Name="TenMon" Nullable="true" MaxLength="200" />
+    <Property Type="String" Name="TenNhanVien" Nullable="true" MaxLength="200" />
+    <Property Type="Decimal" Name="TienKhachTra" Nullable="true" Precision="19" />
+    <Property Type="Decimal" Name="TienThua" Nullable="true" Precision="19" />
+    <Property Type="Int32" Name="SoLuong" Nullable="true" />
+    <Property Type="Decimal" Name="GiaBan" Nullable="true" Precision="19" />
+    <Property Type="Decimal" Name="TongCong" Nullable="true" Precision="19" />
+    <Property Type="Decimal" Name="TongHoaDon" Nullable="true" Precision="19" />
+  </ComplexType>
+  <ComplexType Name="TimKiemThucDon_Result">
+    <Property Type="String" Name="MaMon" Nullable="false" MaxLength="200" />
+    <Property Type="String" Name="TenMon" Nullable="true" MaxLength="200" />
+    <Property Type="Decimal" Name="GiaBan" Nullable="true" Precision="19" />
+  </ComplexType>
 </Schema>

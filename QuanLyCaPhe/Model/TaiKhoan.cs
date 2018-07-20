@@ -23,6 +23,7 @@ namespace QuanLyCaPhe.Model
         public string TenTaiKhoan { get; set; }
         public string MatKhau { get; set; }
         public string MaNhanVien { get; set; }
+        public string QRCode { get; set; }
     
         public virtual NhanVien NhanVien { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

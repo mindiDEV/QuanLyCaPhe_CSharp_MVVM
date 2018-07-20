@@ -11,6 +11,8 @@
              Name="billView"
              Height="800">
 
+    
+
     <UserControl.Resources>
         <Style x:Key="VerticalSeparatorStyle"
        TargetType="{x:Type Separator}"
@@ -30,6 +32,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
     </UserControl.Resources>
 
 
@@ -186,15 +189,18 @@
                             <materialDesign:Card Background="Aqua" Width="550" Height="40" Margin="10 10 0 0" HorizontalAlignment="Left">
                                 <WrapPanel>
                                     <Button 
-                                        Background="{x:Null}" 
+                                        Background="{x:Null}"
+                                        Width="180"
+                                        Height="30"
                                         Foreground="Black" 
                                         BorderBrush="{x:Null}"
                                         Command="{Binding FavoriteMenuCommand,UpdateSourceTrigger=PropertyChanged}" 
-                                        CommandParameter="{Binding}">
+                                        CommandParameter="{Binding}"
+                                        Style="{DynamicResource SimpleButton}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition></ColumnDefinition>
-                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="auto"></ColumnDefinition>
                                             </Grid.ColumnDefinitions>
                                             <Grid Grid.Column="0">
                                                 <materialDesign:PackIcon
@@ -204,20 +210,23 @@
                                                         Margin="0 0 10 0" />
                                             </Grid>
                                             <Grid Grid.Column="1">
-                                                <TextBlock Text="Hay dùng" HorizontalAlignment="Right" ></TextBlock>
+                                                <TextBlock Text="Ưa Thích" HorizontalAlignment="Right" ></TextBlock>
                                             </Grid>
                                         </Grid>
                                     </Button>
 
                                     <Button Background="{x:Null}"
-                                                Foreground="Black"
-                                                BorderBrush="{x:Null}"
-                                                Command="{Binding FoodListCommand,UpdateSourceTrigger=PropertyChanged}"
-                                                CommandParameter="{Binding}">
+                                            Width="180"
+                                            Height="30"
+                                            Foreground="Black"
+                                            Style="{DynamicResource SimpleButton}"
+                                            BorderBrush="{x:Null}"
+                                            Command="{Binding FoodListCommand,UpdateSourceTrigger=PropertyChanged}"
+                                            CommandParameter="{Binding}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition></ColumnDefinition>
-                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="auto"></ColumnDefinition>
                                             </Grid.ColumnDefinitions>
                                             <Grid Grid.Column="0">
                                                 <materialDesign:PackIcon
@@ -230,17 +239,21 @@
                                                 <TextBlock Text="Món ăn" HorizontalAlignment="Right" ></TextBlock>
                                             </Grid>
                                         </Grid>
+                                        
                                     </Button>
 
                                     <Button Background="{x:Null}"
-                                                Foreground="Black"
-                                                BorderBrush="{x:Null}"
-                                                Command="{Binding DrinkListCommand, UpdateSourceTrigger=PropertyChanged}"
-                                                CommandParameter="{Binding}">
+                                            Width="180"
+                                            Height="30"
+                                            Style="{DynamicResource SimpleButton}"
+                                            Foreground="Black"
+                                            BorderBrush="{x:Null}"
+                                            Command="{Binding DrinkListCommand, UpdateSourceTrigger=PropertyChanged}"
+                                            CommandParameter="{Binding}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition></ColumnDefinition>
-                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="auto"></ColumnDefinition>
                                             </Grid.ColumnDefinitions>
                                             <Grid Grid.Column="0">
                                                 <materialDesign:PackIcon
@@ -255,6 +268,7 @@
                                         </Grid>
                                     </Button>
                                 </WrapPanel>
+                                
                             </materialDesign:Card>
                         </Grid>
                         <!--Tìm kiếm-->
@@ -263,7 +277,7 @@
                                 <ColumnDefinition Width="323*"/>
                                 <ColumnDefinition Width="307*"/>
                             </Grid.ColumnDefinitions>
-                            <materialDesign:ColorZone Background="#DEDEDE" Grid.ColumnSpan="2">
+                            <materialDesign:ColorZone Background="Transparent" Grid.ColumnSpan="2">
                                 <DockPanel>
                                     <StackPanel
                                             Orientation="Horizontal"
@@ -319,7 +333,7 @@
                         <Grid Grid.Row="4">
                             <Grid>
                                 <!--<Border BorderBrush="Black" BorderThickness="1" Margin="10 20 10 20"></Border>-->
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10 20 10 50">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10 20 10 50" Style="{DynamicResource SimpleScrollViewer}">
                                     <ItemsControl x:Name="activitiesControl"
                                                   Margin="10 10 -15 0"
                                                   Width="600"
@@ -356,6 +370,7 @@
                                                             <TextBlock VerticalAlignment="Center"
                                                                        Foreground="Black"
                                                                        FontFamily="Arial"
+                                                                       FontSize="14"
                                                                        HorizontalAlignment="Center" Margin="0 7 0 7"
                                                                        Text="{Binding TenMon}">
                                                             </TextBlock>
@@ -367,7 +382,7 @@
                                                                        FontFamily="Arial"
                                                                        HorizontalAlignment="Center"
                                                                        Margin="0 5 0 5"
-                                                                       FontSize="10"
+                                                                       FontSize="11"
                                                                        FontWeight="DemiBold"
                                                                        Text="{Binding GiaBan,StringFormat={}{0:n0} VND}">
                                                             </TextBlock>
@@ -558,7 +573,7 @@
                             <Grid Grid.Row="0">
                                 <WrapPanel>
                                     <TextBlock
-                                            Text="Tiền khách trả :"
+                                            Text="Tiền khách đưa :"
                                             Margin="30 15 30 0"
                                             FontSize="15"
                                             FontWeight="Bold"
@@ -586,7 +601,7 @@
                                     </TextBox>
                                     <WrapPanel>
                                         <TextBlock
-                                            Text="Tiền thừa :"
+                                            Text="Trả lại khách :"
                                             Margin="30 20 30 0"
                                             FontSize="15"
                                             FontWeight="Bold"
@@ -646,7 +661,7 @@
                             <Grid Grid.Row="2">
                                 <WrapPanel>
                                     <TextBlock
-                                            Text="THANH TOÁN :"
+                                            Text="TỔNG THANH TOÁN :"
                                             Margin="30 15 30 0"
                                             FontSize="18"
                                             FontWeight="Bold"

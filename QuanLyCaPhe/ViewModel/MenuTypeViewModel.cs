@@ -22,7 +22,26 @@ namespace QuanLyCaPhe.ViewModel
 
         private LoaiThucDon _SelectedItem;
 
-        public LoaiThucDon SelectedItem { get => _SelectedItem; set { _SelectedItem = value; RaisePropertyChanged(); if (SelectedItem != null) { MaLoaiThucDon = SelectedItem.MaLoaiThucDon; TenLoaiThucDon = SelectedItem.TenLoaiThucDon; } } }
+        public LoaiThucDon SelectedItem
+        {
+            get => _SelectedItem;
+            set
+            {
+                _SelectedItem = value;
+                RaisePropertyChanged();
+                if (SelectedItem != null)
+                {
+                    MaLoaiThucDon = SelectedItem.MaLoaiThucDon;
+                    TenLoaiThucDon = SelectedItem.TenLoaiThucDon;
+                    IsEnabledMenuTypeCode = false;
+                }
+            }
+        }
+
+        private bool _isEnabledMenuTypeCode;
+        public bool IsEnabledMenuTypeCode { get => _isEnabledMenuTypeCode; set { if (_isEnabledMenuTypeCode != value) _isEnabledMenuTypeCode = value; RaisePropertyChanged("IsEnabledMenuTypeCode"); } }
+
+        
 
         #endregion Property
 
@@ -47,6 +66,9 @@ namespace QuanLyCaPhe.ViewModel
 
         public MenuTypeViewModel()
         {
+
+            IsEnabledMenuTypeCode = true;
+
             MaLoaiThucDon = "LTD";
 
             List = new ObservableCollection<LoaiThucDon>(DataProvider.Instance.Database.LoaiThucDons);
@@ -62,7 +84,7 @@ namespace QuanLyCaPhe.ViewModel
                     return false;
                 }
 
-                var list = DataProvider.Instance.Database.LoaiThucDons.Where(x => x.TenLoaiThucDon == TenLoaiThucDon && x.MaLoaiThucDon == MaLoaiThucDon).Count();
+                var list = DataProvider.Instance.Database.LoaiThucDons.Where(x => x.MaLoaiThucDon == MaLoaiThucDon).Count();
                 if (list != 0)
                 {
                     return false;
@@ -95,10 +117,9 @@ namespace QuanLyCaPhe.ViewModel
                   var res = DataProvider.Instance.Database.LoaiThucDons.SingleOrDefault(x => x.MaLoaiThucDon == SelectedItem.MaLoaiThucDon);
                   if (res != null)
                   {
-                      res.MaLoaiThucDon = MaLoaiThucDon;
+                      IsEnabledMenuTypeCode = false;
                       res.TenLoaiThucDon = TenLoaiThucDon;
                       DataProvider.Instance.Database.SaveChanges();
-                      RaisePropertyChanged("List");
                       ClearTextBox();
                   }
               });
@@ -154,12 +175,14 @@ namespace QuanLyCaPhe.ViewModel
 
         #endregion Constructor
 
-        private bool ClearTextBox()
+        public bool ClearTextBox()
         {
-            if (TenLoaiThucDon != null && MaLoaiThucDon != null)
+            if (MaLoaiThucDon != null)
             {
                 MaLoaiThucDon = "LTD";
                 TenLoaiThucDon = string.Empty;
+                SelectedItem = null;
+                IsEnabledMenuTypeCode = true;
                 return true;
             }
             return false;

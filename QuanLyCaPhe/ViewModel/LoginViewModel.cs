@@ -1,6 +1,8 @@
-﻿using QuanLyCaPhe.Model;
+﻿using QuanLyCaPhe.ClassSupport;
+using QuanLyCaPhe.Model;
 using QuanLyCaPhe.View;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
@@ -22,7 +24,9 @@ namespace QuanLyCaPhe.ViewModel
         private static string _maNhanVien;
         public bool IsLogin;
 
-        public string TenTaiKhoan { get => _tenTaiKhoan; set { _tenTaiKhoan = value; } }
+        
+
+        public string TenTaiKhoan { get => _tenTaiKhoan; set { _tenTaiKhoan = value; RaisePropertyChanged(); } }
         public string MatKhau { get => _matKhau; set { _matKhau = value; RaisePropertyChanged(); } }
         public static string MaNhanVien { get => _maNhanVien; set { _maNhanVien = value; } }
 
@@ -38,6 +42,8 @@ namespace QuanLyCaPhe.ViewModel
 
         public ICommand LoginByQrCode { get; set; }
 
+        public PasswordBox getPasswordBox { get; set; }
+
         #endregion Command Properties
 
         #region Constructor
@@ -47,6 +53,7 @@ namespace QuanLyCaPhe.ViewModel
             IsLogin = false;
             TenTaiKhoan = "";
             MatKhau = "";
+           
             LoginWindowCommand = new RelayCommand<Window>((p) => { return true; }, (p) =>
             {
                 tmp = p;
@@ -59,13 +66,20 @@ namespace QuanLyCaPhe.ViewModel
                 p.Close();
             });
 
+           
+
             PasswordChangedCommand = new RelayCommand<PasswordBox>((p) =>
             {
+                getPasswordBox = p;
                 return true;
             },
             (p) =>
             {
                 MatKhau = p.Password;
+                
+
+
+
             });
 
             LoginByQrCode = new RelayCommand<Window>((p) =>
@@ -76,7 +90,31 @@ namespace QuanLyCaPhe.ViewModel
             (p) =>
             {
                 ShowWebcamView(p);
+                if(!string.IsNullOrEmpty(WebcamViewModel.getDecoded))
+                {
+                    List<string> listDecoded = WebcamViewModel.getDecoded.Split(' ').ToList();
+                    string _taiKhoanQrCode = listDecoded[0];
+                    string _matKhauQrCode = listDecoded[1];
+                    var checkQrCode = DataProvider.Instance.Database.TaiKhoans.Where(x => x.QRCode == _matKhauQrCode && x.TenTaiKhoan == _taiKhoanQrCode).ToList();
+                    if(checkQrCode.Count()!=0)
+                    {
+                        IsLogin = true;
+
+                        tmp.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Đăng nhập thất bại");
+                        IsLogin = false;
+                        
+                        return;
+                        
+                    }
+                }
+                
             });
+
+
         }
 
         #endregion Constructor
@@ -87,13 +125,13 @@ namespace QuanLyCaPhe.ViewModel
         {
             WebcamView webcamView = new WebcamView();
             webcamView.ShowDialog();
-            var webcamViewVM = webcamView.DataContext as WebcamViewModel;
-            if (webcamViewVM.IsLoginByQrCode)
-            {
-                IsLogin = true;
+            //var webcamViewVM = webcamView.DataContext as WebcamViewModel;
+            //if (webcamViewVM.IsLoginByQrCode)
+            //{
+            //    IsLogin = true;
 
-                tmp.Close();
-            }
+            //    tmp.Close();
+            //}
         }
 
         private void LoginWindow(Window p)
@@ -128,10 +166,19 @@ namespace QuanLyCaPhe.ViewModel
             }
             else
             {
-                IsLogin = false;
-                WarningDialogs("Sai tên đăng nhập hoặc mật khẩu");
-                return false;
+                if(IsLogin == false)
+                {
+
+                    WarningDialogs("Sai tên đăng nhập hoặc mật khẩu");
+                    TenTaiKhoan = "";
+                    getPasswordBox.Password = "";
+                    PasswordBehaviors.SetIsClear(getPasswordBox, true);
+                    
+                    return false;
+                }
+               
             }
+            return true;
         }
 
         public static string Base64Encode(string plainText)

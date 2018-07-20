@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:QuanLyCaPhe.View"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              DataContext="{StaticResource CustomerViewModel}"
@@ -174,7 +175,9 @@
                              Margin="35 5 15 5"
                              materialDesign:HintAssist.Hint="Điện thoại"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                             Text="{Binding DienThoaiDiDong,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                             Text="{Binding DienThoaiDiDong,UpdateSourceTrigger=PropertyChanged}">
+                               
+                            </TextBox>
 
                             <ComboBox materialDesign:HintAssist.Hint="Giới tính"
                                       Style="{StaticResource MaterialDesignFloatingHintComboBox}"

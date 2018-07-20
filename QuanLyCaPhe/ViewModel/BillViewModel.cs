@@ -69,7 +69,6 @@ namespace QuanLyCaPhe.ViewModel
         private double? _thanhToan;
 
         private bool _ComboBoxEnabled;
-
         public bool ComboBoxEnabled
         {
             get
@@ -82,7 +81,7 @@ namespace QuanLyCaPhe.ViewModel
                 RaisePropertyChanged("ComboBoxEnabled");
             }
         }
-
+        
         public string TenLoaiKhachHang
         {
             get
@@ -397,6 +396,7 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        
 
         private LoaiKhachHang _SelectedCustomerType;
 
@@ -525,17 +525,18 @@ namespace QuanLyCaPhe.ViewModel
 
         public BillViewModel()
         {
+            GetListPromotionName();
+
+            GetListCustomerType();
+
+            GetDrinkListWhenStartup();
+
 
             //Init list of bill
             List = new ObservableCollection<HoaDon_DTO>();
 
             PromotionDetailList = new ObservableCollection<KhuyenMai_DTO>();
 
-            GetListPromotionName();
-
-            GetListCustomerType();
-
-            GetDrinkListWhenStartup();
 
             FoodListCommand = new RelayCommand<object>((p) =>
             {
@@ -559,7 +560,8 @@ namespace QuanLyCaPhe.ViewModel
 
             btnMenuClick = new RelayCommand<object>((p) =>
             {
-
+                             
+                    
                 return true;
             },
             (p) =>
@@ -581,6 +583,8 @@ namespace QuanLyCaPhe.ViewModel
 
                     ThanhToanCuoiCung();
 
+                    TotalDiscountByQRCode();
+
 
                 }
                 //Khi số lượng món ăn lớn hơn 1
@@ -598,6 +602,8 @@ namespace QuanLyCaPhe.ViewModel
                         KhuyenMaiSanPham(bill_DTO);
 
                         ThanhToanCuoiCung();
+
+                        
 
                     }
                 }
@@ -639,10 +645,10 @@ namespace QuanLyCaPhe.ViewModel
                                 {
                                     List.Remove(hoaDon);
                                     PromotionDetailList.Remove(khuyenMai);
+                                    ClearValue();
                                 }
                             }
                         }
-
 
                     }
                     //Nếu sản phẩm mua không có sản phẩm khuyến mãi
@@ -651,6 +657,11 @@ namespace QuanLyCaPhe.ViewModel
                         var sanPhamMua = List.Where(x => x.MaMon == hoaDon.MaMon).SingleOrDefault();
                         List.Remove(sanPhamMua);
                         ThanhToanCuoiCung();
+                        if(List.Count() == 0)
+                        {
+                            ClearValue();
+                        }
+
 
 
                     }
@@ -692,23 +703,27 @@ namespace QuanLyCaPhe.ViewModel
             //Thanh toán
             PayCommand = new RelayCommand<object>((p) =>
             {
-                if (Convert.ToDouble(TienKhachTra) <= TongTien && Convert.ToDouble(TienKhachTra) <= ThanhToan)
+                if (Convert.ToDouble(TienKhachTra) <= ThanhToan || SelectedCustomerName == null) 
                 {
                     return false;
                 }
+                
                 return true;
             }, (p) =>
              {
+                
                  HoaDon hd = new HoaDon();
                  string _maHoaDon = EncodeIDBill(hd.MaHoaDon);
                  hd.MaHoaDon = _maHoaDon;
                  hd.NgayXuatHoaDon = Convert.ToDateTime(DateTime.Now.ToShortDateString());
                  hd.MaNhanVien = LoginViewModel.MaNhanVien;
-                 if (SelectedCustomerType.MaLoaiKhachHang == "LKHTH")
+                 if (SelectedCustomerType.MaLoaiKhachHang == "LKHTH" || SelectedCustomerType.MaLoaiKhachHang == "LKHVIP" || SelectedCustomerType.MaLoaiKhachHang == "LKHVIPP")
                  {
-                     hd.MaKhachHang = 6;
-                 }
-
+                     hd.MaKhachHang = SelectedCustomerName.MaKhachHang;
+                 } 
+                
+                 hd.TienKhachTra = Convert.ToDecimal(TienKhachTra);
+                 hd.TienThua = Convert.ToDecimal(TienThua);
                  hd.TongHoaDon = Convert.ToDecimal(ThanhToanCuoiCung());
 
                  DataProvider.Instance.Database.HoaDons.Add(hd);
@@ -722,42 +737,29 @@ namespace QuanLyCaPhe.ViewModel
                      cthd.SoLuong = item.SoLuong;
                      cthd.TongCong = Convert.ToDecimal(item.ThanhTien);
                      BillDetaiList.Add(cthd);
+                     ClearValue();
                  }
                  DataProvider.Instance.Database.ChiTietHoaDons.AddRange(BillDetaiList);
                  DataProvider.Instance.Database.SaveChanges();
                  HoaDonReport report = new HoaDonReport();
                  report.Parameters["MaHoaDon"].Value = hd.MaHoaDon;
                  report.ShowPreviewDialog();
-                 ClearValue();
+
+
              });
 
             //Huỷ bỏ hoá đơn
             CancelMenuCommand = new RelayCommand<object>((p) =>
             {
+                if (Convert.ToDouble(TienKhachTra) >= ThanhToan)
+                {
+                    return false;
+                }
                 return true;
             }, (p) =>
             {
-                if (List != null && PromotionDetailList != null && SelectedPromotionName != null)
-                {
-                    List = null;
-                    PromotionDetailList = null;
-                    SelectedPromotionName = null;
-                }
 
-                List = new ObservableCollection<HoaDon_DTO>();
-
-                PromotionDetailList = new ObservableCollection<KhuyenMai_DTO>();
-
-                TienKhachTra = 0;
-
-                TienThua = 0;
-
-                ThanhToan = TongTien = null;
-
-                EnabledCustomerVIP(SelectedCustomerType);
-
-                EnabledButtonDiscountByQRCode();
-
+                ClearValue();
 
             });
 
@@ -796,7 +798,7 @@ namespace QuanLyCaPhe.ViewModel
                     }
                     catch
                     {                
-                        p.Text = "0";
+                        p.Text = string.Empty;
                         return;
                     }
                 }
@@ -1155,32 +1157,32 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
-        private void GetDrinkListWhenStartup()
+        public void GetDrinkListWhenStartup()
         {
 
             MenuList = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons.Where(x => x.NhomThucDon.LoaiThucDon.MaLoaiThucDon == "LTDDU"));
         }
 
-        private void ClearValue()
+        public void ClearValue()
         {
-            if (List != null && PromotionDetailList != null && SelectedPromotionName != null)
+            if (List != null || PromotionDetailList != null )
             {
                 List = null;
-                PromotionDetailList = null;
-                SelectedPromotionName = null;
-            }
 
+                PromotionDetailList = null;
+
+                TongTien = ThanhToan = TienKhachTra = TienThua = null;
+            }
+            
             List = new ObservableCollection<HoaDon_DTO>();
 
             PromotionDetailList = new ObservableCollection<KhuyenMai_DTO>();
-
-            //Clear tất cả các giá trị
-            TongTien = ThanhToan = TienKhachTra = TienThua = null;
 
             EnabledCustomerVIP();
 
             EnabledButtonDiscountByQRCode();
 
+            TongTien = ThanhToan = TienKhachTra = TienThua = null;
 
         }
 
@@ -1220,7 +1222,7 @@ namespace QuanLyCaPhe.ViewModel
 
             return ThanhToan;
         }
-        private void GetListPromotionName()
+        public void GetListPromotionName()
         {
             KhuyenMai_DTO khuyenMai_DTO;
             List<ChuongTrinhKhuyenMai> ListChuongTrinhKM = new List<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x => x.NgayBDKM <= DateTime.Now && x.NgayKTKM >= DateTime.Now));
@@ -1255,7 +1257,7 @@ namespace QuanLyCaPhe.ViewModel
             return maHoaDon;
         }
 
-        private void GetListCustomerType()
+        public void GetListCustomerType()
         {
             CustomerTypeList = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs);
         }
@@ -1264,11 +1266,15 @@ namespace QuanLyCaPhe.ViewModel
         {
             FavoriteMenuList = new ObservableCollection<KhuyenMai_DTO>();
             List<HoaDon> DanhSachHoaDon = DataProvider.Instance.Database.HoaDons.Where(x => x.NgayXuatHoaDon.Value.Year == DateTime.Now.Year).ToList();
+
+            //Lấy các món đã mua trong danh sách hoá đơn
             foreach (var itemDSHD in DanhSachHoaDon)
             {
                 List<ChiTietHoaDon> DanhSachCTHD = DataProvider.Instance.Database.ChiTietHoaDons.Where(x => x.MaHoaDon == itemDSHD.MaHoaDon).ToList();
+                //Lấy data trong chi tiết hoá đơn
                 foreach (var itemDSCTHD in DanhSachCTHD)
                 {
+                    //Nếu chưa có món nào được yêu thích thì thêm vào
                     if (FavoriteMenuList.Where(x => x.MaMon == itemDSCTHD.MaMon).SingleOrDefault() == null)
                     {
                         ThucDon thucDon = DataProvider.Instance.Database.ThucDons.Where(x => x.MaMon == itemDSCTHD.MaMon).SingleOrDefault();
@@ -1291,7 +1297,7 @@ namespace QuanLyCaPhe.ViewModel
             {
                 MenuList.Add(ConvertKhuyenMai_ThucDon(itemFavoriteMenu));
                 _count++;
-                if (_count > 0)
+                if (_count > 4)
                 {
 
                     break;
@@ -1311,24 +1317,11 @@ namespace QuanLyCaPhe.ViewModel
             if(scanQRCodeViewModel.IsCheckQrCode)
             {
 
-                double? tongTienCacSanPhamDaMua = 0;
+               
                 //Lấy các sản phẩm đã mua
                 try
                 {
-                    foreach (var itemList in List)
-                    {
-                        List<HoaDon_DTO> ListSanPhamMua = List.Where(x => x.MaMon == itemList.MaMon).ToList();
-                        //Lấy tổng giá tiền của các sản phẩm mua
-                        foreach (var itemListSanPhamMua in ListSanPhamMua)
-                        {
-                            tongTienCacSanPhamDaMua += itemListSanPhamMua.ThanhTien;
-                        }
-                        //Khi check mã QR Code thành công thì lấy tổng giá tiền trừ đi % mã qr code
-
-                    }
-                    tongTienCacSanPhamDaMua = tongTienCacSanPhamDaMua * 0.9;
-
-                    ThanhToan = tongTienCacSanPhamDaMua;
+                    ThanhToan = TotalDiscountByQRCode();
 
                     DisabledCustomerVip();
 
@@ -1340,9 +1333,9 @@ namespace QuanLyCaPhe.ViewModel
                 }
             }   
         }
-        private double TotalDiscountByQRCode()
+        private double TotalDiscountByQRCode(double sum = 0)
         {
-            double sum = 0;
+            
             foreach (var itemTongTien in List)
             {
                 sum += itemTongTien.ThanhTien * 0.9;

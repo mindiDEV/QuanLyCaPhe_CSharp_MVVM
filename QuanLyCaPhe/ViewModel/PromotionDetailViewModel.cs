@@ -18,7 +18,14 @@ namespace QuanLyCaPhe.ViewModel
 
         private ObservableCollection<ChuongTrinhKhuyenMai> _PromotionList;
         public ObservableCollection<ChuongTrinhKhuyenMai> PromotionList { get => _PromotionList; set { _PromotionList = value; } }
-        
+
+        private ObservableCollection<ThucDon> _MenuProductBuyList;
+        public ObservableCollection<ThucDon> MenuProductBuyList { get => _MenuProductBuyList; set { _MenuProductBuyList = value; } }
+
+        private ObservableCollection<ThucDon> _MenuProductGiftList;
+        public ObservableCollection<ThucDon> MenuProductGiftList { get => _MenuProductGiftList; set { _MenuProductGiftList = value; } }
+
+
 
         private string _maCTKM;
 
@@ -28,9 +35,9 @@ namespace QuanLyCaPhe.ViewModel
 
         private string _maChiTietKM;
 
-        private double _giamGia;
+        private double? _giamGia;
 
-        private int _dieuKien;
+        private int? _dieuKien;
 
         public string MaChiTietKM
         {
@@ -93,6 +100,20 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        public string TenMon
+        {
+            get
+            {
+                return _sanPhamTang;
+            }
+            set
+            {
+                if (_sanPhamTang != value)
+                {
+                    _sanPhamTang = value; RaisePropertyChanged("TenMon");
+                }
+            }
+        }
 
 
         public string SanPhamTang
@@ -109,7 +130,7 @@ namespace QuanLyCaPhe.ViewModel
                 }
             }
         }
-        public double GiamGia
+        public double? GiamGia
         {
             get
             {
@@ -124,7 +145,7 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
-        public int DieuKien
+        public int? DieuKien
         {
             get
             {
@@ -154,8 +175,8 @@ namespace QuanLyCaPhe.ViewModel
                 {
                     MaChiTietKM = SelectedItem.MaChiTietKM;
                     SelectPromotionList = SelectedItem.ChuongTrinhKhuyenMai;
-                    SanPhamTang = SelectedItem.SanPhamTang;
-                    MaMon = SelectedItem.MaMon;
+                    SelectedProductBuyList = SelectedItem.ThucDon;
+                    SelectedProductGiftList = DataProvider.Instance.Database.ThucDons.Where(x => x.MaMon == SelectedItem.SanPhamTang).FirstOrDefault();
                     GiamGia = (double)SelectedItem.GiamGia;
                     DieuKien = (int)SelectedItem.DieuKien;
                 }
@@ -178,6 +199,39 @@ namespace QuanLyCaPhe.ViewModel
                 }
             }
         }
+
+        private ThucDon _SelectedProductBuyList;
+
+        public ThucDon SelectedProductBuyList
+        {
+            get => _SelectedProductBuyList;
+            set
+            {
+                _SelectedProductBuyList = value;
+                RaisePropertyChanged();
+                if(SelectedProductBuyList != null)
+                {
+                    MaMon = SelectedProductBuyList.MaMon;
+                }
+            }
+        }
+
+        private ThucDon _SelectedProductGiftList;
+
+        public ThucDon SelectedProductGiftList
+        {
+            get => _SelectedProductGiftList;
+            set
+            {
+                _SelectedProductGiftList = value;
+                RaisePropertyChanged();
+                if (SelectedProductGiftList != null)
+                {
+                    SanPhamTang = SelectedProductGiftList.MaMon;
+                }
+            }
+        }
+
 
 
         #endregion Property
@@ -208,11 +262,14 @@ namespace QuanLyCaPhe.ViewModel
 
             LoadPromotionList();
 
-            
+            LoadMenuProductBuyList();
+
+            LoadMenuProductGiftList();
+
 
             AddPromotionDetailCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaChiTietKM) || string.IsNullOrEmpty(SanPhamTang) || string.IsNullOrEmpty(MaMon))
+                if (string.IsNullOrEmpty(MaChiTietKM) || string.IsNullOrEmpty(SanPhamTang) || string.IsNullOrEmpty(MaMon) || SelectPromotionList == null)
                 {
                     return false;
                 }
@@ -259,10 +316,7 @@ namespace QuanLyCaPhe.ViewModel
 
             CreateNewPromotionDetailCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaCTKM))
-                {
-                    return false;
-                }
+               
                 return true;
             }, (p) =>
             {
@@ -270,19 +324,49 @@ namespace QuanLyCaPhe.ViewModel
             });
         }
 
+        private void LoadMenuProductBuyList()
+        {
+            MenuProductBuyList = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons);
+        }
+
+        private void LoadMenuProductGiftList()
+        {
+            MenuProductGiftList = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons);
+        }
+
         #endregion Constructor
 
         #region Methods
 
-        private bool ClearTextBox()
+        public bool ClearTextBox()
         {
-            
+            if(MaChiTietKM !=null)
+            {
+                MaChiTietKM = string.Empty;
+                GiamGia = null;
+                SanPhamTang = string.Empty;
+                MaMon = string.Empty;
+                DieuKien = null;
+                SelectedItem = null;
+                SelectPromotionList = null;
+                SelectedProductBuyList = null;
+                SelectedProductGiftList = null;
+
+            }
             return false;
         }
 
         private void AddPromotionDetail_Execute()
         {
-            var promotionDetail = new ChiTietKhuyenMai() { MaChiTietKM = MaChiTietKM, MaCTKM = MaCTKM, SanPhamTang = SanPhamTang, MaMon = MaMon, GiamGia = (float)GiamGia, DieuKien = DieuKien  };
+            var promotionDetail = new ChiTietKhuyenMai()
+            {
+                MaChiTietKM = MaChiTietKM,
+                MaCTKM = SelectPromotionList.MaCTKM,
+                SanPhamTang = SelectedProductGiftList.MaMon,
+                MaMon = SelectedProductBuyList.MaMon,
+                GiamGia = (float)GiamGia,
+                DieuKien = DieuKien
+            };
             DataProvider.Instance.Database.ChiTietKhuyenMais.Add(promotionDetail);
             DataProvider.Instance.Database.SaveChanges();
             List.Add(promotionDetail);
@@ -294,8 +378,10 @@ namespace QuanLyCaPhe.ViewModel
             var res = DataProvider.Instance.Database.ChiTietKhuyenMais.SingleOrDefault(x => x.MaChiTietKM == SelectedItem.MaChiTietKM);
             if (res != null)
             {
-                    
-
+                res.GiamGia = (int)GiamGia;
+                res.SanPhamTang = SanPhamTang;
+                res.MaMon = MaMon;
+                res.DieuKien = DieuKien;
                 DataProvider.Instance.Database.SaveChanges();
                 ClearTextBox();
             }
@@ -307,12 +393,12 @@ namespace QuanLyCaPhe.ViewModel
             ClearTextBox();
 
         }
-        private void LoadPromotionDetailList()
+        public void LoadPromotionDetailList()
         {
             List = new ObservableCollection<ChiTietKhuyenMai>(DataProvider.Instance.Database.ChiTietKhuyenMais);
         }        
 
-        private void LoadPromotionList()
+        public void LoadPromotionList()
         {
             PromotionList = new ObservableCollection<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais);
         }

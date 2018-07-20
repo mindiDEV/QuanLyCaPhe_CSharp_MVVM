@@ -10,10 +10,13 @@ namespace QuanLyCaPhe.View
     {
         public static ProgressBar ProgressBarLV { get; set; }
 
+        public static PasswordBox _floattingPasswordBox { get; set; }
+
         public LoginView()
         {
             InitializeComponent();
             ProgressBarLV = ProgessBar;
+            _floattingPasswordBox = FloatingPasswordBox;
         }
     }
 }

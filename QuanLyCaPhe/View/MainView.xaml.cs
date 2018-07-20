@@ -13,15 +13,16 @@ namespace QuanLyCaPhe
     public partial class MainWindow : Window
     {
         public static Grid _GridMain { get; set; }
-
         public MainWindow()
         {
             InitializeComponent();
+            
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 return;
             }
             _GridMain = GridMain;
+
         }
 
         private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
@@ -64,6 +65,7 @@ namespace QuanLyCaPhe
                     {
                         this.DataContext = cl = new Collection();
                         GridMain.Children.Add(cl);
+                       
                     }
 
                     break;
@@ -72,7 +74,8 @@ namespace QuanLyCaPhe
                     if (cv == null)
                     {
                         this.DataContext = cv = new CustomerView();
-                        
+                        var customer = cv.DataContext as CustomerViewModel;
+                        customer.ClearTextBox();
                         GridMain.Children.Add(cv);
                     }
 
@@ -81,15 +84,24 @@ namespace QuanLyCaPhe
                 case "ItemBill":
                     if (bill == null)
                     {
+
                         this.DataContext = bill = new BillView();
+                        var billViewModel = bill.DataContext as BillViewModel;
                         GridMain.Children.Add(bill);
+                        billViewModel.ClearValue();
+                        billViewModel.GetDrinkListWhenStartup();
+                        billViewModel.GetListCustomerType();
+                        billViewModel.GetListPromotionName();
                     }
+
                     break;
 
                 case "ItemEmployee":
                     if (ev == null)
                     {
                         this.DataContext = ev = new EmployeeView();
+                        var employee = ev.DataContext as EmployeeViewModel;
+                        employee.ClearTextBox();
                         GridMain.Children.Add(ev);
                     }
                     break;
@@ -102,11 +114,14 @@ namespace QuanLyCaPhe
                     if (pv == null)
                     {
                         this.DataContext = pv = new PromotionView();
+                        var promotion = pv.DataContext as PromotionViewModel;
+                        promotion.ClearTextBox(); 
                         GridMain.Children.Add(pv);
+     
                     }
                     break;
 
-                
+
             }
         }
 

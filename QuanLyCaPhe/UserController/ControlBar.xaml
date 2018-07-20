@@ -5,15 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:attachBehaviors="clr-namespace:QuanLyCaPhe.ClassSupport"
              mc:Ignorable="d"
              Name="ControlBarUC">
-
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="MouseDown">
             <i:InvokeCommandAction Command="{Binding MouseMoveWindow}"
                                    CommandParameter="{Binding ElementName=ControlBarUC}"></i:InvokeCommandAction>
         </i:EventTrigger>
     </i:Interaction.Triggers>
+
+    <!--<i:Interaction.Behaviors>
+        <attachBehaviors:DragMoveBehavior/>
+    </i:Interaction.Behaviors>-->
 
     <Grid>
         <materialDesign:ColorZone Background="WhiteSmoke"
@@ -79,6 +84,9 @@
                     </TextBlock>
                 </StackPanel>
             </DockPanel>
+            <i:Interaction.Behaviors>
+                <attachBehaviors:DragMoveBehavior/>
+            </i:Interaction.Behaviors>
         </materialDesign:ColorZone>
     </Grid>
 </UserControl>

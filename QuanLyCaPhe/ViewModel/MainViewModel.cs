@@ -60,8 +60,10 @@ namespace QuanLyCaPhe.ViewModel
             if (loginVM.IsLogin)
             {
                 login.Close();
-                HomeView hv = new HomeView();
-                MainWindow._GridMain.Children.Add(hv);
+                //Khi đăng nhập thành công, sẽ show màn hình order đầu tiên
+                //HomeView hv = new HomeView();
+                BillView bv = new BillView();
+                MainWindow._GridMain.Children.Add(bv);
 
                 nhatKyDangNhap.TenTaiKhoan = loginVM.TenTaiKhoan;
                 nhatKyDangNhap.NgayDangNhap = DateTime.Now;

@@ -14,8 +14,10 @@ namespace QuanLyCaPhe.Model
     public partial class InPhieuThanhToan_Result
     {
         public Nullable<System.DateTime> NgayXuatHoaDon { get; set; }
-        public string TenNhanVien { get; set; }
         public string TenMon { get; set; }
+        public string TenNhanVien { get; set; }
+        public Nullable<decimal> TienKhachTra { get; set; }
+        public Nullable<decimal> TienThua { get; set; }
         public Nullable<int> SoLuong { get; set; }
         public Nullable<decimal> GiaBan { get; set; }
         public Nullable<decimal> TongCong { get; set; }

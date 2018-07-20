@@ -149,19 +149,23 @@
 
                     <Grid Grid.Row="3">
                         <WrapPanel>
-                            <TextBox
-                             Width="200"
-                             Margin="35 5 15 5"
-                             materialDesign:HintAssist.Hint="Sản phẩm tặng ( * )"
-                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                             Text="{Binding SanPhamTang,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                            <ComboBox materialDesign:HintAssist.Hint="Sản phẩm mua ( * ) "
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Width="200"
+                                      ItemsSource="{Binding MenuProductBuyList}"
+                                      DisplayMemberPath="TenMon"
+                                      SelectedItem="{Binding SelectedProductBuyList,UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="35 5 15 5">
+                            </ComboBox>
 
-                            <TextBox
-                             Width="200"
-                             Margin="35 5 15 5"
-                             materialDesign:HintAssist.Hint="Sản phẩm mua ( * )"
-                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                             Text="{Binding MaMon,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                            <ComboBox materialDesign:HintAssist.Hint="Sản phẩm tặng ( * )"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Width="200"
+                                      DisplayMemberPath="TenMon"
+                                      ItemsSource="{Binding MenuProductGiftList}"
+                                      SelectedItem="{Binding SelectedProductGiftList,UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="35 5 15 5">
+                            </ComboBox>
                         </WrapPanel>
                     </Grid>
 
@@ -170,7 +174,7 @@
                             <TextBox
                              Width="200"
                              Margin="35 5 15 5"
-                             materialDesign:HintAssist.Hint="Giảm giá ( * )"
+                             materialDesign:HintAssist.Hint="Giảm giá"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                              Text="{Binding GiamGia,UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
@@ -178,7 +182,7 @@
                              Text="{Binding DieuKien,UpdateSourceTrigger=PropertyChanged}"
                              Width="200"
                              Margin="35 5 15 5"
-                             materialDesign:HintAssist.Hint="Điều kiện"
+                             materialDesign:HintAssist.Hint="Điều kiện tặng ( * )"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}">
                             </TextBox>
                         </WrapPanel>
@@ -202,7 +206,7 @@
 
                                     <GridViewColumn Header="Giảm giá" Width="auto" DisplayMemberBinding="{Binding GiamGia}"></GridViewColumn>
 
-                                    <GridViewColumn Header="Điều kiện" Width="auto" DisplayMemberBinding="{Binding DieuKien}"></GridViewColumn> 
+                                    <GridViewColumn Header="Điều kiện khuyến mãi" Width="auto" DisplayMemberBinding="{Binding DieuKien}"></GridViewColumn> 
                                 </GridView>
                             </ListView.View>
                         </ListView>

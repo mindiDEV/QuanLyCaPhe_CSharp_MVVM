@@ -419,7 +419,9 @@ namespace QuanLyCaPhe.ViewModel
         public MenuViewModel()
         {
             MaHienThi_ThucDon = "Mã món ( * )";
+
             TenHienThi_ThucDon = "Tên món ( * )";
+
             TenHienThi_LoaiThucDon = "Loại thực đơn ( * )";
 
             //Get list and display on listview
@@ -446,11 +448,7 @@ namespace QuanLyCaPhe.ViewModel
                     return false;
                 }
 
-                var list = DataProvider.Instance.Database.ThucDons.Where(x => x.TenMon == TenMon && x.MaMon == MaMon).Count();
-                if (list != 0)
-                {
-                    return false;
-                }
+                
                 return true;
             }, (p) =>
             {
@@ -622,12 +620,24 @@ namespace QuanLyCaPhe.ViewModel
         {
             ThucDon td = new ThucDon();
 
-            if (td != null)
+            if (td != null && fileName_Image!=null)
             {
+
                 FileStream fs = new FileStream(fileName_Image, FileMode.Open, FileAccess.Read);
                 string tmp;
                 tmp = ImageToByte(fs);
                 td.HinhDaiDien = Convert.FromBase64String(tmp);
+            }
+            else
+            {
+                if(fileName_Image == null)
+                {
+                    fileName_Image = @"..\Imagines\defaultimage.jpg";
+                    FileStream fs = new FileStream(fileName_Image, FileMode.Open, FileAccess.Read);
+                    string tmp;
+                    tmp = ImageToByte(fs);
+                    td.HinhDaiDien = Convert.FromBase64String(tmp);
+                }
             }
 
             var menu = new ThucDon() { MaMon = MaMon, TenMon = TenMon, GiaBan = Convert.ToDecimal(GiaBan), HinhDaiDien = td.HinhDaiDien, GhiChu = GhiChu, MaDonViTinh = SelectedUnit.MaDonViTinh, MaNhomThucDon = SelectedMenuGroup.MaNhomThucDon };
@@ -654,7 +664,7 @@ namespace QuanLyCaPhe.ViewModel
             var res = DataProvider.Instance.Database.ThucDons.SingleOrDefault(x => x.MaMon == SelectedItem.MaMon);
             if (res != null)
             {
-                res.MaMon = MaMon;
+                res.MaMon = MaMon;  
                 res.TenMon = TenMon;
                 res.GiaBan = Convert.ToDecimal(GiaBan);
                 res.GhiChu = GhiChu;
@@ -672,14 +682,20 @@ namespace QuanLyCaPhe.ViewModel
             ClearTextBox();
         }
 
-        private bool ClearTextBox()
+        public bool ClearTextBox()
         {
-            if (MaMon != null && TenMon != null && GhiChu != null && GiaBan != 0)
+            if (MaMon != null)
             {
                 MaMon = string.Empty;
                 TenMon = string.Empty;
                 GhiChu = string.Empty;
                 GiaBan = 0;
+                ImageSource = null;
+                HinhDaiDien = null;
+                SelectedUnit = null;
+                SelectedItem = null;
+                SelectedMenuType = null;
+                SelectedMenuGroup = null;
                 return true;
             }
             return false;

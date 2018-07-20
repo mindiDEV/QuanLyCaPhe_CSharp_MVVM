@@ -14,10 +14,12 @@
     <viewmodel:BillViewModel x:Key="BilViewModel"></viewmodel:BillViewModel>
     <viewmodel:EmployeeViewModel x:Key="EmployeeViewModel"></viewmodel:EmployeeViewModel>
     <viewmodel:PromotionViewModel x:Key="PromotionViewModel"></viewmodel:PromotionViewModel>
-    <converters:InputValidationRule x:Key="InputValidationRule"></converters:InputValidationRule>
     <viewmodel:HomeViewModel x:Key="HomeViewModel"></viewmodel:HomeViewModel>
     <viewmodel:WebcamViewModel x:Key="WebcamViewModel"></viewmodel:WebcamViewModel>
     <viewmodel:ScanQRCodeDiscountViewModel x:Key="ScanQRCodeDiscountViewModel"></viewmodel:ScanQRCodeDiscountViewModel>
     <viewmodel:PromotionDetailViewModel x:Key="PromotionDetailViewModel"></viewmodel:PromotionDetailViewModel>
+    <converters:InputValidationRule x:Key="InputValidationRule"></converters:InputValidationRule>
     <converters:IndexConverter x:Key="IndexConverter"></converters:IndexConverter>
+    
+    
 </ResourceDictionary>

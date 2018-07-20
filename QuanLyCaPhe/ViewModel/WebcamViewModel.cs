@@ -42,6 +42,8 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        public static string getDecoded= "";
+
         public static Window tmp;
 
         private DispatcherTimer dispatcherTime;
@@ -199,10 +201,12 @@ namespace QuanLyCaPhe.ViewModel
 
                 if (decoded != "")
                 {
-                  
-                    IsLoginByQrCode = true;
+                    getDecoded = decoded;
+                    
+                   // IsLoginByQrCode = true;
 
                     dispatcherTime.Stop();
+
                 }
                 else
                 {
@@ -259,7 +263,6 @@ namespace QuanLyCaPhe.ViewModel
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MessageBox.Show("Đã đăng nhập thành công");
             StopWebcam();
             tmp.Close();
             WebcamView.ProgressBarView.Value = 0;

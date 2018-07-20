@@ -19,9 +19,9 @@ namespace QuanLyCaPhe.ViewModel
 
         private string _maCTKM;
 
-        private DateTime _ngayBDKM = DateTime.Now;
+        private DateTime? _ngayBDKM = DateTime.Now.AddDays(-1);
 
-        private DateTime _ngayKTKM = DateTime.Now;
+        private DateTime? _ngayKTKM = DateTime.Now;
 
         public string TenCTKM
         {
@@ -42,7 +42,7 @@ namespace QuanLyCaPhe.ViewModel
 
         public string MoTaCTKM { get => _motaCTKM; set { if (_motaCTKM != value) _motaCTKM = value; RaisePropertyChanged("MoTaCTKM"); } }
 
-        public DateTime NgayBDKM
+        public DateTime? NgayBDKM
         {
             get
             {
@@ -56,7 +56,7 @@ namespace QuanLyCaPhe.ViewModel
                 }
             }
         }
-        public DateTime NgayKTKM
+        public DateTime? NgayKTKM
         {
             get
             {
@@ -67,6 +67,20 @@ namespace QuanLyCaPhe.ViewModel
                 if (_ngayKTKM != value)
                 {
                     _ngayKTKM = value; RaisePropertyChanged("NgayKTKM");
+                }
+            }
+        }
+
+        private bool _isEnabledPromotionCode;
+        public bool IsEnabledPromotionCode
+        {
+            get => _isEnabledPromotionCode;
+            set
+            {
+                if (_isEnabledPromotionCode != value)
+                {
+                    _isEnabledPromotionCode = value;
+                    RaisePropertyChanged("IsEnabledPromotionCode");
                 }
             }
         }
@@ -88,9 +102,12 @@ namespace QuanLyCaPhe.ViewModel
                     MoTaCTKM = SelectedItem.MoTaCTKM;
                     NgayBDKM = (DateTime)SelectedItem.NgayBDKM;
                     NgayKTKM = (DateTime)SelectedItem.NgayKTKM;
+                    IsEnabledPromotionCode = false;
                 }
             }
         }
+
+
 
         #endregion Property
 
@@ -117,19 +134,21 @@ namespace QuanLyCaPhe.ViewModel
 
         public PromotionViewModel()
         {
+
+            IsEnabledPromotionCode = true;
+
             MaCTKM = "KM";
 
             List = new ObservableCollection<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais);
 
             AddPromotionCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaCTKM) || string.IsNullOrEmpty(TenCTKM))
+                if (string.IsNullOrEmpty(MaCTKM) || string.IsNullOrEmpty(TenCTKM) || string.IsNullOrEmpty(MoTaCTKM))
                 {
                     return false;
                 }
 
-                var list = DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x => x.TenCTKM == TenCTKM && x.MaCTKM == MaCTKM).Count();
-                if (list != 0)
+                if (DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x=>x.MaCTKM == MaCTKM).Count() != 0)
                 {
                     return false;
                 }
@@ -141,7 +160,7 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdatePromotionCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaCTKM) && SelectedItem == null)
+                if (((string.IsNullOrEmpty(MaCTKM) && string.IsNullOrEmpty(TenCTKM) && string.IsNullOrEmpty(MoTaCTKM)) || SelectedItem == null))
                     return false;
 
                 if (!isSymbolAndNumber(TenCTKM))
@@ -149,8 +168,7 @@ namespace QuanLyCaPhe.ViewModel
                     return false;
                 }
 
-                var list = DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x => x.MaCTKM == MaCTKM && x.TenCTKM == TenCTKM).Count();
-                if (list != 0)
+                if (DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x => x.TenCTKM == TenCTKM && x.MoTaCTKM == MoTaCTKM && (x.NgayBDKM == NgayBDKM && x.NgayKTKM == NgayKTKM)).Count() != 0)
                 {
                     return false;
                 }
@@ -184,19 +202,23 @@ namespace QuanLyCaPhe.ViewModel
             });
         }
 
+        
+
         #endregion Constructor
 
         #region Methods
 
-        private bool ClearTextBox()
+        public bool ClearTextBox()
         {
-            if (MaCTKM != null && TenCTKM != null && MoTaCTKM != null)
+            if (MaCTKM != null)
             {
-                MaCTKM = "DVT";
+                MaCTKM = "KM";
                 TenCTKM = string.Empty;
                 MoTaCTKM = string.Empty;
-                NgayBDKM = DateTime.Now;
+                NgayBDKM = DateTime.Now.AddDays(-1);
                 NgayKTKM = DateTime.Now;
+                SelectedItem = null;
+                IsEnabledPromotionCode = true;
                 return true;
             }
             return false;
@@ -204,7 +226,7 @@ namespace QuanLyCaPhe.ViewModel
 
         private void AddPromotion_Execute()
         {
-            var Promotion = new ChuongTrinhKhuyenMai() { MaCTKM = MaCTKM, TenCTKM = TenCTKM,MoTaCTKM = MoTaCTKM,NgayBDKM = NgayKTKM,NgayKTKM = NgayKTKM};
+            var Promotion = new ChuongTrinhKhuyenMai() { MaCTKM = MaCTKM, TenCTKM = TenCTKM,MoTaCTKM = MoTaCTKM,NgayBDKM = NgayBDKM, NgayKTKM = NgayKTKM};
             DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Add(Promotion);
             DataProvider.Instance.Database.SaveChanges();
             List.Add(Promotion);
@@ -216,7 +238,6 @@ namespace QuanLyCaPhe.ViewModel
             var res = DataProvider.Instance.Database.ChuongTrinhKhuyenMais.SingleOrDefault(x => x.MaCTKM == SelectedItem.MaCTKM);
             if (res != null)
             {
-                res.MaCTKM = MaCTKM;
                 res.TenCTKM = TenCTKM;
                 res.MoTaCTKM = MoTaCTKM;
                 res.NgayBDKM = NgayBDKM;

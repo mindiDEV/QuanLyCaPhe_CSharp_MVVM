@@ -6,6 +6,9 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:attachBehavior="clr-namespace:QuanLyCaPhe.ClassSupport"
+        xmlns:local="clr-namespace:QuanLyCaPhe.ClassSupport"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -21,7 +24,7 @@
         WindowStyle="None"
         DataContext="{StaticResource LoginViewModel}"
         Name="loginView">
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -51,24 +54,44 @@
                         <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
-                        <Label Content="Login"
+                        <Button
+                    Command="{Binding CloseWindowCommand,UpdateSourceTrigger=PropertyChanged}"
+                    CommandParameter="{Binding ElementName=loginView}"
+                    Content="X" Height="25"
+                    Margin="0 0 0 0"
+                    Width="40"
+                    FontSize="14"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    Foreground="Black"
+                    BorderBrush="Transparent" 
+                    HorizontalAlignment="Right">
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Label Content="Đăng Nhập"
                                FontFamily="Cooper Black"
                                FontSize="35"
                                Margin="50 30 0 0"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Left" />
+
+                        <i:Interaction.Behaviors>
+                            <attachBehavior:DragMoveBehavior/>
+                        </i:Interaction.Behaviors>
                     </Grid>
 
                     <!--Username-->
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="2">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="AccountCircle"
                                                      VerticalAlignment="Center"
                                                      Margin="50 30 0 0"
                                                      Foreground="Blue" />
-                            <TextBox materialDesign:HintAssist.Hint="Username"
+                            <TextBox materialDesign:HintAssist.Hint="Tên tài khoản"
                                      Width="270"
                                      Text="{Binding TenTaiKhoan,UpdateSourceTrigger=PropertyChanged}"
                                      FontSize="15"
@@ -77,43 +100,47 @@
                     </Grid>
 
                     <!--Password-->
-                    <Grid Grid.Row="2">
+                    <Grid Grid.Row="3">
                         <WrapPanel>
                             <materialDesign:PackIcon Kind="Key"
                                                      VerticalAlignment="Center"
                                                      Margin="50 30 0 0"
                                                      Foreground="Blue" />
                             <PasswordBox x:Name="FloatingPasswordBox"
-                                         materialDesign:HintAssist.Hint="Password"
+                                         local:PasswordBehaviors.IsClear="False"
+                                         materialDesign:HintAssist.Hint="Mật khẩu"
                                          Margin="10 30 0 0"
                                          Width="270"
                                          FontSize="15"
                                          Style="{StaticResource MaterialDesignFloatingHintPasswordBox}">
+                                
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="PasswordChanged">
-                                        <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}"
+                                        <i:InvokeCommandAction Command="{Binding PasswordChangedCommand,UpdateSourceTrigger=PropertyChanged}"
                                    CommandParameter="{Binding ElementName=FloatingPasswordBox}" />
                                     </i:EventTrigger>
+                                    
                                 </i:Interaction.Triggers>
+                                
                             </PasswordBox>
                         </WrapPanel>
                     </Grid>
 
                     <!--Button Login-->
-                    <Grid Grid.Row="3">
+                    <Grid Grid.Row="4">
                         <Button Command="{Binding LoginWindowCommand}"
                                 CommandParameter="{Binding ElementName=loginView}"
                                 HorizontalAlignment="Left"
-                                Content="LOGIN"
+                                Content="ĐĂNG NHẬP"
                                 IsDefault="True"
-                                FontFamily="Impact"
-                                FontSize="18"
+                                FontFamily="Calibri Light"
+                                FontSize="17"
                                 Width="270"
                                 Margin="80 30 0 0"
                                 Background="#FF307CD6"
                                 BorderBrush="#FF307CD6" />
                     </Grid>
-                    <Grid Grid.Row="4">
+                    <Grid Grid.Row="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="307*" />
                             <ColumnDefinition Width="93*" />
@@ -123,16 +150,18 @@
                                 Command="{Binding LoginByQrCode}"
                                 CommandParameter="{Binding ElementName=loginView,UpdateSourceTrigger=PropertyChanged}"
                                 HorizontalAlignment="Center"
-                                Content="Login by QR Code"
+                                Content="Đăng nhập bằng QR Code"
                                 FontFamily="Segoe UI Black"
                                 FontSize="10"
-                                Width="auto"
+                                Width="200"
+                                VerticalAlignment="Center"
+                            
                                 BorderBrush="Transparent"
-                                Margin="156,6,33,0"
+                                Margin="120 5 0 5"
                                 Foreground="BlueViolet"
                                 Background="Transparent" />
                     </Grid>
-                    <Grid Grid.Row="5">
+                    <Grid Grid.Row="6">
                         <ProgressBar Width="200"
                                      Name="ProgessBar"
                                      Height="20"

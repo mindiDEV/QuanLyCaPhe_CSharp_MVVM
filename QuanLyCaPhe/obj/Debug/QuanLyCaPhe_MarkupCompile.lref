@@ -2,6 +2,7 @@
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\App.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\ResourceXAML\MainResources.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\UserController\Collection.xaml;;
+FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\UserController\ControlBar.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\CustomerTypeView.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\CustomerView.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\EmployeeView.xaml;;
@@ -12,9 +13,9 @@ FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\MenuGroupView.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\MenuTypeView.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\MenuView.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\BillView.xaml;;
+FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\PromotionDetailView.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\PromotionView.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\ScanQRCodeDiscountView.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\UnitView.xaml;;
 FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\WebcamView.xaml;;
-FE:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\View\PromotionDetailView.xaml;;
 

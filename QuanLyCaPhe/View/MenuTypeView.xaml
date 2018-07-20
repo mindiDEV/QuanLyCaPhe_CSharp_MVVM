@@ -126,6 +126,7 @@
                              Margin="35 5 15 5"
                              materialDesign:HintAssist.Hint="Mã loại thực đơn ( * )"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             IsEnabled="{Binding IsEnabledMenuTypeCode,UpdateSourceTrigger=PropertyChanged}"
                              Text="{Binding MaLoaiThucDon,UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
                             <TextBox

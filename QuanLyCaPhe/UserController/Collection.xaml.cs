@@ -1,4 +1,5 @@
 ﻿using QuanLyCaPhe.View;
+using QuanLyCaPhe.ViewModel;
 using System.Windows.Controls;
 
 namespace QuanLyCaPhe.UserController
@@ -41,6 +42,8 @@ namespace QuanLyCaPhe.UserController
                         if (menuType == null)
                         {
                             this.DataContext = menuType = new MenuTypeView();
+                            var menuTypeViewModel = menuType.DataContext as MenuTypeViewModel;
+                            menuTypeViewModel.ClearTextBox();
                             MainWindow._GridMain.Children.Add(menuType);
                         }
                         break;
@@ -51,6 +54,8 @@ namespace QuanLyCaPhe.UserController
                         if (menuGroup == null)
                         {
                             this.DataContext = menuGroup = new MenuGroupView();
+                            var menuGroupViewModel = menuGroup.DataContext as MenuGroupViewModel;
+                            menuGroupViewModel.ClearTextBox();
                             MainWindow._GridMain.Children.Add(menuGroup);
                         }
                         break;
@@ -60,6 +65,8 @@ namespace QuanLyCaPhe.UserController
                     if (menuView == null)
                     {
                         this.DataContext = menuView = new MenuView();
+                        var menuViewModel = menuView.DataContext as MenuViewModel;
+                        menuViewModel.ClearTextBox();
                         MainWindow._GridMain.Children.Add(menuView);
                     }
                     break;
@@ -71,24 +78,28 @@ namespace QuanLyCaPhe.UserController
 
         private void ListCustomer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            CustomerTypeView customerTypeView = null;
-            CustomerView customerView = null;
-            MainWindow._GridMain.Children.Clear();
+                CustomerTypeView customerTypeView = null;
+                CustomerView customerView = null;
+                MainWindow._GridMain.Children.Clear();
             switch (((ListViewItem)((ListView)sender).SelectedItem).Name)
             {
                 case "ItemCustomerType":
                     {
                         if (customerTypeView == null)
-                        {
+                        { 
                             this.DataContext = customerTypeView = new CustomerTypeView();
+                            var customerTypeViewModel = customerTypeView.DataContext as CustomerTypeViewModel;
+                            customerTypeViewModel.ClearTextBox();
                             MainWindow._GridMain.Children.Add(customerTypeView);
                         }
                         break;
                     }
                 case "ItemCustomer":
                     if (customerView == null)
-                    {
+                    {    
                         this.DataContext = customerView = new CustomerView();
+                        var customerViewModel = customerView.DataContext as CustomerViewModel;
+                        customerViewModel.ClearTextBox();
                         MainWindow._GridMain.Children.Add(customerView);
                     }
                     break;
@@ -110,6 +121,8 @@ namespace QuanLyCaPhe.UserController
                         if (pv == null)
                         {
                             this.DataContext = pv = new PromotionView();
+                            var promotionViewModel = pv.DataContext as PromotionViewModel;
+                            promotionViewModel.ClearTextBox();
                             MainWindow._GridMain.Children.Add(pv);
                         }
                         break;
@@ -119,7 +132,11 @@ namespace QuanLyCaPhe.UserController
                         if (pdv == null)
                         {
                             this.DataContext = pdv = new PromotionDetailView();
+                            var promotionDetailViewModel = pdv.DataContext as PromotionDetailViewModel;
+                            promotionDetailViewModel.LoadPromotionList();
+                            promotionDetailViewModel.ClearTextBox();
                             MainWindow._GridMain.Children.Add(pdv);
+                            
                         }
                         break;
                     }

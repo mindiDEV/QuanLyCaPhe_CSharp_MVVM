@@ -4,6 +4,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:QuanLyCaPhe.View"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts" xmlns:dxga="http://schemas.devexpress.com/winfx/2008
     xaml/gauges" xmlns:dxca="http://schemas.devexpress.com/winfx/2008/xaml/carousel" x:Class="QuanLyCaPhe.View.HomeView"
@@ -34,7 +35,13 @@
                             Margin="30 20 0 0"
                             materialDesign:HintAssist.Hint="Ngày bắt đầu"
                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                            SelectedDate="{Binding NgayBatDau,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            SelectedDate="{Binding NgayBatDau,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectedDateChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectedChangedNgayBatDau}" CommandParameter="{Binding ElementName=homeViewModel}"></i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </DatePicker>
 
                         <DatePicker
                             Width="200"
@@ -42,7 +49,13 @@
                             Margin="30 20 0 0"
                             materialDesign:HintAssist.Hint="Ngày kết thúc"
                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                            SelectedDate="{Binding NgayKetThuc,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            SelectedDate="{Binding NgayKetThuc,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectedDateChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectedChangedNgayKetThuc}" CommandParameter="{Binding ElementName=homeViewModel}"></i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </DatePicker>
                     </WrapPanel>
                 </Grid>
             </WrapPanel>

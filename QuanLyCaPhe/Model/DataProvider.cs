@@ -21,11 +21,11 @@
             }
         }
 
-        public QuanLyQuanCaPheEntities Database { get; set; }
+        public QuanLyCaPheEntities1 Database { get; set; }
 
         private DataProvider()
         {
-            Database = new QuanLyQuanCaPheEntities();
+            Database = new QuanLyCaPheEntities1();
         }
     }
 }

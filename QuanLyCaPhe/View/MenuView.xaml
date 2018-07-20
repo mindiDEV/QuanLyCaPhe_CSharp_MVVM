@@ -91,15 +91,7 @@
                                 BorderBrush="{x:Null}"
                                 Foreground="#F2F4F5" />
 
-                            <Button
-                                Command="{Binding DeleteImageCommand}"
-                                CommandParameter="{Binding ElementName=menuView,UpdateSourceTrigger=PropertyChanged}"
-                                Width="150"
-                                Content="Xoá ảnh"
-                                Height="50"
-                                Background="{x:Null}"
-                                BorderBrush="{x:Null}"
-                                Foreground="#F2F4F5" />
+                            
 
                             <Button
                         Width="150"
@@ -252,8 +244,17 @@
                                     <GridViewColumn Header="Mã món" Width="auto" DisplayMemberBinding="{Binding MaMon}"></GridViewColumn>
 
                                     <GridViewColumn Header="Tên món" Width="auto" DisplayMemberBinding="{Binding TenMon}"></GridViewColumn>
-
-                                    <GridViewColumn Header="Giá bán" Width="auto" DisplayMemberBinding="{Binding GiaBan}"></GridViewColumn>
+                                    
+                                    <GridViewColumn  Header="Giá bán"
+                                                             Width="auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding GiaBan,StringFormat={}{0:n0} VND}"
+                                                                   TextAlignment="Left"
+                                                                   Width="100" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
 
                                     <GridViewColumn Header="Đơn vị" Width="auto" DisplayMemberBinding="{Binding DonViTinh.TenDonViTinh}"></GridViewColumn>
 
