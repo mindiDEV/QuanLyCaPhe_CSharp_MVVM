@@ -1,7 +1,11 @@
-﻿using QuanLyCaPhe.Model;
+﻿using QuanLyCaPhe.Message;
+using QuanLyCaPhe.Model;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using GalaSoft.MvvmLight.Messaging;
+using System.Windows;
 
 namespace QuanLyCaPhe.ViewModel
 {
@@ -33,10 +37,10 @@ namespace QuanLyCaPhe.ViewModel
         #region Cách 2
 
         private ObservableCollection<NhomThucDon> _List;
-        public ObservableCollection<NhomThucDon> List { get => _List; set { _List = value; } }
+        public ObservableCollection<NhomThucDon> List { get => _List; set { _List = value; RaisePropertyChanged("List"); } }
 
         private ObservableCollection<LoaiThucDon> _menuTypeList;
-        public ObservableCollection<LoaiThucDon> MenuTypeList { get => _menuTypeList; set { _menuTypeList = value; } }
+        public ObservableCollection<LoaiThucDon> MenuTypeList { get => _menuTypeList; set { _menuTypeList = value; RaisePropertyChanged("MenuTypeList"); } }
 
         #endregion Cách 2
 
@@ -71,6 +75,17 @@ namespace QuanLyCaPhe.ViewModel
 
         private NhomThucDon _SelectedItem;
 
+        private bool _daXoa = false;
+        public bool DaXoa
+        {
+            get => _daXoa;
+            set
+            {
+                _daXoa = value;
+                RaisePropertyChanged();
+                
+            }
+        }
         public NhomThucDon SelectedItem
         {
             get => _SelectedItem;
@@ -161,6 +176,7 @@ namespace QuanLyCaPhe.ViewModel
         public MenuGroupViewModel()
         {
             //GetMenuDetails();
+
             //GetComboBoxOfMenuType();
 
             IsEnabledMenuGroupCode = true;
@@ -171,8 +187,8 @@ namespace QuanLyCaPhe.ViewModel
 
             MaNhomThucDon = "NTD";
 
-            GetListMenuGroup();
-            GetListComboBoxMenuType();
+            //Hiển thị tất cả dữ liệu của nhóm và loại THỰC ĐƠN
+            LoadAll();
 
             AddMenuGroupCommand = new RelayCommand<object>((p) =>
             {
@@ -181,7 +197,7 @@ namespace QuanLyCaPhe.ViewModel
                     return false;
                 }
 
-                if (!isSymbolAndNumber(MaNhomThucDon) && !isSymbolAndNumber(TenNhomThucDon))
+                if (!isSymbol(MaNhomThucDon) || !isSymbolAndNumber(TenNhomThucDon))
                 {
                     return false;
                 }
@@ -198,11 +214,11 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdateMenuGroupCommand = new RelayCommand<object>((p) =>
             {
-                if (((string.IsNullOrEmpty(TenHienThi_NhomThucDon) && string.IsNullOrEmpty(MaHienThi_NhomThucDon))|| SelectedItem == null))
+                if (((string.IsNullOrEmpty(TenHienThi_NhomThucDon) || string.IsNullOrEmpty(MaHienThi_NhomThucDon))|| SelectedItem == null))
                 {
                     return false;
                 }
-                if (!isSymbolAndNumber(MaNhomThucDon) && !isSymbol(TenNhomThucDon))
+                if (!isSymbol(MaNhomThucDon) || !isSymbolAndNumber(TenNhomThucDon))
                 {
                     return false;
                 }
@@ -222,18 +238,21 @@ namespace QuanLyCaPhe.ViewModel
             DeleteMenuGroupCommand = new RelayCommand<object>(
                 (p) =>
                 {
-                    
+                    if (SelectedItem == null || SelectedMenuType == null)
+                    {
+                        return false;
+                    }
                     return true;
                 },
                 (p) =>
                 {
-                    WarningDialogs("Dữ liệu không thể xoá vì đang có ràng buộc. Xin vui lòng thử lại vào dịp khác!!!");
+                    DeleteMenuGroup();
                 });
 
             CreateNewMenuGroupCommand = new RelayCommand<object>(
                 (p) =>
                 {
-                    if (SelectedItem == null && SelectedMenuType == null)
+                    if (SelectedItem == null || SelectedMenuType == null)
                     {
                         return false;
                     }
@@ -243,6 +262,42 @@ namespace QuanLyCaPhe.ViewModel
                 {
                     ClearTextBox();
                 });
+        }
+
+        private void DeleteMenuGroup()
+        {
+            UserMessage msg = new UserMessage();
+            if (ConfirmDialog("Bạn có chắc chắn muốn xoá nhóm thực đơn <<" + SelectedItem.TenNhomThucDon + ">> không ? "))
+            {
+                try
+                {
+                    var menuGroup = DataProvider.Instance.Database.NhomThucDons.SingleOrDefault(x => x.MaNhomThucDon == SelectedItem.MaNhomThucDon);
+                    List.Remove(menuGroup);
+                    menuGroup.DaXoa = true;
+                    DataProvider.Instance.Database.SaveChanges();
+                    RaisePropertyChanged("List");
+                    msg.Message = "Dữ liệu đã xoá thành công";
+                }
+                catch (System.Exception ex)
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                    }
+                    msg.Message = "Có vấn đề trong xoá dữ liệu";
+                }
+
+
+            }
+            Messenger.Default.Send<UserMessage>(msg);
+            ClearTextBox();
+        }
+
+        private void LoadAll()
+        {
+            GetListMenuGroup();
+
+            GetListComboBoxMenuType();
         }
 
         #endregion Constructor
@@ -276,39 +331,77 @@ namespace QuanLyCaPhe.ViewModel
 
         private void AddMenuGroup()
         {
-            var menuGroup = new NhomThucDon() { MaNhomThucDon = MaNhomThucDon, TenNhomThucDon = TenNhomThucDon, GhiChu = GhiChu, MaLoaiThucDon = SelectedMenuType.MaLoaiThucDon };
-            if (menuGroup.GhiChu == null)
+            UserMessage msg = new UserMessage();
+            try
             {
-                menuGroup.GhiChu = "Không có";
-            }   
-            
+                var menuGroup = new NhomThucDon()
+                {
+                    MaNhomThucDon = MaNhomThucDon,
+                    TenNhomThucDon = TenNhomThucDon,
+                    GhiChu = GhiChu,
+                    MaLoaiThucDon = SelectedMenuType.MaLoaiThucDon,
+                    DaXoa = DaXoa
+                };
 
-            DataProvider.Instance.Database.NhomThucDons.Add(menuGroup);
-            DataProvider.Instance.Database.SaveChanges();
-            List.Add(menuGroup);
+                if (menuGroup.GhiChu == "")
+                {
+                    menuGroup.GhiChu = "Không có";
+                }
+
+
+                DataProvider.Instance.Database.NhomThucDons.Add(menuGroup);
+                DataProvider.Instance.Database.SaveChanges();
+                List.Add(menuGroup);
+                msg.Message = "Thêm dữ liệu thành công";
+            }
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong thêm dữ liệu";
+            }
+
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         private void UpdateMenuGroup()
         {
-            var menuGroup = DataProvider.Instance.Database.NhomThucDons.Where(x => x.MaNhomThucDon == SelectedItem.MaNhomThucDon).SingleOrDefault();
-            if(menuGroup!=null)
+            UserMessage msg = new UserMessage();
+            try
             {
-                IsEnabledMenuGroupCode = false;
-                menuGroup.TenNhomThucDon = TenNhomThucDon;
-                menuGroup.GhiChu = GhiChu;
-                menuGroup.MaLoaiThucDon = SelectedMenuType.MaLoaiThucDon;
-                DataProvider.Instance.Database.SaveChanges();
-                ClearTextBox();
+                var menuGroup = DataProvider.Instance.Database.NhomThucDons.Where(x => x.MaNhomThucDon == SelectedItem.MaNhomThucDon).SingleOrDefault();
+                if (menuGroup != null)
+                {
+
+                    IsEnabledMenuGroupCode = false;
+                    menuGroup.TenNhomThucDon = TenNhomThucDon;
+                    menuGroup.GhiChu = GhiChu;
+                    menuGroup.MaLoaiThucDon = SelectedMenuType.MaLoaiThucDon;
+                    DataProvider.Instance.Database.SaveChanges();
+                    msg.Message = "Cập nhật thành công";
+                }
             }
-           
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong cập nhật dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
+            ClearTextBox();
+
         }
 
         private bool GetListMenuGroup()
         {
             if (List == null)
             {
-                List = new ObservableCollection<NhomThucDon>(DataProvider.Instance.Database.NhomThucDons);
+                List = new ObservableCollection<NhomThucDon>(DataProvider.Instance.Database.NhomThucDons.Where(x=>x.DaXoa == DaXoa).ToList());
                 return true;
             }
             return false;
@@ -318,7 +411,7 @@ namespace QuanLyCaPhe.ViewModel
         {
             if (MenuTypeList == null)
             {
-                MenuTypeList = new ObservableCollection<LoaiThucDon>(DataProvider.Instance.Database.LoaiThucDons);
+                MenuTypeList = new ObservableCollection<LoaiThucDon>(DataProvider.Instance.Database.LoaiThucDons.Where(x=>x.DaXoa==DaXoa).ToList());
                 return true;
             }
             return false;

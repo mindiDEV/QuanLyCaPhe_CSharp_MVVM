@@ -24,6 +24,7 @@ namespace QuanLyCaPhe.Model
         public string TenNhomThucDon { get; set; }
         public string GhiChu { get; set; }
         public string MaLoaiThucDon { get; set; }
+        public Nullable<bool> DaXoa { get; set; }
     
         public virtual LoaiThucDon LoaiThucDon { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -25,7 +25,6 @@ namespace QuanLyCaPhe.Model
         public Nullable<decimal> TienKhachTra { get; set; }
         public Nullable<decimal> TienThua { get; set; }
         public Nullable<decimal> TongHoaDon { get; set; }
-        public Nullable<bool> TrangThai { get; set; }
         public string MaNhanVien { get; set; }
         public int MaKhachHang { get; set; }
     

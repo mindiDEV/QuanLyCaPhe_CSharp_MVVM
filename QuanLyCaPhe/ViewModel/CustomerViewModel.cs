@@ -1,7 +1,11 @@
-﻿using QuanLyCaPhe.Model;
+﻿using GalaSoft.MvvmLight.Messaging;
+using QuanLyCaPhe.Message;
+using QuanLyCaPhe.Model;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -33,6 +37,20 @@ namespace QuanLyCaPhe.ViewModel
 
         private int? _IsSelectedSex;
 
+        private bool _daXoa = false;
+        public bool DaXoa
+        {
+            get => _daXoa;
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value;
+
+                    RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
         public int? IsSelectedSex
         {
             get => _IsSelectedSex;
@@ -229,16 +247,11 @@ namespace QuanLyCaPhe.ViewModel
 
             AddCustomerCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(TenLoaiKhachHang) || string.IsNullOrEmpty(TenKhachHang) || string.IsNullOrEmpty(DienThoaiDiDong))
+                if (string.IsNullOrEmpty(TenLoaiKhachHang) || string.IsNullOrEmpty(TenKhachHang) || IsSelectedSex == null)
                 {
                     return false;
                 }
                 if (!isNumber(DienThoaiDiDong))
-                {
-                    return false;
-                }
-
-                if (DataProvider.Instance.Database.KhachHangs.Where(x => x.MaKhachHang == MaKhachHang).Count() != 0)
                 {
                     return false;
                 }
@@ -254,7 +267,7 @@ namespace QuanLyCaPhe.ViewModel
 
                 sex = IsSelectedSex == 0 ? "Nam" : "Nữ";
 
-                if (((string.IsNullOrEmpty(TenLoaiKhachHang) && string.IsNullOrEmpty(DiaChi) && string.IsNullOrEmpty(DienThoaiDiDong)) || SelectedItem == null))
+                if ((string.IsNullOrEmpty(TenLoaiKhachHang) && string.IsNullOrEmpty(DiaChi) && string.IsNullOrEmpty(DienThoaiDiDong)) || SelectedItem == null)
                     return false;
 
                 if (!isNumber(DienThoaiDiDong))
@@ -320,58 +333,117 @@ namespace QuanLyCaPhe.ViewModel
 
         private void GetListCustomerType()
         {
-            CustomerTypeList = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs);
+            CustomerTypeList = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs.Where(x=>x.DaXoa == DaXoa).ToList());
         }
 
         private void GetListCustomer()
         {
-            List = new ObservableCollection<KhachHang>(DataProvider.Instance.Database.KhachHangs);
+            List = new ObservableCollection<KhachHang>(DataProvider.Instance.Database.KhachHangs.Where(x=>x.DaXoa == DaXoa).ToList());
         }
 
         private void AddCustomer_Execute()
         {
+
+            UserMessage msg = new UserMessage();
+
             string sex = "";
 
             sex = IsSelectedSex == 0 ? "Nam" : "Nữ";
 
-            var Customer = new KhachHang()
+            try
             {
-                TenKhachHang = TenKhachHang,
-                DiaChi = DiaChi,
-                GioiTinh = sex,
-                DienThoaiDiDong = DienThoaiDiDong,
-                MaLoaiKhachHang = SelectedCustomerType.MaLoaiKhachHang,
-            };
-            DataProvider.Instance.Database.KhachHangs.Add(Customer);
-            DataProvider.Instance.Database.SaveChanges();
-            List.Add(Customer);
+                var Customer = new KhachHang()
+                {
+                    TenKhachHang = TenKhachHang,
+                    DiaChi = DiaChi,
+                    GioiTinh = sex,
+                    DienThoaiDiDong = DienThoaiDiDong,
+                    MaLoaiKhachHang = SelectedCustomerType.MaLoaiKhachHang,
+                    DaXoa = DaXoa,
+                };
+                if (Customer.DiaChi == "")
+                {
+                    Customer.DiaChi = @"Không có";
+                }
+                DataProvider.Instance.Database.KhachHangs.Add(Customer);
+                DataProvider.Instance.Database.SaveChanges();
+                List.Add(Customer);
+                msg.Message = "Thêm dữ liệu thành công";
+            }
+            catch (Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong thêm dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         private void UpdateCustomer_Execute()
         {
+            UserMessage msg = new UserMessage();
+
             var res = DataProvider.Instance.Database.KhachHangs.SingleOrDefault(x => x.MaKhachHang == SelectedItem.MaKhachHang);
             if (res != null)
             {
-                res.TenKhachHang = TenKhachHang;
-                res.DiaChi = DiaChi;
-                if (IsSelectedSex == 0)
+                try
                 {
-                    res.GioiTinh = "Nam";
+                    res.TenKhachHang = TenKhachHang;
+                    res.DiaChi = DiaChi;
+                    if (IsSelectedSex == 0)
+                    {
+                        res.GioiTinh = "Nam";
+                    }
+                    else if (IsSelectedSex == 1)
+                    {
+                        res.GioiTinh = "Nữ";
+                    }
+                    res.DienThoaiDiDong = DienThoaiDiDong;
+                    res.MaLoaiKhachHang = SelectedCustomerType.MaLoaiKhachHang;
+                    DataProvider.Instance.Database.SaveChanges();
+                    msg.Message = "Cập nhật dữ liệu thành công";
                 }
-                else if (IsSelectedSex == 1)
+                catch (Exception ex)
                 {
-                    res.GioiTinh = "Nữ";
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                    }
+                    msg.Message = "Có vấn đề trong cập nhật dữ liệu";
                 }
-                res.DienThoaiDiDong = DienThoaiDiDong;
-                res.MaLoaiKhachHang = SelectedCustomerType.MaLoaiKhachHang;
-                DataProvider.Instance.Database.SaveChanges();
+                Messenger.Default.Send<UserMessage>(msg);
                 ClearTextBox();
             }
         }
-
         private void DeleteCustomer_Execute()
         {
+            UserMessage msg = new UserMessage();
+            if (ConfirmDialog("Bạn có chắc chắn muốn xoá khách hàng <<" + SelectedItem.TenKhachHang + ">> không ? "))
+            {
+                try
+                {
+                    var customer = DataProvider.Instance.Database.KhachHangs.SingleOrDefault(x => x.MaKhachHang == SelectedItem.MaKhachHang);
+                    List.Remove(customer);
+                    customer.DaXoa = true;
+                    DataProvider.Instance.Database.SaveChanges();
+                    RaisePropertyChanged("List");
+                    msg.Message = "Dữ liệu đã xoá thành công";
+                }
+                catch (Exception ex)
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                    }
+                    msg.Message = "Có vấn đề trong xoá dữ liệu";
+                }
+                
+            }
+            Messenger.Default.Send<UserMessage>(msg);
+            ClearTextBox();
         }
 
         #endregion Methods

@@ -1,4 +1,5 @@
 ﻿using QuanLyCaPhe.Model;
+using QuanLyCaPhe.View;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,6 +10,33 @@ namespace QuanLyCaPhe.ViewModel
     {
         private NhatKyDangNhap nhatKyDangNhap = new NhatKyDangNhap();
 
+        private string _tenNhanVien;
+        public string TenNhanVien
+        {
+            get
+            {
+                return _tenNhanVien;
+            }
+            set
+            {
+                _tenNhanVien = value;
+                RaisePropertyChanged("TenNhanVien");
+            }
+        }
+
+        private string _tieuDe;
+        public string TieuDe
+        {
+            get
+            {
+                return _tieuDe;
+            }
+            set
+            {
+                _tieuDe = value;
+                RaisePropertyChanged("TieuDe");
+            }
+        }
         public ICommand CloseWindowCommand { get; set; }
         public ICommand MaximizedWindowCommand { get; set; }
         public ICommand MinimizedWindowCommand { get; set; }
@@ -17,6 +45,9 @@ namespace QuanLyCaPhe.ViewModel
 
         public ControlBarViewModel()
         {
+            TieuDe = "Chương Trình Quản Lý Bán Hàng Cà Phê";
+
+        
             CloseWindowCommand = new RelayCommand<UserControl>((p) => { return p == null ? false : true; }, (p) =>
             {
                 //FrameworkElement mainWindow = GetParentWindow(p);
@@ -26,6 +57,8 @@ namespace QuanLyCaPhe.ViewModel
                 {
                     Application.Current.Shutdown();
                 }
+                //CheckClosingView checkClosing = new CheckClosingView();
+                //checkClosing.ShowDialog();
             });
 
             MaximizedWindowCommand = new RelayCommand<UserControl>((p) => { return p == null ? false : true; }, (p) =>

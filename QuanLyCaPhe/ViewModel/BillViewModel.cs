@@ -228,6 +228,21 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        private bool _daXoa = false;
+        public bool DaXoa
+        {
+            get => _daXoa;
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value;
+                    RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
+
+
         public string TenMon
         {
             get => _tenMon;
@@ -336,9 +351,9 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
-        private int _giamGia;
+        private double _giamGia;
 
-        public int GiamGia
+        public double GiamGia
         {
             get => _giamGia;
             set
@@ -517,8 +532,6 @@ namespace QuanLyCaPhe.ViewModel
         public ICommand DiscountByQRCodeCommand { get => _DiscountByQRCodeCommand; set => _DiscountByQRCodeCommand = value; }
 
 
-
-
         #endregion Command Properties
 
         #region Constructor
@@ -608,10 +621,15 @@ namespace QuanLyCaPhe.ViewModel
                     }
                 }
                 
-
                 EnabledCustomerVIP(SelectedCustomerType);
 
                 EnabledButtonDiscountByQRCode();
+
+                if (!string.IsNullOrEmpty(TienKhachTra+""))
+                {
+                    TienThua = TienKhachTra - ThanhToan;
+                }
+                
 
             });
 
@@ -656,13 +674,13 @@ namespace QuanLyCaPhe.ViewModel
                     {
                         var sanPhamMua = List.Where(x => x.MaMon == hoaDon.MaMon).SingleOrDefault();
                         List.Remove(sanPhamMua);
+
                         ThanhToanCuoiCung();
+
                         if(List.Count() == 0)
                         {
                             ClearValue();
                         }
-
-
 
                     }
                 }
@@ -703,7 +721,7 @@ namespace QuanLyCaPhe.ViewModel
             //Thanh toán
             PayCommand = new RelayCommand<object>((p) =>
             {
-                if (Convert.ToDouble(TienKhachTra) <= ThanhToan || SelectedCustomerName == null) 
+                if (Convert.ToDouble(TienKhachTra) < ThanhToan || SelectedCustomerName == null||TongTien==0||string.IsNullOrEmpty(TongTien+"")) 
                 {
                     return false;
                 }
@@ -751,7 +769,7 @@ namespace QuanLyCaPhe.ViewModel
             //Huỷ bỏ hoá đơn
             CancelMenuCommand = new RelayCommand<object>((p) =>
             {
-                if (Convert.ToDouble(TienKhachTra) >= ThanhToan)
+                if (List.Count==0)
                 {
                     return false;
                 }
@@ -794,6 +812,7 @@ namespace QuanLyCaPhe.ViewModel
                 {
                     try
                     {
+                       
                         TienThua = Convert.ToDouble(p.Text) - ThanhToan;
                     }
                     catch
@@ -952,6 +971,7 @@ namespace QuanLyCaPhe.ViewModel
 
         private void KhuyenMaiSanPham(HoaDon_DTO hoaDon)
         {
+            
             ThucDon SanPhamTang;
             ChiTietKhuyenMai chiTietKM;
             KhuyenMai_DTO khuyenMai_DTO;
@@ -980,21 +1000,48 @@ namespace QuanLyCaPhe.ViewModel
                                 khuyenMai_DTO = new KhuyenMai_DTO();
 
                                 SanPhamTang = DataProvider.Instance.Database.ThucDons.Where(x => x.MaMon == chiTietKM.SanPhamTang).SingleOrDefault();
-                                int? _soLuong = hoaDon.SoLuong / chiTietKM.DieuKien;
-                                khuyenMai_DTO = ConvertThucDon_KhuyenMai(SanPhamTang, chiTietKM.MaMon, (int)_soLuong);
 
+                                int? _soLuong = hoaDon.SoLuong / chiTietKM.DieuKien;
+
+                                khuyenMai_DTO = ConvertThucDon_KhuyenMai(SanPhamTang, chiTietKM.MaMon, (int)_soLuong);   
+                                
                                 PromotionDetailList.Add(khuyenMai_DTO);
 
+                                double sumThanhTien = 0;
+
+                                foreach (var item in PromotionDetailList)
+                                {
+                                    
+                                    sumThanhTien += item.ThanhTien;
+                                }
+
+                                GiamGia = sumThanhTien;
+                                
                             }
                             else
                             {
 
                                 //Nhiều sản phẩm tặng
                                 SanPhamTang = DataProvider.Instance.Database.ThucDons.Where(x => x.MaMon == chiTietKM.SanPhamTang).SingleOrDefault();
+
                                 int? _soLuong = hoaDon.SoLuong / chiTietKM.DieuKien;
+
                                 khuyenMai_DTO = ConvertThucDon_KhuyenMai(SanPhamTang, chiTietKM.MaMon, (int)_soLuong);
+
                                 PromotionDetailList.Where(x => x.MaMon == chiTietKM.SanPhamTang).SingleOrDefault().SoLuong = (int)_soLuong;
+
                                 PromotionDetailList.Where(x => x.MaMon == chiTietKM.SanPhamTang).SingleOrDefault().ThanhTien = khuyenMai_DTO.ThanhTien;
+
+                                double sumThanhTien = 0;
+
+                                foreach (var item in PromotionDetailList)
+                                {
+                                    sumThanhTien += item.ThanhTien;
+                                }
+
+                                GiamGia = sumThanhTien;
+
+
 
                             }
                         }
@@ -1038,6 +1085,8 @@ namespace QuanLyCaPhe.ViewModel
 
                     ThanhToan = sum * 0.95;
 
+                    GiamGia = Convert.ToDouble(TongTien - ThanhToan);
+
                     CustomerNameList = new ObservableCollection<KhachHang>(DataProvider.Instance.Database.KhachHangs.Where(x => x.MaLoaiKhachHang == SelectedCustomerType.MaLoaiKhachHang));
                 }
                 else if (SelectedCustomerType.MaLoaiKhachHang == "LKHVIPP")
@@ -1049,6 +1098,8 @@ namespace QuanLyCaPhe.ViewModel
                     TongTien = sum + TongTienKhuyenMai();
 
                     ThanhToan = sum * 0.9;
+
+                    GiamGia = Convert.ToDouble(TongTien - ThanhToan);
 
                     CustomerNameList = new ObservableCollection<KhachHang>(DataProvider.Instance.Database.KhachHangs.Where(x => x.MaLoaiKhachHang == SelectedCustomerType.MaLoaiKhachHang));
                 }
@@ -1160,7 +1211,7 @@ namespace QuanLyCaPhe.ViewModel
         public void GetDrinkListWhenStartup()
         {
 
-            MenuList = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons.Where(x => x.NhomThucDon.LoaiThucDon.MaLoaiThucDon == "LTDDU"));
+            MenuList = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons.Where(x => x.NhomThucDon.LoaiThucDon.MaLoaiThucDon == "LTDDU" && x.DaXoa == DaXoa).ToList());
         }
 
         public void ClearValue()
@@ -1172,6 +1223,8 @@ namespace QuanLyCaPhe.ViewModel
                 PromotionDetailList = null;
 
                 TongTien = ThanhToan = TienKhachTra = TienThua = null;
+
+                GiamGia = 0;
             }
             
             List = new ObservableCollection<HoaDon_DTO>();
@@ -1183,6 +1236,8 @@ namespace QuanLyCaPhe.ViewModel
             EnabledButtonDiscountByQRCode();
 
             TongTien = ThanhToan = TienKhachTra = TienThua = null;
+
+            GiamGia = 0;
 
         }
 
@@ -1220,20 +1275,48 @@ namespace QuanLyCaPhe.ViewModel
 
             ThanhToan = sum;
 
+            if (SelectedCustomerType != null)
+            {
+                if (SelectedCustomerType.MaLoaiKhachHang == "LKHTH")
+                {
+                    ThanhToan = sum;
+                }
+                else if (SelectedCustomerType.MaLoaiKhachHang == "LKHVIP")
+                {
+
+                    ThanhToan = sum * 0.95;
+
+
+                }
+                else if (SelectedCustomerType.MaLoaiKhachHang == "LKHVIPP")
+                {
+                   
+                    ThanhToan = sum * 0.9;
+
+
+                }
+            }
+
+            if (!string.IsNullOrEmpty(TienKhachTra + ""))
+            {
+                TienThua = TienKhachTra - ThanhToan;        
+
+            }
+                     
             return ThanhToan;
         }
         public void GetListPromotionName()
         {
             KhuyenMai_DTO khuyenMai_DTO;
-            List<ChuongTrinhKhuyenMai> ListChuongTrinhKM = new List<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x => x.NgayBDKM <= DateTime.Now && x.NgayKTKM >= DateTime.Now));
+            List<ChuongTrinhKhuyenMai> ListChuongTrinhKM = new List<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x => x.NgayBDKM <= DateTime.Now && x.NgayKTKM >= DateTime.Now && x.DaXoa == DaXoa));
             PromotionNameList = new ObservableCollection<KhuyenMai_DTO>();
             foreach (var itemChuongTrinh in ListChuongTrinhKM)
             {
 
-                List<ChiTietKhuyenMai> ListChiTietKM = new List<ChiTietKhuyenMai>(DataProvider.Instance.Database.ChiTietKhuyenMais.Where(x => x.MaCTKM == itemChuongTrinh.MaCTKM));
+                List<ChiTietKhuyenMai> ListChiTietKM = new List<ChiTietKhuyenMai>(DataProvider.Instance.Database.ChiTietKhuyenMais.Where(x => x.MaCTKM == itemChuongTrinh.MaCTKM && x.DaXoa == DaXoa));
                 foreach (var itemChiTietKM in ListChiTietKM)
                 {
-                    List<ThucDon> ListThucDon = new List<ThucDon>(DataProvider.Instance.Database.ThucDons.Where(x => x.MaMon == itemChiTietKM.MaMon));
+                    List<ThucDon> ListThucDon = new List<ThucDon>(DataProvider.Instance.Database.ThucDons.Where(x => x.MaMon == itemChiTietKM.MaMon && x.DaXoa == DaXoa));
                     foreach (var itemThucDOn in ListThucDon)
                     {
                         khuyenMai_DTO = new KhuyenMai_DTO();
@@ -1259,7 +1342,7 @@ namespace QuanLyCaPhe.ViewModel
 
         public void GetListCustomerType()
         {
-            CustomerTypeList = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs);
+            CustomerTypeList = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs.Where(x=>x.DaXoa == DaXoa).ToList());
         }
 
         private void HienThiSanPhamYeuThich()
@@ -1289,12 +1372,14 @@ namespace QuanLyCaPhe.ViewModel
                 }
 
             }
+
             //Sắp xếp theo thứ tự tăng dần
             FavoriteMenuList = new ObservableCollection<KhuyenMai_DTO>(FavoriteMenuList.OrderByDescending(x => x.SoLuong).ToList());
             int _count = 0;
             MenuList.Clear();
             foreach (var itemFavoriteMenu in FavoriteMenuList)
             {
+                //Thay đổi số lượng các món yêu thích ở đây
                 MenuList.Add(ConvertKhuyenMai_ThucDon(itemFavoriteMenu));
                 _count++;
                 if (_count > 4)

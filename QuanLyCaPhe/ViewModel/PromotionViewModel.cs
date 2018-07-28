@@ -3,6 +3,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using System;
+using QuanLyCaPhe.Message;
+using System.Windows;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace QuanLyCaPhe.ViewModel
 {
@@ -11,7 +14,7 @@ namespace QuanLyCaPhe.ViewModel
         #region Property
 
         private ObservableCollection<ChuongTrinhKhuyenMai> _List;
-        public ObservableCollection<ChuongTrinhKhuyenMai> List { get => _List; set { _List = value; } }
+        public ObservableCollection<ChuongTrinhKhuyenMai> List { get => _List; set { _List = value; RaisePropertyChanged("List"); } }
 
         private string _tenCTKM;
 
@@ -107,6 +110,21 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        private bool _daXoa = false;
+        public bool DaXoa
+        {
+            get
+            {
+                return _daXoa;
+            }
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value; RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
 
 
         #endregion Property
@@ -139,11 +157,16 @@ namespace QuanLyCaPhe.ViewModel
 
             MaCTKM = "KM";
 
-            List = new ObservableCollection<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais);
+            LoadPromotionList();
 
             AddPromotionCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaCTKM) || string.IsNullOrEmpty(TenCTKM) || string.IsNullOrEmpty(MoTaCTKM))
+                if (string.IsNullOrEmpty(MaCTKM) || string.IsNullOrEmpty(TenCTKM) || string.IsNullOrEmpty(MoTaCTKM) || NgayBDKM == null || NgayKTKM == null)
+                {
+                    return false;
+                }
+
+                if(!isSymbol(MaCTKM) || !isSymbol(TenCTKM) || !isSymbol(MoTaCTKM))
                 {
                     return false;
                 }
@@ -160,7 +183,7 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdatePromotionCommand = new RelayCommand<object>((p) =>
             {
-                if (((string.IsNullOrEmpty(MaCTKM) && string.IsNullOrEmpty(TenCTKM) && string.IsNullOrEmpty(MoTaCTKM)) || SelectedItem == null))
+                if ((string.IsNullOrEmpty(MaCTKM) && string.IsNullOrEmpty(TenCTKM) && string.IsNullOrEmpty(MoTaCTKM)) || SelectedItem == null)
                     return false;
 
                 if (!isSymbolAndNumber(TenCTKM))
@@ -168,7 +191,7 @@ namespace QuanLyCaPhe.ViewModel
                     return false;
                 }
 
-                if (DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x => x.TenCTKM == TenCTKM && x.MoTaCTKM == MoTaCTKM && (x.NgayBDKM == NgayBDKM && x.NgayKTKM == NgayKTKM)).Count() != 0)
+                if (DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x => x.TenCTKM == TenCTKM && x.MoTaCTKM == MoTaCTKM && x.NgayBDKM == (DateTime)NgayBDKM && x.NgayKTKM == (DateTime)NgayKTKM).Count() != 0)
                 {
                     return false;
                 }
@@ -202,7 +225,12 @@ namespace QuanLyCaPhe.ViewModel
             });
         }
 
-        
+        public void LoadPromotionList()
+        {
+            List = new ObservableCollection<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x=>x.DaXoa == DaXoa).ToList());
+        }
+
+
 
         #endregion Constructor
 
@@ -210,49 +238,104 @@ namespace QuanLyCaPhe.ViewModel
 
         public bool ClearTextBox()
         {
-            if (MaCTKM != null)
-            {
-                MaCTKM = "KM";
-                TenCTKM = string.Empty;
-                MoTaCTKM = string.Empty;
-                NgayBDKM = DateTime.Now.AddDays(-1);
-                NgayKTKM = DateTime.Now;
-                SelectedItem = null;
-                IsEnabledPromotionCode = true;
-                return true;
-            }
-            return false;
+
+            MaCTKM = "KM";
+            TenCTKM = string.Empty;
+            MoTaCTKM = string.Empty;
+            NgayBDKM = DateTime.Now.AddDays(-1);
+            NgayKTKM = DateTime.Now;
+            SelectedItem = null;
+            IsEnabledPromotionCode = true;
+            return true;
+
         }
 
         private void AddPromotion_Execute()
         {
-            var Promotion = new ChuongTrinhKhuyenMai() { MaCTKM = MaCTKM, TenCTKM = TenCTKM,MoTaCTKM = MoTaCTKM,NgayBDKM = NgayBDKM, NgayKTKM = NgayKTKM};
-            DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Add(Promotion);
-            DataProvider.Instance.Database.SaveChanges();
-            List.Add(Promotion);
+            UserMessage msg = new UserMessage();
+            try
+            {
+                var Promotion = new ChuongTrinhKhuyenMai()
+                {
+                    MaCTKM = MaCTKM,
+                    TenCTKM = TenCTKM,
+                    MoTaCTKM = MoTaCTKM,
+                    NgayBDKM = NgayBDKM,
+                    NgayKTKM = NgayKTKM,
+                    DaXoa = DaXoa,
+                };
+                DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Add(Promotion);
+                DataProvider.Instance.Database.SaveChanges();
+                List.Add(Promotion);
+                msg.Message = "Thêm dữ liệu thành công";
+            }
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                
+                msg.Message = "Có vấn đề trong thêm dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         private void UpdatePromotion_Execute()
         {
-            var res = DataProvider.Instance.Database.ChuongTrinhKhuyenMais.SingleOrDefault(x => x.MaCTKM == SelectedItem.MaCTKM);
-            if (res != null)
+            UserMessage msg = new UserMessage();
+            try
             {
-                res.TenCTKM = TenCTKM;
-                res.MoTaCTKM = MoTaCTKM;
-                res.NgayBDKM = NgayBDKM;
-                res.NgayKTKM = NgayKTKM;
-               
-                DataProvider.Instance.Database.SaveChanges();
-                ClearTextBox();
+                var res = DataProvider.Instance.Database.ChuongTrinhKhuyenMais.SingleOrDefault(x => x.MaCTKM == SelectedItem.MaCTKM);
+                if (res != null)
+                {
+                    res.TenCTKM = TenCTKM;
+                    res.MoTaCTKM = MoTaCTKM;
+                    res.NgayBDKM = NgayBDKM;
+                    res.NgayKTKM = NgayKTKM;
+                    DataProvider.Instance.Database.SaveChanges();
+                    msg.Message = "Cập nhật dữ liệu thành công";
+                }
             }
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong cập nhật dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
+            ClearTextBox();
+
         }
 
         private void DeletePromotion_Execute()
         {
-            WarningDialogs("Dữ liệu không thể xoá. Xin vui lòng thử lại vào dịp khác!!!");
+            UserMessage msg = new UserMessage();
+            try
+            {
+                if (ConfirmDialog("Bạn có chắc chắn muốn xoá chương trình khuyến mãi <<" + SelectedItem.TenCTKM + ">> không ? "))
+                {
+                    var promotion = DataProvider.Instance.Database.ChuongTrinhKhuyenMais.SingleOrDefault(x => x.MaCTKM == SelectedItem.MaCTKM);
+                    List.Remove(promotion);
+                    promotion.DaXoa = true;
+                    DataProvider.Instance.Database.SaveChanges();
+                    RaisePropertyChanged("List");
+                    msg.Message = "Xoá dữ liệu thành công";
+                }
+            }
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong xoá dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
-
         }
 
         #endregion Methods

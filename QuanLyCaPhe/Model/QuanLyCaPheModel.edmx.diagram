@@ -5,33 +5,39 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="1e0cd6f8714c41ca9bea1ccf39ea4082" Name="Diagram1">
-        <EntityTypeShape EntityType="QuanLyCaPheModel.Ban" Width="1.5" PointX="10.75" PointY="7.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.ChiTietHoaDon" Width="1.5" PointX="7.5" PointY="3.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.ChiTietKhuyenMai" Width="1.5" PointX="10.5" PointY="3.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.ChuongTrinhKhuyenMai" Width="1.5" PointX="8.25" PointY="8.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.DonViTinh" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.HoaDon" Width="1.5" PointX="5.25" PointY="10.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.KhachHang" Width="1.5" PointX="3" PointY="8.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.LoaiKhachHang" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.LoaiThucDon" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.NhanVien" Width="1.5" PointX="3" PointY="11.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.NhatKyDangNhap" Width="1.5" PointX="7.5" PointY="14.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.NhomThucDon" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.sysdiagram" Width="1.5" PointX="10.75" PointY="10.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.TaiKhoan" Width="1.5" PointX="5.25" PointY="14.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyCaPheModel.ThucDon" Width="1.5" PointX="5.25" PointY="3.125" IsExpanded="true" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietHoaDon_HoaDon" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietHoaDon_ThucDon" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ThucDon" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_ThucDon_DonViTinh" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_HoaDon_KhachHang" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_HoaDon_NhanVien" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_KhachHang_LoaiKhachHang" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_NhomThucDon_LoaiThucDon" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_TaiKhoan_NhanVien" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_NhatKyDangNhap_TaiKhoan" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyCaPheModel.FK_ThucDon_NhomThucDon" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.Ban" Width="1.5" PointX="0.75" PointY="8.25" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.ChiTietHoaDon" Width="1.5" PointX="10.5" PointY="4.25" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.ChiTietKhuyenMai" Width="1.5" PointX="7.5" PointY="4.125" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.ChiTietQuyenHan" Width="1.5" PointX="10.5" PointY="1.5" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.ChuongTrinhKhuyenMai" Width="1.5" PointX="5.25" PointY="17.25" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.DonViTinh" Width="1.5" PointX="3" PointY="1.375" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.HoaDon" Width="1.5" PointX="8.25" PointY="11" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.KhachHang" Width="1.5" PointX="6" PointY="13.125" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.LoaiKhachHang" Width="1.5" PointX="3.75" PointY="13.5" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.LoaiThucDon" Width="1.5" PointX="0.75" PointY="4.5" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.NhanVien" Width="1.5" PointX="6" PointY="9.125" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.NhatKyDangNhap" Width="1.5" PointX="10.5" PointY="10.625" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.NhomThucDon" Width="1.5" PointX="3" PointY="4.25" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.QuanHeNguoiDung_QuyenHan" Width="1.5" PointX="10.5" PointY="7.625" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.QuyenHan" Width="1.5" PointX="8.25" PointY="0.75" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.sysdiagram" Width="1.5" PointX="2.75" PointY="8.25" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.TaiKhoan" Width="1.5" PointX="8.25" PointY="7.5" />
+        <EntityTypeShape EntityType="QuanLyCaPheModel.ThucDon" Width="1.5" PointX="5.25" PointY="3.75" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietHoaDon_HoaDon" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietHoaDon_ThucDon" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ChuongTrinhKhuyenMai" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietKhuyenMai_ThucDon" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ChiTietQuyenHan_QuyenHan" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ThucDon_DonViTinh" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_HoaDon_KhachHang" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_HoaDon_NhanVien" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_KhachHang_LoaiKhachHang" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_NhomThucDon_LoaiThucDon" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_TaiKhoan_NhanVien" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_NhatKyDangNhap_TaiKhoan" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_ThucDon_NhomThucDon" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_QuanHeNguoiDung_QuyenHan_QuyenHan" />
+        <AssociationConnector Association="QuanLyCaPheModel.FK_QuanHeNguoiDung_QuyenHan_TaiKhoan" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

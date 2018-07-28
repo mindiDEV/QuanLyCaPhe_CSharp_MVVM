@@ -17,9 +17,19 @@
     <viewmodel:HomeViewModel x:Key="HomeViewModel"></viewmodel:HomeViewModel>
     <viewmodel:WebcamViewModel x:Key="WebcamViewModel"></viewmodel:WebcamViewModel>
     <viewmodel:ScanQRCodeDiscountViewModel x:Key="ScanQRCodeDiscountViewModel"></viewmodel:ScanQRCodeDiscountViewModel>
+    <viewmodel:CollectionViewModel x:Key="CollectionViewModel"></viewmodel:CollectionViewModel>
     <viewmodel:PromotionDetailViewModel x:Key="PromotionDetailViewModel"></viewmodel:PromotionDetailViewModel>
-    <converters:InputValidationRule x:Key="InputValidationRule"></converters:InputValidationRule>
+    <viewmodel:CheckClosingViewModel x:Key="CheckClosingViewModel"></viewmodel:CheckClosingViewModel>
+    <converters:BoolToVisibilityConverter x:Key="converters"></converters:BoolToVisibilityConverter>
+        <converters:InputValidationRule x:Key="InputValidationRule"></converters:InputValidationRule>
     <converters:IndexConverter x:Key="IndexConverter"></converters:IndexConverter>
-    
-    
+
+    <SolidColorBrush x:Key="DarkBrightBrush" Color="#FF831404" />
+    <Color x:Key="DarkBright">#FF831404</Color>
+
+    <SolidColorBrush x:Key="MidDullBrush" Color="#FF707078" />
+    <Color x:Key="MidDull">#FF707078</Color>
+
+    <SolidColorBrush x:Key="DarkForecolourBrush" Color="MidnightBlue" />
+
 </ResourceDictionary>

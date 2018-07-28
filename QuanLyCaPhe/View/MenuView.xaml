@@ -9,6 +9,16 @@
              DataContext="{StaticResource MenuViewModel}"
              Name="menuView">
 
+    <UserControl.Resources>
+        <Storyboard x:Key="FadeUIMessage">
+            <DoubleAnimation 
+                Storyboard.TargetName="UIMessage"
+                Storyboard.TargetProperty="(TextBlock.Opacity)" 
+                From="1" To="0" Duration="0:0:4" />
+        </Storyboard>
+    </UserControl.Resources>
+
+
     <Grid Background="#293541">
         <Grid>
             <Grid.RowDefinitions>
@@ -91,15 +101,10 @@
                                 BorderBrush="{x:Null}"
                                 Foreground="#F2F4F5" />
 
-                            
+                            <!--Message-->
+                            <TextBlock x:Name="UIMessage" Text="" Margin="350 0 0 0"  FontSize="14"  HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Light"  Foreground="{DynamicResource LightBorderBrush}"/>
 
-                            <Button
-                        Width="150"
-                        Content="Trợ giúp"
-                        Height="50"
-                        Background="{x:Null}"
-                        BorderBrush="{x:Null}"
-                        Foreground="#F2F4F5" />
+                            
                         </StackPanel>
 
                         <!--Move bar-->
@@ -162,6 +167,7 @@
                                 <WrapPanel>
                                     <TextBox
                              Width="200"
+                             IsEnabled="{Binding IsEnabledMaMon,UpdateSourceTrigger=PropertyChanged}"
                              Margin="35 5 15 5"
                              materialDesign:HintAssist.Hint="{Binding MaHienThi_ThucDon}"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"

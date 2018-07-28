@@ -24,7 +24,6 @@
         WindowState="Maximized"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen">
-
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedWindow}" CommandParameter="{Binding ElementName=mainView}"></i:InvokeCommandAction>
@@ -40,9 +39,16 @@
         </Storyboard>
         <Storyboard x:Key="CloseMenu">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
-                <EasingDoubleKeyFrame KeyTime="0" Value="200" />
+                <EasingDoubleKeyFrame KeyTime="0" Value="210" />
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="70" />
             </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        
+        <Storyboard x:Key="FadeUIMessage">
+            <DoubleAnimation 
+                Storyboard.TargetName="UIMessage"
+                Storyboard.TargetProperty="(TextBlock.Opacity)" 
+                From="1" To="0" Duration="0:0:6" />
         </Storyboard>
     </Window.Resources>
 
@@ -69,9 +75,10 @@
                     <DropShadowEffect BlurRadius="2" ShadowDepth="1" Color="#FFAEAEAE" />
                 </Grid.Effect>
                 <StackPanel>
-                    <Grid Height="150"
+                    <Grid Height="190"
                           Background="#E87E31"
                           RenderTransformOrigin="0.5,0.5">
+                        
                         <Grid.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform />
@@ -80,9 +87,13 @@
                                 <TranslateTransform />
                             </TransformGroup>
                         </Grid.RenderTransform>
-
-                        <!--Toggle Button-->
-                        <Button x:Name="ButtonOpenMenu"
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition ></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <!--Toggle Button-->
+                            <Button x:Name="ButtonOpenMenu"
                                 Height="30"
 
                                 Width="60" Margin="0 5 0 0"
@@ -93,11 +104,11 @@
                                 BorderBrush="{x:Null}"
                                 Foreground="#D3D3D3"
                                 Click="ButtonOpenMenu_Click">
-                            <materialDesign:PackIcon Kind="Menu" Width="25" Height="25" />
-                        </Button>
+                                <materialDesign:PackIcon Kind="Menu" Width="25" Height="25" />
+                            </Button>
 
-                        <!--Close Button-->
-                        <Button x:Name="ButtonCloseMenu"
+                            <!--Close Button-->
+                            <Button x:Name="ButtonCloseMenu"
                                 Visibility="Collapsed"
                                 Height="60"
                                 Width="60"
@@ -108,26 +119,32 @@
                                 Background="{x:Null}" BorderBrush="{x:Null}"
                                 Foreground="#D3D3D3"
                                 Click="ButtonCloseMenu_Click">
-                            <materialDesign:PackIcon
+                                <materialDesign:PackIcon
                                 Kind="ArrowLeft"
                                 Width="25"
                                 Height="25" />
-                        </Button>
+                            </Button>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <!--Image-->
+                            <Image Source="/Imagines/logo3.png" Height="100"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Grid>
+                        
+                        
 
-                        <!--Image-->
-                        <Image Source="/Imagines/logo3.png" Height="100"
-                               VerticalAlignment="Bottom" />
+                        
+                        
                     </Grid>
 
                     <!--Menu-->
-                    <ListView
-                        x:Name="ListViewMenu"
+                    <ListView SelectedIndex="{Binding SelectedIndexListView,UpdateSourceTrigger =PropertyChanged}"
                         Foreground="#6E6F79"
                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                        SelectionChanged="ListViewMenu_SelectionChanged">
-
+                        Visibility="{Binding IsActive,Converter={StaticResource converters},UpdateSourceTrigger=PropertyChanged}">
                         <!--Home-->
-                        <ListViewItem x:Name="ItemHome"
+                        <ListViewItem 
+                                      IsSelected="{Binding SelectedItemHome,UpdateSourceTrigger=PropertyChanged}"
                                       Height="60">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
@@ -146,8 +163,8 @@
                         <!--Collection-->
 
                         <ListViewItem x:Name="ItemCollection"
-                                      Height="60"
-                                      MouseUp="ItemCollection_MouseUp">
+                                      IsSelected="{Binding SelectedItemCollection,UpdateSourceTrigger=PropertyChanged}"
+                                      Height="60">
 
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
@@ -163,7 +180,9 @@
                         </ListViewItem>
 
                         <!--Order-->
-                        <ListViewItem Height="60" x:Name="ItemBill">
+                        <ListViewItem Height="60"
+                                      IsSelected="{Binding SelectedItemBill,UpdateSourceTrigger=PropertyChanged}"
+                                      x:Name="ItemBill">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="FoodForkDrink"
                                                          Height="25" Width="25"
@@ -176,7 +195,9 @@
                         </ListViewItem>
 
                         <!--Customer-->
-                        <ListViewItem Height="60" x:Name="ItemCustomer">
+                        <ListViewItem Height="60" 
+                                      IsSelected="{Binding SelectedItemCustomer,UpdateSourceTrigger=PropertyChanged}"
+                                      x:Name="ItemCustomer">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
                                     Kind="AccountAlert"
@@ -190,7 +211,9 @@
                         </ListViewItem>
 
                         <!--Employee-->
-                        <ListViewItem Height="60" x:Name="ItemEmployee">
+                        <ListViewItem Height="60" 
+                                      IsSelected="{Binding SelectedItemEmployee,UpdateSourceTrigger=PropertyChanged}"
+                                      x:Name="ItemEmployee">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
                                     Kind="AccountSwitch"
@@ -204,8 +227,10 @@
                             </StackPanel>
                         </ListViewItem>
 
-                        <!--Employee-->
-                        <ListViewItem Height="60" x:Name="ItemPromotion">
+                        <!--Promotion-->
+                        <ListViewItem Height="60" 
+                                      IsSelected="{Binding SelectedItemPromotion,UpdateSourceTrigger=PropertyChanged}"
+                                      x:Name="ItemPromotion">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
                                     Kind="Popcorn"
@@ -219,8 +244,32 @@
                             </StackPanel>
                         </ListViewItem>
 
-                        
+                        <!--Detail Promotion-->
+                        <ListViewItem Height="60" 
+                                      IsSelected="{Binding SelectedItemDetailPromotion,UpdateSourceTrigger=PropertyChanged}">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    Kind="SilverwareVariant"
+                                    Height="25"
+                                    Width="25"
+                                    Margin="10" />
+                                <TextBlock Text="CT khuyến mãi"
+                                           VerticalAlignment="Center"
+                                           FontFamily="Saigonese"
+                                           Margin="20 10" />
+
+                                
+                            </StackPanel>
+                        </ListViewItem>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseUp">
+                                <i:InvokeCommandAction Command="{Binding MouseDownListView,UpdateSourceTrigger=PropertyChanged}"
+                                   CommandParameter="{Binding ElementName=mainView}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </ListView>
+                    
                 </StackPanel>
             </Grid>
         </Grid>
@@ -228,7 +277,7 @@
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition></RowDefinition>
+                <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -237,6 +286,7 @@
 
             <Grid Grid.Row="1" x:Name="GridMain">
             </Grid>
+            
         </Grid>
     </Grid>
 </Window>

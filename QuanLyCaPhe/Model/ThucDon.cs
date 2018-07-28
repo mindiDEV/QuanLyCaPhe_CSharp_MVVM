@@ -23,11 +23,12 @@ namespace QuanLyCaPhe.Model
     
         public string MaMon { get; set; }
         public string TenMon { get; set; }
-        public Nullable<decimal> GiaBan { get; set; }
+        public decimal GiaBan { get; set; }
         public byte[] HinhDaiDien { get; set; }
         public string GhiChu { get; set; }
         public string MaDonViTinh { get; set; }
         public string MaNhomThucDon { get; set; }
+        public Nullable<bool> DaXoa { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; }

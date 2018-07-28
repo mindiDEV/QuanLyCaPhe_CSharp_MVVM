@@ -1,10 +1,13 @@
-﻿using QuanLyCaPhe.Model;
+﻿using GalaSoft.MvvmLight.Messaging;
+using QuanLyCaPhe.Message;
+using QuanLyCaPhe.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace QuanLyCaPhe.ViewModel
@@ -14,16 +17,16 @@ namespace QuanLyCaPhe.ViewModel
         #region Property
 
         private ObservableCollection<ChiTietKhuyenMai> _List;
-        public ObservableCollection<ChiTietKhuyenMai> List { get => _List; set { _List = value; } }
+        public ObservableCollection<ChiTietKhuyenMai> List { get => _List; set { _List = value; RaisePropertyChanged("List"); } }
 
         private ObservableCollection<ChuongTrinhKhuyenMai> _PromotionList;
-        public ObservableCollection<ChuongTrinhKhuyenMai> PromotionList { get => _PromotionList; set { _PromotionList = value; } }
+        public ObservableCollection<ChuongTrinhKhuyenMai> PromotionList { get => _PromotionList; set { _PromotionList = value; RaisePropertyChanged("PromotionList"); } }
 
         private ObservableCollection<ThucDon> _MenuProductBuyList;
-        public ObservableCollection<ThucDon> MenuProductBuyList { get => _MenuProductBuyList; set { _MenuProductBuyList = value; } }
+        public ObservableCollection<ThucDon> MenuProductBuyList { get => _MenuProductBuyList; set { _MenuProductBuyList = value; RaisePropertyChanged("MenuProductBuyList"); } }
 
         private ObservableCollection<ThucDon> _MenuProductGiftList;
-        public ObservableCollection<ThucDon> MenuProductGiftList { get => _MenuProductGiftList; set { _MenuProductGiftList = value; } }
+        public ObservableCollection<ThucDon> MenuProductGiftList { get => _MenuProductGiftList; set { _MenuProductGiftList = value; RaisePropertyChanged("MenuProductGiftList"); } }
 
 
 
@@ -35,7 +38,6 @@ namespace QuanLyCaPhe.ViewModel
 
         private string _maChiTietKM;
 
-        private double? _giamGia;
 
         private int? _dieuKien;
 
@@ -130,20 +132,7 @@ namespace QuanLyCaPhe.ViewModel
                 }
             }
         }
-        public double? GiamGia
-        {
-            get
-            {
-                return _giamGia;
-            }
-            set
-            {
-                if (_giamGia != value)
-                {
-                    _giamGia = value; RaisePropertyChanged("GiamGia");
-                }
-            }
-        }
+        
 
         public int? DieuKien
         {
@@ -177,8 +166,8 @@ namespace QuanLyCaPhe.ViewModel
                     SelectPromotionList = SelectedItem.ChuongTrinhKhuyenMai;
                     SelectedProductBuyList = SelectedItem.ThucDon;
                     SelectedProductGiftList = DataProvider.Instance.Database.ThucDons.Where(x => x.MaMon == SelectedItem.SanPhamTang).FirstOrDefault();
-                    GiamGia = (double)SelectedItem.GiamGia;
                     DieuKien = (int)SelectedItem.DieuKien;
+                    IsEnabledPromotionCode = false;
                 }
             }
         }
@@ -232,6 +221,38 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        private bool _daXoa = false;
+        public bool DaXoa
+        {
+            get
+            {
+                return _daXoa;
+            }
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value; RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
+        private bool _isEnabledPromotionCode;
+        public bool IsEnabledPromotionCode
+        {
+            get
+            {
+                return _isEnabledPromotionCode;
+            }
+            set
+            {
+                if (_isEnabledPromotionCode != value)
+                {
+                    _isEnabledPromotionCode = value; RaisePropertyChanged("IsEnabledPromotionCode");
+                }
+            }
+        }
+
+        
 
 
         #endregion Property
@@ -258,18 +279,13 @@ namespace QuanLyCaPhe.ViewModel
 
         public PromotionDetailViewModel()
         {
-            LoadPromotionDetailList();
+            LoadAll();
 
-            LoadPromotionList();
-
-            LoadMenuProductBuyList();
-
-            LoadMenuProductGiftList();
-
+            IsEnabledPromotionCode = true;
 
             AddPromotionDetailCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaChiTietKM) || string.IsNullOrEmpty(SanPhamTang) || string.IsNullOrEmpty(MaMon) || SelectPromotionList == null)
+                if (string.IsNullOrEmpty(MaChiTietKM) || string.IsNullOrEmpty(SanPhamTang) || string.IsNullOrEmpty(MaMon) || DieuKien == null || SelectPromotionList == null)
                 {
                     return false;
                 }
@@ -287,12 +303,10 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdatePromotionDetailCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaChiTietKM) && SelectedItem == null)
+                if (string.IsNullOrEmpty(MaChiTietKM) || SelectedItem == null)
                     return false;
 
-                
-
-                var list = DataProvider.Instance.Database.ChiTietKhuyenMais.Where(x => x.MaChiTietKM == MaChiTietKM).Count();
+                var list = DataProvider.Instance.Database.ChiTietKhuyenMais.Where(x => x.MaMon == MaMon && x.SanPhamTang == SanPhamTang && x.DieuKien == DieuKien && x.MaCTKM == SelectPromotionList.MaCTKM).Count();
                 if (list != 0)
                 {
                     return false;
@@ -326,12 +340,12 @@ namespace QuanLyCaPhe.ViewModel
 
         private void LoadMenuProductBuyList()
         {
-            MenuProductBuyList = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons);
+            MenuProductBuyList = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons.Where(x => x.DaXoa == DaXoa).ToList());
         }
 
         private void LoadMenuProductGiftList()
         {
-            MenuProductGiftList = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons);
+            MenuProductGiftList = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons.Where(x => x.DaXoa == DaXoa).ToList());
         }
 
         #endregion Constructor
@@ -340,67 +354,131 @@ namespace QuanLyCaPhe.ViewModel
 
         public bool ClearTextBox()
         {
-            if(MaChiTietKM !=null)
-            {
-                MaChiTietKM = string.Empty;
-                GiamGia = null;
-                SanPhamTang = string.Empty;
-                MaMon = string.Empty;
-                DieuKien = null;
-                SelectedItem = null;
-                SelectPromotionList = null;
-                SelectedProductBuyList = null;
-                SelectedProductGiftList = null;
 
-            }
+            MaChiTietKM = string.Empty;
+            SanPhamTang = string.Empty;
+            MaMon = string.Empty;
+            DieuKien = null;
+            SelectedItem = null;
+            SelectPromotionList = null;
+            SelectedProductBuyList = null;
+            SelectedProductGiftList = null;
+            IsEnabledPromotionCode = true;
+
             return false;
         }
 
         private void AddPromotionDetail_Execute()
         {
-            var promotionDetail = new ChiTietKhuyenMai()
+            UserMessage msg = new UserMessage();
+            try
             {
-                MaChiTietKM = MaChiTietKM,
-                MaCTKM = SelectPromotionList.MaCTKM,
-                SanPhamTang = SelectedProductGiftList.MaMon,
-                MaMon = SelectedProductBuyList.MaMon,
-                GiamGia = (float)GiamGia,
-                DieuKien = DieuKien
-            };
-            DataProvider.Instance.Database.ChiTietKhuyenMais.Add(promotionDetail);
-            DataProvider.Instance.Database.SaveChanges();
-            List.Add(promotionDetail);
+                var promotionDetail = new ChiTietKhuyenMai()
+                {
+                    MaChiTietKM = MaChiTietKM,
+                    MaCTKM = SelectPromotionList.MaCTKM,
+                    SanPhamTang = SelectedProductGiftList.MaMon,
+                    MaMon = SelectedProductBuyList.MaMon,
+                    DieuKien = DieuKien,
+                    DaXoa = DaXoa,
+                    
+                    
+                };
+
+                DataProvider.Instance.Database.ChiTietKhuyenMais.Add(promotionDetail);
+                DataProvider.Instance.Database.SaveChanges();
+                List.Add(promotionDetail);
+                msg.Message = "Thêm dữ liệu thành công";
+            }
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong thêm dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         private void UpdatePromotionDetail_Execute()
         {
-            var res = DataProvider.Instance.Database.ChiTietKhuyenMais.SingleOrDefault(x => x.MaChiTietKM == SelectedItem.MaChiTietKM);
-            if (res != null)
+            UserMessage msg = new UserMessage();
+            try
             {
-                res.GiamGia = (int)GiamGia;
-                res.SanPhamTang = SanPhamTang;
-                res.MaMon = MaMon;
-                res.DieuKien = DieuKien;
-                DataProvider.Instance.Database.SaveChanges();
-                ClearTextBox();
+                var res = DataProvider.Instance.Database.ChiTietKhuyenMais.SingleOrDefault(x => x.MaChiTietKM == SelectedItem.MaChiTietKM);
+                if (res != null)
+                {
+                    res.SanPhamTang = SanPhamTang;
+                    res.MaMon = MaMon;
+                    res.DieuKien = DieuKien;
+                    DataProvider.Instance.Database.SaveChanges();
+                    msg.Message = "Cập nhật thành công";
+                }
             }
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong cập nhật dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
+            ClearTextBox();
         }
 
         private void DeletePromotionDetail_Execute()
         {
-            WarningDialogs("Dữ liệu không thể xoá. Xin vui lòng thử lại vào dịp khác!!!");
+            UserMessage msg = new UserMessage();
+            try
+            {
+                if (ConfirmDialog("Bạn có chắc chắn muốn xoá khuyến mãi <<" + SelectedItem.MaCTKM + ">> không ? "))
+                {
+                    var promotionDetail = DataProvider.Instance.Database.ChiTietKhuyenMais.SingleOrDefault(x => x.MaCTKM == SelectedItem.MaCTKM);
+                    List.Remove(promotionDetail);
+                    promotionDetail.DaXoa = true;
+                    DataProvider.Instance.Database.SaveChanges();
+                    RaisePropertyChanged("List");
+                    msg.Message = "Dữ liệu đã xoá thành công";
+
+                }
+            }
+
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong xoá dữ liệu";
+            }
+
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
 
         }
         public void LoadPromotionDetailList()
         {
-            List = new ObservableCollection<ChiTietKhuyenMai>(DataProvider.Instance.Database.ChiTietKhuyenMais);
+            List = new ObservableCollection<ChiTietKhuyenMai>(DataProvider.Instance.Database.ChiTietKhuyenMais.Where(x=>x.DaXoa == DaXoa).ToList());
         }        
 
         public void LoadPromotionList()
         {
-            PromotionList = new ObservableCollection<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais);
+            PromotionList = new ObservableCollection<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais.Where(x => x.DaXoa == DaXoa).ToList());
+        }
+        public void LoadAll()
+        {
+            LoadPromotionDetailList();
+
+            LoadPromotionList();
+
+            LoadMenuProductBuyList();
+
+            LoadMenuProductGiftList();
+
+            ClearTextBox();
         }
         #endregion Methods
     }

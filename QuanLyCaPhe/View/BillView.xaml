@@ -10,9 +10,7 @@
              DataContext="{StaticResource BilViewModel}"
              Name="billView"
              Height="800">
-
-    
-
+  
     <UserControl.Resources>
         <Style x:Key="VerticalSeparatorStyle"
        TargetType="{x:Type Separator}"
@@ -407,7 +405,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"></RowDefinition>
                             <RowDefinition Height="1.5*"></RowDefinition>
-                            <RowDefinition Height="1*"></RowDefinition>
+                            <RowDefinition Height="0.7*"></RowDefinition>
                             <RowDefinition ></RowDefinition>
                         </Grid.RowDefinitions>
                         <!--Danh sách các khuyến mãi-->
@@ -428,15 +426,17 @@
 
                                         </GridViewColumn>
 
+                                        <GridViewColumn Header="Sản phẩm mua" 
+                                                            Width="auto" 
+                                                            DisplayMemberBinding="{Binding MaMon}">
+                                        </GridViewColumn>
+
                                         <GridViewColumn Header="Sản phẩm tặng" 
                                                             Width="auto" 
                                                             DisplayMemberBinding="{Binding SanPhamTang}">
                                         </GridViewColumn>
 
-                                        <GridViewColumn Header="Sản phẩm mua" 
-                                                            Width="auto" 
-                                                            DisplayMemberBinding="{Binding MaMon}">
-                                        </GridViewColumn>
+                                        
 
                                         <GridViewColumn Header="Ngày bắt đầu" Width="auto" DisplayMemberBinding="{Binding NgayBDKM,StringFormat=dd/MM/yyyy}"></GridViewColumn>
 
@@ -480,7 +480,7 @@
                                                 <DataTemplate>
                                                     <TextBlock Text="{Binding TenMon}"
                                                                    TextAlignment="Left"
-                                                                   Width="140" />
+                                                                   Width="160" />
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
@@ -573,8 +573,8 @@
                             <Grid Grid.Row="0">
                                 <WrapPanel>
                                     <TextBlock
-                                            Text="Tiền khách đưa :"
-                                            Margin="30 15 30 0"
+                                            Text="Tiền mặt :"
+                                            Margin="30 10 30 0"
                                             FontSize="15"
                                             FontWeight="Bold"
                                             HorizontalAlignment="Left"
@@ -585,11 +585,12 @@
                                         Name="TextMoneyCustomer"
                                         Width="100"
                                         Height="40"
-                                        Margin="-20 -5 0 0"
+                                        Margin="-20 -10 0 0"
                                         HorizontalAlignment="Left"
                                         FontSize="14"
                                         FontFamily="Bold"
                                         VerticalAlignment="Top"
+                                        
                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                         Text="{Binding TienKhachTra,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                                         <i:Interaction.Triggers>
@@ -601,8 +602,8 @@
                                     </TextBox>
                                     <WrapPanel>
                                         <TextBlock
-                                            Text="Trả lại khách :"
-                                            Margin="30 20 30 0"
+                                            Text="Trả lại :"
+                                            Margin="65 10 30 0"
                                             FontSize="15"
                                             FontWeight="Bold"
                                             HorizontalAlignment="Left"
@@ -612,7 +613,7 @@
                                         Width="100"
                                         Height="40"
                                         IsEnabled="False"
-                                        Margin="-20 -5 30 0"
+                                        Margin="0 -10 30 0"
                                         FontWeight="Bold"
                                         Foreground="Black"
                                         HorizontalAlignment="Center"
@@ -629,19 +630,19 @@
                                 <WrapPanel>
                                     <TextBlock
                                             Text="Tổng tiền :"
-                                            Margin="30 10 30 0"
+                                            Margin="30 20 30 0"
                                             FontSize="15"
                                             FontWeight="Bold"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Top">
                                     </TextBlock>
-
+                                    
                                     <TextBox
                                         Name="TextTotal"
-                                        Width="150"
+                                        Width="130"
                                         IsEnabled="False"
                                         Height="40"
-                                        Margin="-20 -6 30 0"
+                                        Margin="-20 0 30 0"
                                         FontWeight="Bold"
                                         Foreground="Black"
                                         HorizontalAlignment="Center"
@@ -656,12 +657,35 @@
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
                                     </TextBox>
+
+                                    <TextBlock
+                                            Text="Giảm giá :"
+                                            Margin="0 20 30 0"
+                                            FontSize="15"
+                                            FontWeight="Bold"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top">
+                                    </TextBlock>
+                                    <TextBox
+                                        Width="100"
+                                        Height="40"
+                                        IsEnabled="False"
+                                        Margin="-20 0 30 0"
+                                        FontWeight="Bold"
+                                        Foreground="Black"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        FontSize="14"
+                                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                        Text="{Binding GiamGia,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                    </TextBox>
+
                                 </WrapPanel>
                             </Grid>
                             <Grid Grid.Row="2">
                                 <WrapPanel>
                                     <TextBlock
-                                            Text="TỔNG THANH TOÁN :"
+                                            Text="THANH TOÁN :"
                                             Margin="30 15 30 0"
                                             FontSize="18"
                                             FontWeight="Bold"

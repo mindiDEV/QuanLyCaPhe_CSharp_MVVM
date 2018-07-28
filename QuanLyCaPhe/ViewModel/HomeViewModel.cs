@@ -1,15 +1,18 @@
-﻿using Microsoft.Win32;
+﻿using DevExpress.XtraReports.UI;
+using Microsoft.Win32;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using QuanLyCaPhe.ClassSupport;
 using QuanLyCaPhe.Model;
+using QuanLyCaPhe.Report;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-
 namespace QuanLyCaPhe.ViewModel
 {
     public class HomeViewModel : BaseViewModel
@@ -25,6 +28,12 @@ namespace QuanLyCaPhe.ViewModel
         public ObservableCollection<HoaDon> _listBill;
         public ObservableCollection<HoaDon> ListBill { get => _listBill; set { _listBill = value; RaisePropertyChanged("ListBill"); } }
 
+        public ObservableCollection<ChuongTrinhKhuyenMai> _listPromotion;
+        public ObservableCollection<ChuongTrinhKhuyenMai> ListPromotion { get => _listPromotion; set { _listPromotion = value; RaisePropertyChanged("ListPromotion"); } }
+
+        private ObservableCollection<LoaiKhachHang> _CustomerTypeList;
+        public ObservableCollection<LoaiKhachHang> CustomerTypeList { get => _CustomerTypeList; set { _CustomerTypeList = value; RaisePropertyChanged("CustomerTypeList"); } }
+
         private string _maHoaDon;
         private DateTime _ngayXuatHoaDon;
         private double _tongHoaDon;
@@ -32,7 +41,77 @@ namespace QuanLyCaPhe.ViewModel
         private string _maKhachHang;
         private DateTime _ngayBatDau = DateTime.Now.Date.AddDays(-1);
         private DateTime _ngayKetThuc = DateTime.Now;
+        private string _trangThaiLamViec = "Đang làm";
 
+        private string _tenLoaiKhachHang;
+
+        
+
+        private bool _daXoa;
+        public bool DaXoa
+        {
+            get { return _daXoa; }
+            set { _daXoa = value; RaisePropertyChanged("DaXoa"); }
+        }
+        public string TenLoaiKhachHang
+        {
+            get { return _tenLoaiKhachHang; }
+            set { _tenLoaiKhachHang = value; RaisePropertyChanged("TenLoaiKhachHang"); }
+        }
+   
+
+        private LoaiKhachHang _selectedCustomerType;
+        public LoaiKhachHang SelectedCustomerType
+        {
+            get
+            {
+                return _selectedCustomerType;
+            }
+            set
+            {
+                if (_selectedCustomerType != value)
+                {
+                    _selectedCustomerType = value;
+                    RaisePropertyChanged("SelectedCustomerType");
+                    if (SelectedCustomerType != null)
+                    {
+                        
+                        TenLoaiKhachHang = SelectedCustomerType.TenLoaiKhachHang;
+                        if (TenLoaiKhachHang == "Thường")
+                        {
+                            ListCustomer = new ObservableCollection<KhachHang>(DataProvider.Instance.Database.KhachHangs.Where(x => x.MaLoaiKhachHang == "LKHTH" && x.DaXoa == DaXoa).ToList());
+                        }
+                        else if (TenLoaiKhachHang == "VIP")
+                        {
+                            ListCustomer = new ObservableCollection<KhachHang>(DataProvider.Instance.Database.KhachHangs.Where(x => x.MaLoaiKhachHang == "LKHVIP" && x.DaXoa == DaXoa).ToList());
+                        }
+                        else if (TenLoaiKhachHang == "VIPP")
+                        {
+                            ListCustomer = new ObservableCollection<KhachHang>(DataProvider.Instance.Database.KhachHangs.Where(x => x.MaLoaiKhachHang == "LKHVIPP" && x.DaXoa == DaXoa).ToList());
+                        }
+                        CountCustomer = ListCustomer.Count();
+                    }
+                }
+            }
+        }
+
+
+
+        public string TrangThaiLamViec
+        {
+            get
+            {
+                return _trangThaiLamViec;
+            }
+            set
+            {
+                if (_trangThaiLamViec != value)
+                {
+                    _trangThaiLamViec = value;
+                    RaisePropertyChanged("TrangThaiLamViec");
+                }
+            }
+        }
         public string MaHoaDon
         {
             get
@@ -110,6 +189,8 @@ namespace QuanLyCaPhe.ViewModel
                 }
             }
         }
+
+
 
         public string MaNhanVien
         {
@@ -197,11 +278,57 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
-        
+        private int _countPromotion;
+
+        public int CountPromotion
+        {
+            get
+            {
+                return _countPromotion;
+            }
+            set
+            {
+                if (_countPromotion != value)
+                {
+                    _countPromotion = value;
+                    RaisePropertyChanged("CountPromotion");
+                }
+            }
+        }
+
+
+        private string _maLoaiKhachHang;
+
+        public string MaLoaiKhachHang
+        {
+            get
+            {
+                return _maLoaiKhachHang;
+            }
+            set
+            {
+                if (_maLoaiKhachHang != value)
+                {
+                    _maLoaiKhachHang = value;
+                    RaisePropertyChanged("MaLoaiKhachHang");
+                }
+            }
+        }
+
+
+
+
         #endregion Properties
 
         #region Command Property
         public ICommand ReportBill { get; set; }
+
+        public ICommand ReportPromotion { get; set; }
+
+        public ICommand ReportCustomer { get; set; }
+        public ICommand ReportEmployee { get; set; }
+
+        
 
         public ICommand SelectedChangedNgayBatDau { get; set; }
 
@@ -219,136 +346,61 @@ namespace QuanLyCaPhe.ViewModel
 
             LoadEmployeeList();
 
+            LoadCustomerTypeList();
+
+            LoadPromotionList();
+
+            ReportEmployee = new RelayCommand<object>((p) =>
+            {
+                return true;
+            },
+            (p) =>
+            {
+                InBaoCaoNhanVien reportNhanVien = new InBaoCaoNhanVien();
+                reportNhanVien.Parameters["TrangThaiLamViec"].Value = _trangThaiLamViec;
+                reportNhanVien.ShowPreviewDialog();
+            });
+
+            ReportCustomer = new RelayCommand<object>((p) => { return true; }, (p) => 
+            {
+                try
+                {
+                    InBaoCaoKhachHang reportKhachHang = new InBaoCaoKhachHang();
+                    reportKhachHang.Parameters["LoaiKhachHang"].Value = SelectedCustomerType.TenLoaiKhachHang;
+                    reportKhachHang.ShowPreviewDialog();
+                }
+                catch
+                {
+                    MessageBox.Show("Chưa chọn loại khách hàng!!");
+                    return;
+                }
+              
+            });
+            
+
+
             ReportBill = new RelayCommand<object>((p) =>
             {
                 return true;
             },
              (p) =>
              {
-                 string filePath = "";
-                 // tạo SaveFileDialog để lưu file excel
-                 SaveFileDialog dialog = new SaveFileDialog();
+                 
+                 InBaoCaoHoaDon reportHoaDon = new InBaoCaoHoaDon();
+                 reportHoaDon.Parameters["_ngayBatDau"].Value = _ngayBatDau;
+                 reportHoaDon.Parameters["_ngayKetThuc"].Value = _ngayKetThuc;
+                 reportHoaDon.ShowPreviewDialog();
 
-                 // chỉ lọc ra các file có định dạng Excel
-                 dialog.Filter = "Excel | *.xlsx | Excel 2003 | *.xls";
+             });
 
-                 // Nếu mở file và chọn nơi lưu file thành công sẽ lưu đường dẫn lại dùng
-                 if (dialog.ShowDialog() == true)
-                 {
-                     filePath = dialog.FileName;
-                 }
-
-                 // nếu đường dẫn null hoặc rỗng thì báo không hợp lệ và return hàm
-                 if (string.IsNullOrEmpty(filePath))
-                 {
-                     MessageBox.Show("Đường dẫn báo cáo không hợp lệ");
-                     return;
-                 }
-
-                 try
-                 {
-                     using (ExcelPackage x = new ExcelPackage())
-                     {
-                         // đặt tên người tạo file
-                         x.Workbook.Properties.Author = "Duy Nguyen Developer";
-
-                         // đặt tiêu đề cho file
-                         x.Workbook.Properties.Title = "Báo cáo thống kê";
-
-                         //Tạo một sheet để làm việc trên đó
-                         x.Workbook.Worksheets.Add("HoaDon Sheet");
-
-                         // lấy sheet vừa add ra để thao tác
-                         ExcelWorksheet ws = x.Workbook.Worksheets[1];
-
-                         // đặt tên cho sheet
-                         ws.Name = "HoaDon Sheet";
-                         // fontsize mặc định cho cả sheet
-                         ws.Cells.Style.Font.Size = 12;
-                         // font family mặc định cho cả sheet
-                         ws.Cells.Style.Font.Name = "Calibri";
-
-                         // Tạo danh sách các column header
-                         string[] arrColumnHeader = 
-                         {
-                                                "Mã hoá đơn",
-                                                "Ngày xuất hoá đơn",
-                                                "Tổng hoá đơn",
-                                                "Mã nhân viên",
-                                                "Mã khách hàng",
-                         };
-
-                         // lấy ra số lượng cột cần dùng dựa vào số lượng header
-                         var countColHeader = arrColumnHeader.Count();
-
-                         // merge các column lại từ column 1 đến số column header
-                         // gán giá trị cho cell vừa merge là Thống kê thông tni User Kteam
-                         ws.Cells[1, 1].Value = "THỐNG KÊ THÔNG TIN HOÁ ĐƠN";
-                         ws.Cells[1, 1, 1, countColHeader].Merge = true;
-                         // in đậm
-                         ws.Cells[1, 1, 1, countColHeader].Style.Font.Bold = true;
-                         // căn giữa
-                         ws.Cells[1, 1, 1, countColHeader].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-                         int colIndex = 1;
-                         int rowIndex = 2;
-
-                         //tạo các header từ column header đã tạo từ bên trên
-                         foreach (var item in arrColumnHeader)
-                         {
-                             var cell = ws.Cells[rowIndex, colIndex];
-
-                             //set màu thành gray
-                             var fill = cell.Style.Fill;
-                             fill.PatternType = ExcelFillStyle.Solid;
-                             fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
-
-                             //căn chỉnh các border
-                             var border = cell.Style.Border;
-                             border.Bottom.Style =
-                                 border.Top.Style =
-                                 border.Left.Style =
-                                 border.Right.Style = ExcelBorderStyle.Thin;
-
-                             //gán giá trị
-                             cell.Value = item;
-
-                             colIndex++;
-                         }
-
-      
-                         // với mỗi item trong danh sách sẽ ghi trên 1 dòng
-                         foreach (var item in ListBill)
-                         {
-                             // bắt đầu ghi từ cột 1. Excel bắt đầu từ 1 không phải từ 0
-                             colIndex = 1;
-
-                             // rowIndex tương ứng từng dòng dữ liệu
-                             rowIndex++;
-
-                             //gán giá trị cho từng cell                      
-                             ws.Cells[rowIndex, colIndex++].Value = item.MaHoaDon;
-
-                             ws.Cells[rowIndex, colIndex++].Value = item.NgayXuatHoaDon.Value.ToShortDateString();
-
-                             ws.Cells[rowIndex, colIndex++].Value = item.TongHoaDon;
-
-                             ws.Cells[rowIndex, colIndex++].Value = item.NhanVien.TenNhanVien;
-
-                             ws.Cells[rowIndex, colIndex++].Value = item.KhachHang.TenKhachHang;
-
-                         }
-
-                         //Lưu file lại
-                         Byte[] bin = x.GetAsByteArray();
-                         File.WriteAllBytes(filePath, bin);
-                     }
-                     MessageBox.Show("Xuất excel thành công!");
-                 }
-                 catch (Exception EE)
-                 {
-                     MessageBox.Show("Có lỗi khi lưu file!",EE.Message);
-                 }
+            ReportPromotion = new RelayCommand<object>((p) =>
+            {
+                return true;
+            },
+             (p) =>
+             {
+                 
+                 Export("HOADON SHEET", "THỐNG KÊ CHƯƠNG TRÌNH KHUYẾN MÃI");
              });
 
             SelectedChangedNgayBatDau = new RelayCommand<object>((p) =>
@@ -373,13 +425,19 @@ namespace QuanLyCaPhe.ViewModel
              });
         }
 
+        private void LoadCustomerTypeList()
+        {
+            CustomerTypeList = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs);
+        }
+
         #endregion Constructor
-        
+
         #region Methods
 
         public void LoadCustomerList()
         {
-            ListCustomer = new ObservableCollection<KhachHang>(DataProvider.Instance.Database.KhachHangs);
+            ListCustomer = new ObservableCollection<KhachHang>(DataProvider.Instance.Database.KhachHangs.Where(x=>x.DaXoa == DaXoa).ToList());    
+
             CountCustomer = ListCustomer.Count();
         }
 
@@ -388,6 +446,13 @@ namespace QuanLyCaPhe.ViewModel
             ListEmployee = new ObservableCollection<NhanVien>(DataProvider.Instance.Database.NhanViens);
             CountEmployee = ListEmployee.Count();
         }
+        public void LoadPromotionList()
+        {
+            ListPromotion = new ObservableCollection<ChuongTrinhKhuyenMai>(DataProvider.Instance.Database.ChuongTrinhKhuyenMais);
+            CountPromotion = ListPromotion.Count();
+        }
+
+
 
         public void LoadBillList(DateTime? ngayBatDau =null, DateTime? ngayKetThuc=null)
         {
@@ -400,8 +465,124 @@ namespace QuanLyCaPhe.ViewModel
             (x.NgayXuatHoaDon.Value.Month == ngayKetThuc.Value.Month) && x.NgayXuatHoaDon.Value.Day <= ngayKetThuc.Value.Day)).ToList());
 
             CountBill = ListBill.Count();
-        }   
+        }
 
-        #endregion Methods
+        public void Export(string sheetName, string title)
+        {
+
+            //Tạo các đối tượng Excel
+
+            Microsoft.Office.Interop.Excel.Application oExcel = new Microsoft.Office.Interop.Excel.Application();
+
+            Microsoft.Office.Interop.Excel.Workbooks oBooks;
+
+            Microsoft.Office.Interop.Excel.Sheets oSheets;
+
+            Microsoft.Office.Interop.Excel.Workbook oBook;
+
+            Microsoft.Office.Interop.Excel.Worksheet oSheet;
+
+            //Tạo mới một Excel WorkBook 
+
+            oExcel.Visible = true;
+
+            oExcel.DisplayAlerts = false;
+
+            oExcel.Application.SheetsInNewWorkbook = 1;
+
+            oBooks = oExcel.Workbooks;
+
+            oBook = (Microsoft.Office.Interop.Excel.Workbook)(oExcel.Workbooks.Add(Type.Missing));
+
+            oSheets = oBook.Worksheets;
+
+            oSheet = (Microsoft.Office.Interop.Excel.Worksheet)oSheets.get_Item(1);
+
+            oSheet.Name = sheetName;
+
+            // Tạo phần đầu nếu muốn
+
+            Microsoft.Office.Interop.Excel.Range head = oSheet.get_Range("A1", "C1");
+
+            head.MergeCells = true;
+
+            head.Value2 = title;
+
+            head.Font.Bold = true;
+
+            head.Font.Name = "Tahoma";
+
+            head.Font.Size = "20";
+
+            head.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
+
+            // Tạo tiêu đề cột 
+
+            Microsoft.Office.Interop.Excel.Range cl1 = oSheet.get_Range("A3", "A3");
+
+            cl1.Value2 = "Mã CTKM";
+
+            cl1.ColumnWidth = 20.0;
+
+            Microsoft.Office.Interop.Excel.Range cl2 = oSheet.get_Range("B3", "B3");
+
+            cl2.Value2 = "Tên CTKM";
+
+            cl2.ColumnWidth = 60.0;
+
+            Microsoft.Office.Interop.Excel.Range cl3 = oSheet.get_Range("C3", "C3");
+
+            cl3.Value2 = "Mô tả CTKM";
+
+            cl3.ColumnWidth = 60.0;
+
+            Microsoft.Office.Interop.Excel.Range cl4 = oSheet.get_Range("D3", "D3");
+
+            cl4.Value2 = "Ngày BDKM";
+
+            cl4.ColumnWidth = 20.0;
+
+            Microsoft.Office.Interop.Excel.Range cl5 = oSheet.get_Range("E3", "E3");
+
+            cl5.Value2 = "Ngày KTKM";
+
+            cl5.ColumnWidth = 20.0;
+
+            Microsoft.Office.Interop.Excel.Range rowHead = oSheet.get_Range("A3", "E3");
+
+            rowHead.Font.Bold = true;
+
+            // Kẻ viền
+
+            rowHead.Borders.LineStyle = Microsoft.Office.Interop.Excel.Constants.xlSolid;
+
+            // Thiết lập màu nền
+
+            rowHead.Interior.ColorIndex = 15;
+
+            rowHead.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
+
+            int colIndex = 1;
+
+            int rowIndex = 1;
+
+            foreach (var item in ListPromotion)
+            {
+                colIndex = 1;
+
+                // rowIndex tương ứng từng dòng dữ liệu
+                rowIndex++;
+
+                cl1.Cells[rowIndex, colIndex].Value = item.MaCTKM;
+                cl2.Cells[rowIndex, colIndex].Value = item.TenCTKM;
+                cl3.Cells[rowIndex, colIndex].Value = item.MoTaCTKM;
+                cl4.Cells[rowIndex, colIndex].Value = item.NgayBDKM.Value.ToShortDateString();
+                cl5.Cells[rowIndex, colIndex].Value = item.NgayKTKM.Value.ToShortDateString();
+                
+            }
+
+        }
     }
+
+    #endregion Methods
 }

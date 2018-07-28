@@ -5,8 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:QuanLyCaPhe.UserController"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{StaticResource CollectionViewModel}"
+             Name="collectionView">
 
     <Grid x:Name="GridCollection" Background="#E1DDDF">
 
@@ -38,14 +41,11 @@
                 <Grid Grid.Row="1">
                     <ListView
                         x:Name="ListMaterial"
-                        Foreground="Black"
-                        SelectionChanged="ListMaterial_SelectionChanged">
-
-                        <!--Kho-->
-                        
+                        Foreground="Black">
 
                         <!--Đơn vị tính-->
                         <ListViewItem x:Name="ItemUnit"
+                                      IsSelected="{Binding SelectedItemUnit,UpdateSourceTrigger=PropertyChanged}"
                                       Height="60">
                             <StackPanel Orientation="Horizontal" Margin="100 0 0 0">
                                 <materialDesign:PackIcon
@@ -60,6 +60,13 @@
                                     Margin="20 10" />
                             </StackPanel>
                         </ListViewItem>
+                        
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SelectedChangedListViewUnit,UpdateSourceTrigger=PropertyChanged}"
+                                   CommandParameter="{Binding ElementName=collectionView}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </ListView>
                 </Grid>
             </Grid>
@@ -78,11 +85,11 @@
                 <Grid Grid.Row="1">
                     <ListView
                         x:Name="List"
-                        Foreground="Black"
-                        SelectionChanged="ListMaterial_SelectionChanged">
+                        Foreground="Black">
 
                         <!--Thực đơn-->
                         <ListViewItem x:Name="ItemMenu"
+                                      IsSelected="{Binding SelectedItemMenu,UpdateSourceTrigger=PropertyChanged}"
                                       Height="60">
                             <StackPanel Orientation="Horizontal" Margin="100 0 0 0">
                                 <materialDesign:PackIcon
@@ -100,6 +107,7 @@
 
                         <!--Loại thực đơn-->
                         <ListViewItem x:Name="ItemMenuType"
+                                      IsSelected="{Binding SelectedItemMenuType,UpdateSourceTrigger=PropertyChanged}"
                                       Height="60">
                             <StackPanel Orientation="Horizontal" Margin="100 0 0 0">
                                 <materialDesign:PackIcon
@@ -117,6 +125,7 @@
 
                         <!--Nhóm thực đơn-->
                         <ListViewItem x:Name="ItemMenuGroup"
+                                      IsSelected="{Binding SelectedItemMenuGroup,UpdateSourceTrigger=PropertyChanged}"
                                       Height="60">
                             <StackPanel Orientation="Horizontal" Margin="100 0 0 0">
                                 <materialDesign:PackIcon
@@ -131,6 +140,14 @@
                                     Margin="20 10" />
                             </StackPanel>
                         </ListViewItem>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SelectedChangedListViewMenu,UpdateSourceTrigger=PropertyChanged}"
+                                   CommandParameter="{Binding ElementName=collectionView}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        
                     </ListView>
                 </Grid>
             </Grid>
@@ -157,12 +174,12 @@
                     </Grid>
                     <Grid Grid.Row="1">
                         <ListView x:Name="ListCustomer"
-                        Foreground="Black"
-                        SelectionChanged="ListCustomer_SelectionChanged">
+                        Foreground="Black">
 
-                            <!--Kho-->
+                            <!--Khách hàng-->
                             <ListViewItem x:Name="ItemCustomer"
-                                      Height="60">
+                                          IsSelected="{Binding SelectedItemCustomer,UpdateSourceTrigger=PropertyChanged}"
+                                          Height="60">
                                 <StackPanel Orientation="Horizontal" Margin="100 0 0 0">
                                     <materialDesign:PackIcon
                                     Kind="AccountBox"
@@ -177,9 +194,10 @@
                                 </StackPanel>
                             </ListViewItem>
 
-                            <!--Đơn vị tính-->
+                            <!--Loại khách hàng-->
                             <ListViewItem x:Name="ItemCustomerType"
-                                      Height="60">
+                                          IsSelected="{Binding SelectedItemCustomerType,UpdateSourceTrigger=PropertyChanged}"
+                                          Height="60">
                                 <StackPanel Orientation="Horizontal" Margin="100 0 0 0">
                                     <materialDesign:PackIcon
                                     Kind="AccountEdit"
@@ -193,16 +211,24 @@
                                     Margin="20 10" />
                                 </StackPanel>
                             </ListViewItem>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectedChangedListViewCustomer,UpdateSourceTrigger=PropertyChanged}"
+                                   CommandParameter="{Binding ElementName=collectionView}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </ListView>
+
                     </Grid>
                 </Grid>
-                <!--Danh sách thực đơn-->
+                
+                <!--Danh sách khuyến mãi-->
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <!--Thực đơn-->
+                    <!--Khuyến mãi-->
                     <Grid Grid.Row="0">
                         <materialDesign:PackIcon VerticalAlignment="Center" Kind="ScaleBalance" Margin="30 10 0 0" Height="30" Width="50" />
                         <TextBlock Text= "Khuyến mãi"  FontSize="20" Margin="100 10 0 0" VerticalAlignment="Center" FontFamily="Saigonese"></TextBlock>
@@ -210,11 +236,11 @@
 
                     <Grid Grid.Row="1">
                         <ListView x:Name="ListPromotion"
-                        Foreground="Black"
-                        SelectionChanged="ListPromotion_SelectionChanged">
+                        Foreground="Black">
 
                             <ListViewItem x:Name="ItemPromotion"
-                                      Height="60">
+                                          IsSelected="{Binding SelectedItemPromotion,UpdateSourceTrigger=PropertyChanged}"
+                                          Height="60">
                                 <StackPanel Orientation="Horizontal" Margin="100 0 0 0">
                                     <materialDesign:PackIcon
                                     Kind="Shopping"
@@ -230,7 +256,8 @@
                             </ListViewItem>
 
                             <ListViewItem x:Name="ItemDetailPromotion"
-                                      Height="60">
+                                          IsSelected="{Binding SelectedItemDetailPromotion,UpdateSourceTrigger=PropertyChanged}"
+                                          Height="60">
                                 <StackPanel Orientation="Horizontal" Margin="100 0 0 0">
                                     <materialDesign:PackIcon
                                     Kind="ShoppingMusic"
@@ -244,6 +271,14 @@
                                     Margin="20 10" />
                                 </StackPanel>
                             </ListViewItem>
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectedChangedListViewPromotion,UpdateSourceTrigger=PropertyChanged}"
+                                   CommandParameter="{Binding ElementName=collectionView}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            
                         </ListView>
                     </Grid>
                 </Grid>

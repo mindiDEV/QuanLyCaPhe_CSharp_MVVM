@@ -24,12 +24,11 @@ namespace QuanLyCaPhe.ViewModel
         private static string _maNhanVien;
         public bool IsLogin;
 
-        
-
         public string TenTaiKhoan { get => _tenTaiKhoan; set { _tenTaiKhoan = value; RaisePropertyChanged(); } }
         public string MatKhau { get => _matKhau; set { _matKhau = value; RaisePropertyChanged(); } }
         public static string MaNhanVien { get => _maNhanVien; set { _maNhanVien = value; } }
 
+        public static string getTenTaiKhoan { get; set; }
         #endregion Properties
 
         #region Command Properties
@@ -92,24 +91,33 @@ namespace QuanLyCaPhe.ViewModel
                 ShowWebcamView(p);
                 if(!string.IsNullOrEmpty(WebcamViewModel.getDecoded))
                 {
-                    List<string> listDecoded = WebcamViewModel.getDecoded.Split(' ').ToList();
-                    string _taiKhoanQrCode = listDecoded[0];
-                    string _matKhauQrCode = listDecoded[1];
-                    var checkQrCode = DataProvider.Instance.Database.TaiKhoans.Where(x => x.QRCode == _matKhauQrCode && x.TenTaiKhoan == _taiKhoanQrCode).ToList();
-                    if(checkQrCode.Count()!=0)
+                    try
                     {
-                        IsLogin = true;
+                        List<string> listDecoded = WebcamViewModel.getDecoded.Split(' ').ToList();
+                        string _taiKhoanQrCode = listDecoded[0];
+                        string _matKhauQrCode = listDecoded[1];
+                        var checkQrCode = DataProvider.Instance.Database.TaiKhoans.Where(x => x.TenTaiKhoan == _taiKhoanQrCode && x.QRCode == _matKhauQrCode).ToList();
+                        if (checkQrCode.Count() != 0)
+                        {
+                            MessageBox.Show("Đăng nhập thành công");
+                            getTenTaiKhoan = _taiKhoanQrCode;
+                            IsLogin = true;
+                            tmp.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Đăng nhập thất bại");
+                            IsLogin = false;
+                            return;
 
-                        tmp.Close();
+                        }
                     }
-                    else
+                    catch
                     {
-                        MessageBox.Show("Đăng nhập thất bại");
-                        IsLogin = false;
-                        
+                        MessageBox.Show("Kiểm tra lại tên đăng nhập và mật khẩu");
                         return;
-                        
                     }
+                    
                 }
                 
             });
@@ -125,13 +133,7 @@ namespace QuanLyCaPhe.ViewModel
         {
             WebcamView webcamView = new WebcamView();
             webcamView.ShowDialog();
-            //var webcamViewVM = webcamView.DataContext as WebcamViewModel;
-            //if (webcamViewVM.IsLoginByQrCode)
-            //{
-            //    IsLogin = true;
-
-            //    tmp.Close();
-            //}
+            
         }
 
         private void LoginWindow(Window p)
@@ -141,43 +143,70 @@ namespace QuanLyCaPhe.ViewModel
                 return;
             }
 
-            BackgroundWorker worker = new BackgroundWorker();
-            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
-            worker.WorkerReportsProgress = true;
-            worker.DoWork += Worker_DoWork;
-            worker.ProgressChanged += Worker_ProgressChanged;
-            worker.RunWorkerAsync();
+            if (CheckAccount())
+            {
+                getTenTaiKhoan = TenTaiKhoan;
+                tmp.Close();
+            }
         }
 
         private bool CheckAccount()
         {
+            string TrangThaiLamViec = "Đang làm";
             string passWordEncode = MD5Hash(Base64Encode(MatKhau));
-            var account = DataProvider.Instance.Database.TaiKhoans.Where(x => x.TenTaiKhoan == TenTaiKhoan && x.MatKhau == passWordEncode).Count();
-            if (account > 0)
+            try
             {
-                IsLogin = true;
+                var checkAccount = DataProvider.Instance.Database.TaiKhoans.Where(x => x.TenTaiKhoan == TenTaiKhoan && x.MatKhau == passWordEncode).Count();
 
-                var a = from s in DataProvider.Instance.Database.TaiKhoans
-                        where s.TenTaiKhoan == TenTaiKhoan
-                        select s.MaNhanVien;
+                var getDataAccount = DataProvider.Instance.Database.TaiKhoans.Where(x => x.TenTaiKhoan == TenTaiKhoan && x.MatKhau == passWordEncode).SingleOrDefault();
 
-                MaNhanVien = a.SingleOrDefault();
-                return true;
-            }
-            else
-            {
-                if(IsLogin == false)
+                var getStatusWork = DataProvider.Instance.Database.NhanViens.Where(x => x.MaNhanVien == getDataAccount.MaNhanVien).SingleOrDefault();
+
+                if (checkAccount > 0)
                 {
+                    if (getStatusWork.TrangThaiLamViec == TrangThaiLamViec)
+                    {
+                        IsLogin = true;
 
-                    WarningDialogs("Sai tên đăng nhập hoặc mật khẩu");
-                    TenTaiKhoan = "";
-                    getPasswordBox.Password = "";
-                    PasswordBehaviors.SetIsClear(getPasswordBox, true);
-                    
-                    return false;
+                        var a = from s in DataProvider.Instance.Database.TaiKhoans
+                                where s.TenTaiKhoan == TenTaiKhoan
+                                select s.MaNhanVien;
+
+                        MaNhanVien = a.SingleOrDefault();
+                        return true;
+                    }
+                    else
+                    {
+                        WarningDialogs("Tài khoản không tồn tại!!!");
+                        TenTaiKhoan = "";
+                        getPasswordBox.Password = "";
+                        PasswordBehaviors.SetIsClear(getPasswordBox, true);
+                        return false;
+                    }
+
                 }
-               
+                else
+                {
+                    if (IsLogin == false)
+                    {
+
+                        WarningDialogs("Sai tên đăng nhập hoặc mật khẩu");
+                        TenTaiKhoan = "";
+                        getPasswordBox.Password = "";
+                        PasswordBehaviors.SetIsClear(getPasswordBox, true);
+
+                        return false;
+                    }
+
+                }
             }
+
+            catch
+            {
+
+                return false;
+            }
+                 
             return true;
         }
 
@@ -200,33 +229,7 @@ namespace QuanLyCaPhe.ViewModel
             return hash.ToString();
         }
 
-        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            LoginView.ProgressBarLV.Value = e.ProgressPercentage;
-        }
-
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            var worker = sender as BackgroundWorker;
-            int sum = 0;
-            worker.ReportProgress(0, String.Format("Processing 1"));
-            for (int i = 0; i < 20; i++)
-            {
-                Thread.Sleep(100);
-                worker.ReportProgress((sum += 5));
-            }
-        }
-
-        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (CheckAccount())
-            {
-                tmp.Close();
-            }
-
-            LoginView.ProgressBarLV.Value = 0;
-        }
-
+      
         #endregion Methods
     }
 }

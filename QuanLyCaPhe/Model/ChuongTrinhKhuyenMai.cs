@@ -25,6 +25,7 @@ namespace QuanLyCaPhe.Model
         public string MoTaCTKM { get; set; }
         public Nullable<System.DateTime> NgayBDKM { get; set; }
         public Nullable<System.DateTime> NgayKTKM { get; set; }
+        public Nullable<bool> DaXoa { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChiTietKhuyenMai> ChiTietKhuyenMais { get; set; }

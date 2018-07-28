@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using QuanLyCaPhe.ViewModel;
+using System.Windows.Controls;
 
 namespace QuanLyCaPhe.View
 {
@@ -10,6 +11,8 @@ namespace QuanLyCaPhe.View
         public BillView()
         {
             InitializeComponent();
+
+            this.DataContext = new BillViewModel();
            
         }
     }

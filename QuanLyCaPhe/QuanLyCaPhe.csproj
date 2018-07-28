@@ -80,6 +80,9 @@
     <Reference Include="EPPlus, Version=4.5.2.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.4.5.2.1\lib\net40\EPPlus.dll</HintPath>
     </Reference>
+    <Reference Include="GalaSoft.MvvmLight.WPF45">
+      <HintPath>C:\Users\Windows 10\Downloads\Compressed\wpf_EntityFramework\wpf_EntityFramework\wpf_EntityFramework\bin\Debug\GalaSoft.MvvmLight.WPF45.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -89,6 +92,10 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -141,18 +148,22 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClassSupport\BitmapHelpers.cs" />
+    <Compile Include="ClassSupport\BoolToVisibilityConverter.cs" />
+    <Compile Include="ClassSupport\ChiTietHoaDon_DTO.cs" />
     <Compile Include="ClassSupport\DragMoveBehavior.cs" />
     <Compile Include="ClassSupport\HoaDon_DTO.cs" />
     <Compile Include="ClassSupport\IndexConverter.cs" />
     <Compile Include="ClassSupport\InputValidationRule.cs" />
     <Compile Include="ClassSupport\KhuyenMai_DTO.cs" />
     <Compile Include="ClassSupport\PasswordBehaviors.cs" />
+    <Compile Include="ClassSupport\VMBase.cs" />
     <Compile Include="HoaDonReport.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="HoaDonReport.Designer.cs">
       <DependentUpon>HoaDonReport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Message\UserMessage.cs" />
     <Compile Include="Model\Ban.cs">
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
@@ -160,6 +171,9 @@
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\ChiTietKhuyenMai.cs">
+      <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ChiTietQuyenHan.cs">
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\ChuongTrinhKhuyenMai.cs">
@@ -170,6 +184,15 @@
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\HoaDon.cs">
+      <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\InBaoCaoHoaDon_Result.cs">
+      <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\InBaoCaoKhachHang_Result.cs">
+      <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\InBaoCaoNhanVien_Result.cs">
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\InPhieuThanhToan_Result.cs">
@@ -193,6 +216,9 @@
     <Compile Include="Model\NhomThucDon.cs">
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\QuanHeNguoiDung_QuyenHan.cs">
+      <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\QuanLyCaPheModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -208,6 +234,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QuanLyCaPheModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model\QuyenHan.cs">
+      <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\sysdiagram.cs">
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
@@ -220,9 +249,29 @@
     <Compile Include="Model\TimKiemThucDon_Result.cs">
       <DependentUpon>QuanLyCaPheModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Report\InBaoCaoHoaDon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Report\InBaoCaoHoaDon.Designer.cs">
+      <DependentUpon>InBaoCaoHoaDon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Report\InBaoCaoKhachHang.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Report\InBaoCaoKhachHang.Designer.cs">
+      <DependentUpon>InBaoCaoKhachHang.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Report\InBaoCaoNhanVien.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Report\InBaoCaoNhanVien.Designer.cs">
+      <DependentUpon>InBaoCaoNhanVien.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserController\Collection.xaml.cs">
       <DependentUpon>Collection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\CheckClosingViewModel.cs" />
+    <Compile Include="ViewModel\CollectionViewModel.cs" />
     <Compile Include="ViewModel\CustomerTypeViewModel.cs" />
     <Compile Include="ViewModel\CustomerViewModel.cs" />
     <Compile Include="ViewModel\EmployeeViewModel.cs" />
@@ -236,6 +285,9 @@
     <Compile Include="ViewModel\ScanQRCodeDiscountViewModel.cs" />
     <Compile Include="ViewModel\UnitViewModel.cs" />
     <Compile Include="ViewModel\WebcamViewModel.cs" />
+    <Compile Include="View\CheckClosingView.xaml.cs">
+      <DependentUpon>CheckClosingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CustomerTypeView.xaml.cs">
       <DependentUpon>CustomerTypeView.xaml</DependentUpon>
     </Compile>
@@ -288,6 +340,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserController\ControlBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CheckClosingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -392,6 +448,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Report\InBaoCaoHoaDon.resx">
+      <DependentUpon>InBaoCaoHoaDon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\InBaoCaoKhachHang.resx">
+      <DependentUpon>InBaoCaoKhachHang.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\InBaoCaoNhanVien.resx">
+      <DependentUpon>InBaoCaoNhanVien.cs</DependentUpon>
+    </EmbeddedResource>
     <EntityDeploy Include="Model\QuanLyCaPheModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>QuanLyCaPheModel.Designer.cs</LastGenOutput>
@@ -444,5 +509,6 @@
       <LastGenOutput>QuanLyCaPheModel.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

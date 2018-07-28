@@ -197,6 +197,8 @@ E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\DevExpress.XtraPr
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\DevExpress.XtraReports.v17.1.dll
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EntityFramework.dll
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EntityFramework.SqlServer.dll
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EPPlus.dll
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\GalaSoft.MvvmLight.WPF45.dll
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\MaterialDesignColors.dll
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\MaterialDesignThemes.Wpf.dll
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\Microsoft.Expression.Interactions.dll
@@ -244,6 +246,8 @@ E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\DevExpress.XtraPr
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\DevExpress.XtraReports.v17.1.xml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EntityFramework.xml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EntityFramework.SqlServer.xml
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EPPlus.xml
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\GalaSoft.MvvmLight.WPF45.xml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\MaterialDesignThemes.Wpf.pdb
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\MaterialDesignThemes.Wpf.xml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\Microsoft.Expression.Interactions.xml
@@ -368,9 +372,11 @@ E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\de\DevExpress.Xpf
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\es\DevExpress.Xpf.Grid.v17.1.Core.resources.dll
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\ja\DevExpress.Xpf.Grid.v17.1.Core.resources.dll
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\ru\DevExpress.Xpf.Grid.v17.1.Core.resources.dll
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\UserController\ControlBar.baml
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.csprojAssemblyReference.cache
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\ResourceXAML\Simple Styles.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\UserController\Collection.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\UserController\ControlBar.g.cs
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\CheckClosingView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\CustomerTypeView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\CustomerView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\EmployeeView.g.cs
@@ -381,7 +387,9 @@ E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\MenuGroupVie
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\MenuTypeView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\MenuView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\BillView.g.cs
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\PromotionDetailView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\PromotionView.g.cs
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\ScanQRCodeDiscountView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\UnitView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\WebcamView.g.cs
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\App.g.cs
@@ -392,6 +400,8 @@ E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe_Marku
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\App.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\ResourceXAML\MainResources.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\UserController\Collection.baml
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\UserController\ControlBar.baml
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\CheckClosingView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\CustomerTypeView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\CustomerView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\EmployeeView.baml
@@ -402,7 +412,9 @@ E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\MenuGroupVie
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\MenuTypeView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\MenuView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\BillView.baml
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\PromotionDetailView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\PromotionView.baml
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\ScanQRCodeDiscountView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\UnitView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\WebcamView.baml
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.g.resources
@@ -414,11 +426,6 @@ E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.cspro
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.csproj.CopyComplete
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.exe
 E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.pdb
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EPPlus.dll
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\bin\Debug\EPPlus.xml
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\ScanQRCodeDiscountView.g.cs
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\ScanQRCodeDiscountView.baml
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\PromotionDetailView.g.cs
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\View\PromotionDetailView.baml
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.csprojAssemblyReference.cache
-E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\ResourceXAML\Simple Styles.baml
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.Report.InBaoCaoHoaDon.resources
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.Report.InBaoCaoNhanVien.resources
+E:\QuanLyCaPhe_DoAnTotNghiep\QuanLyCaPhe\QuanLyCaPhe\obj\Debug\QuanLyCaPhe.Report.InBaoCaoKhachHang.resources

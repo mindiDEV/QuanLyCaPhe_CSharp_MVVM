@@ -1,7 +1,10 @@
-﻿using QuanLyCaPhe.Model;
+﻿using GalaSoft.MvvmLight.Messaging;
+using QuanLyCaPhe.Message;
+using QuanLyCaPhe.Model;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace QuanLyCaPhe.ViewModel
@@ -11,7 +14,7 @@ namespace QuanLyCaPhe.ViewModel
         #region Property
 
         private ObservableCollection<NhanVien> _List;
-        public ObservableCollection<NhanVien> List { get => _List; set { _List = value; } }
+        public ObservableCollection<NhanVien> List { get => _List; set { _List = value; RaisePropertyChanged("List"); } }
 
         private string _maNhanVien;
 
@@ -31,11 +34,27 @@ namespace QuanLyCaPhe.ViewModel
 
         private DateTime? _ngaySinh;
 
-        private string _trangThaiLamViec;
+        private string _trangThaiLamViec = "Đang làm";
 
         private int? _IsSelectedSex;
 
         private int? _IsSelectedStatus;
+
+        private bool _isEnabledEmployeeCode;
+
+        public bool IsEnabledEmployeeCode
+        {
+            get => _isEnabledEmployeeCode;
+            set
+            {
+                if (_isEnabledEmployeeCode != value)
+                {
+                    _isEnabledEmployeeCode = value;
+
+                    RaisePropertyChanged("IsEnabledEmployeeCode");
+                }
+            }
+        }
 
         public int? IsSelectedStatus
         {
@@ -230,6 +249,7 @@ namespace QuanLyCaPhe.ViewModel
                             IsSelectedStatus = 1;
                         }
                         else IsSelectedStatus = 0;
+                        IsEnabledEmployeeCode = false;
                     }
                 }
             }
@@ -258,23 +278,28 @@ namespace QuanLyCaPhe.ViewModel
 
         public EmployeeViewModel()
         {
+
+            IsEnabledEmployeeCode = true;
+
             MaNhanVien = "NV";
 
             GetListEmployee();
 
             AddEmployeeCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaNhanVien) || string.IsNullOrEmpty(TenNhanVien))
+                if (string.IsNullOrEmpty(MaNhanVien) || string.IsNullOrEmpty(TenNhanVien) || (NgayCap == null) || string.IsNullOrEmpty(NoiCapCMND) || (NgaySinh == null) || string.IsNullOrEmpty(DienThoaiDiDong))
                 {
                     return false;
                 }
 
-                if (!isSymbol(MaNhanVien))
+                if (!isSymbol(MaNhanVien) || !isNumber(CMND) || !isNumber(DienThoaiDiDong))
                 {
                     return false;
                 }
+
 
                 var employeeCheckID = DataProvider.Instance.Database.NhanViens.Where(x => x.MaNhanVien == MaNhanVien).Count();
+
                 if (employeeCheckID != 0)
                 {
                     return false;
@@ -333,6 +358,7 @@ namespace QuanLyCaPhe.ViewModel
                 DienThoaiDiDong = string.Empty;
                 IsSelectedStatus = null;
                 IsSelectedSex = null;
+                IsEnabledEmployeeCode = true;
                 NoiCapCMND = string.Empty;
                 NgayCap = null;
                 NgaySinh = null;
@@ -344,72 +370,117 @@ namespace QuanLyCaPhe.ViewModel
 
         private void GetListEmployee()
         {
-            List = new ObservableCollection<NhanVien>(DataProvider.Instance.Database.NhanViens);
+            List = new ObservableCollection<NhanVien>(DataProvider.Instance.Database.NhanViens.Where(x=>x.TrangThaiLamViec == TrangThaiLamViec).ToList());
         }
 
         private void AddEmployee_Execute()
         {
-            NhanVien nv = new NhanVien();
-            nv.MaNhanVien = MaNhanVien;
-            nv.TenNhanVien = TenNhanVien;
-            nv.DiaChi = DiaChi;
-            nv.CMND = CMND;
-            nv.NgayCap = NgayCap;
-            nv.NoiCapCMND = NoiCapCMND;
-            nv.NgaySinh = NgaySinh;
-            nv.DienThoaiDiDong = DienThoaiDiDong;
-            if (IsSelectedSex == 0)
+            UserMessage msg = new UserMessage();
+            try
             {
-                nv.GioiTinh = "Nam";
+                NhanVien nv = new NhanVien();
+                nv.MaNhanVien = MaNhanVien;
+                nv.TenNhanVien = TenNhanVien;
+                nv.DiaChi = DiaChi;
+                if (nv.DiaChi == "")
+                {
+                    nv.DiaChi = @"Không có";
+                }
+                nv.CMND = CMND;
+                nv.NgayCap = NgayCap;
+                nv.NoiCapCMND = NoiCapCMND;
+                nv.NgaySinh = NgaySinh;
+                nv.DienThoaiDiDong = DienThoaiDiDong;
+                if (IsSelectedSex == 0)
+                {
+                    nv.GioiTinh = "Nam";
+                }
+                else if (IsSelectedSex == 1)
+                {
+                    nv.GioiTinh = "Nữ";
+                }
+                if (IsSelectedStatus == 0)
+                {
+                    nv.TrangThaiLamViec = "Đang làm";
+                }
+                else if (IsSelectedStatus == 1)
+                {
+                    nv.TrangThaiLamViec = "Nghỉ việc";
+                }
+                DataProvider.Instance.Database.NhanViens.Add(nv);
+                DataProvider.Instance.Database.SaveChanges();
+                List.Add(nv);
+                msg.Message = "Thêm dữ liệu thành công";
             }
-            else if (IsSelectedSex == 1)
+            catch (System.Exception ex)
             {
-                nv.GioiTinh = "Nữ";
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong thêm dữ liệu";
             }
-            if (IsSelectedStatus == 0)
-            {
-                nv.TrangThaiLamViec = "Đang làm";
-            }
-            else if (IsSelectedStatus == 1)
-            {
-                nv.TrangThaiLamViec = "Nghỉ việc";
-            }
-            DataProvider.Instance.Database.NhanViens.Add(nv);
-            DataProvider.Instance.Database.SaveChanges();
-            List.Add(nv);
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         private void UpdateEmployee_Execute()
         {
-            var employeeUpdate = DataProvider.Instance.Database.NhanViens.Where(x => x.MaNhanVien == SelectedItem.MaNhanVien).SingleOrDefault();
-            employeeUpdate.MaNhanVien = MaNhanVien;
-            employeeUpdate.TenNhanVien = TenNhanVien;
-            employeeUpdate.DiaChi = DiaChi;
-            employeeUpdate.CMND = CMND;
-            employeeUpdate.NgayCap = NgayCap;
-            employeeUpdate.NoiCapCMND = NoiCapCMND;
-            employeeUpdate.DienThoaiDiDong = DienThoaiDiDong;
-            if (IsSelectedSex == 1)
+            UserMessage msg = new UserMessage();
+            try
             {
-                employeeUpdate.GioiTinh = "Nữ";
+                var employeeUpdate = DataProvider.Instance.Database.NhanViens.Where(x => x.MaNhanVien == SelectedItem.MaNhanVien).SingleOrDefault();
+                employeeUpdate.MaNhanVien = MaNhanVien;
+                employeeUpdate.TenNhanVien = TenNhanVien;
+                employeeUpdate.DiaChi = DiaChi;
+                employeeUpdate.CMND = CMND;
+                employeeUpdate.NgayCap = NgayCap;
+                employeeUpdate.NoiCapCMND = NoiCapCMND;
+                employeeUpdate.DienThoaiDiDong = DienThoaiDiDong;
+                if (IsSelectedSex == 1)
+                {
+                    employeeUpdate.GioiTinh = "Nữ";
+                }
+                else employeeUpdate.GioiTinh = "Nam";
+                if (IsSelectedStatus == 1)
+                {
+                    employeeUpdate.TrangThaiLamViec = "Nghỉ việc";
+                }
+                else employeeUpdate.TrangThaiLamViec = "Đang làm";
+                DataProvider.Instance.Database.SaveChanges();
+                msg.Message = "Cập nhật thành công";
             }
-            else employeeUpdate.GioiTinh = "Nam";
-            if (IsSelectedStatus == 1)
+            catch (System.Exception ex)
             {
-                employeeUpdate.TrangThaiLamViec = "Nghỉ việc";
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong cập nhật dữ liệu";
             }
-            else employeeUpdate.TrangThaiLamViec = "Đang làm";
-            DataProvider.Instance.Database.SaveChanges();
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         private void DeleteEmployee_Execute()
         {
-            var employeeID = DataProvider.Instance.Database.NhanViens.Where(x => x.MaNhanVien == SelectedItem.MaNhanVien).SingleOrDefault();
-            List.Remove(employeeID);
-            DataProvider.Instance.Database.NhanViens.Remove(employeeID);
-            DataProvider.Instance.Database.SaveChanges();
+            UserMessage msg = new UserMessage();
+            try
+            {
+                var employeeID = DataProvider.Instance.Database.NhanViens.Where(x => x.MaNhanVien == SelectedItem.MaNhanVien).SingleOrDefault();
+                List.Remove(employeeID);
+                employeeID.TrangThaiLamViec = "Nghỉ việc";
+                DataProvider.Instance.Database.SaveChanges();
+            }
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong xoá dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 

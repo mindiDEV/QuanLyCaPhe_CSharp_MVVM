@@ -15,7 +15,6 @@ namespace QuanLyCaPhe.View
         public LoginView()
         {
             InitializeComponent();
-            ProgressBarLV = ProgessBar;
             _floattingPasswordBox = FloatingPasswordBox;
         }
     }

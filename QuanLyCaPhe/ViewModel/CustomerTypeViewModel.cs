@@ -1,6 +1,9 @@
-﻿using QuanLyCaPhe.Model;
+﻿using GalaSoft.MvvmLight.Messaging;
+using QuanLyCaPhe.Message;
+using QuanLyCaPhe.Model;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace QuanLyCaPhe.ViewModel
@@ -10,7 +13,7 @@ namespace QuanLyCaPhe.ViewModel
         #region Property
 
         private ObservableCollection<LoaiKhachHang> _List;
-        public ObservableCollection<LoaiKhachHang> List { get => _List; set { _List = value; } }
+        public ObservableCollection<LoaiKhachHang> List { get => _List; set { _List = value; RaisePropertyChanged("List"); } }
 
         private string _tenLoaiKhachHang;
 
@@ -42,6 +45,20 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        private bool _daXoa;
+        public bool DaXoa
+        {
+            get => _daXoa;
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value;
+                    RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
+
         #endregion Property
 
         #region Command Property
@@ -69,7 +86,7 @@ namespace QuanLyCaPhe.ViewModel
 
             MaLoaiKhachHang = "LKH";
 
-            List = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs);
+            List = new ObservableCollection<LoaiKhachHang>(DataProvider.Instance.Database.LoaiKhachHangs.Where(x=>x.DaXoa == DaXoa).ToList());
 
             AddCustomerTypeCommand = new RelayCommand<object>((p) =>
             {
@@ -152,46 +169,82 @@ namespace QuanLyCaPhe.ViewModel
 
         private void AddCustomerType_Execute()
         {
-            var customerType = new LoaiKhachHang() { MaLoaiKhachHang = MaLoaiKhachHang, TenLoaiKhachHang = TenLoaiKhachHang, GhiChu = GhiChu };
-            if (customerType.GhiChu == null)
+            UserMessage msg = new UserMessage();
+            try
             {
-                customerType.GhiChu = @"Không có";
+                var customerType = new LoaiKhachHang()
+                {
+                    MaLoaiKhachHang = MaLoaiKhachHang,
+                    TenLoaiKhachHang = TenLoaiKhachHang,
+                    GhiChu = GhiChu,
+                    DaXoa = DaXoa,
+                };
+                if (customerType.GhiChu == "")
+                {
+                    customerType.GhiChu = @"Không có";
+                }
+                DataProvider.Instance.Database.LoaiKhachHangs.Add(customerType);
+                DataProvider.Instance.Database.SaveChanges();
+                List.Add(customerType);
+                msg.Message = "Thêm dữ liệu thành công";
             }
-            DataProvider.Instance.Database.LoaiKhachHangs.Add(customerType);
-            DataProvider.Instance.Database.SaveChanges();
-            List.Add(customerType);
+            catch (System.Exception ex)
+            {
+
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong thêm dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         private void DeleteCustomerType_Execute()
         {
+            UserMessage msg = new UserMessage();
             if (ConfirmDialog("Bạn có chắc chắn muốn xoá loại khách hàng <<" + SelectedItem.TenLoaiKhachHang + ">> không ? "))
             {
                 var customerType = DataProvider.Instance.Database.LoaiKhachHangs.SingleOrDefault(x => x.MaLoaiKhachHang == SelectedItem.MaLoaiKhachHang);
                 List.Remove(customerType);
-
-                DataProvider.Instance.Database.LoaiKhachHangs.Remove(customerType);
+                customerType.DaXoa = true;
                 DataProvider.Instance.Database.SaveChanges();
                 RaisePropertyChanged("List");
-                ClearTextBox();
+                msg.Message = "Dữ liệu đã xoá thành công";
             }
-            else
-            {
-                ClearTextBox();
-            }
+            ClearTextBox();
+            Messenger.Default.Send<UserMessage>(msg);
         }
 
         private void UpdateCustomerType_Execute()
         {
+            UserMessage msg = new UserMessage();
             var res = DataProvider.Instance.Database.LoaiKhachHangs.SingleOrDefault(x => x.TenLoaiKhachHang == SelectedItem.TenLoaiKhachHang && x.MaLoaiKhachHang == SelectedItem.MaLoaiKhachHang);
             if (res != null)
             {
-                res.MaLoaiKhachHang = MaLoaiKhachHang;
-                res.TenLoaiKhachHang = TenLoaiKhachHang;
-                res.GhiChu = GhiChu;
-                DataProvider.Instance.Database.SaveChanges();
-                ClearTextBox();
+                try
+                {
+                    res.MaLoaiKhachHang = MaLoaiKhachHang;
+                    res.TenLoaiKhachHang = TenLoaiKhachHang;
+                    res.GhiChu = GhiChu;
+                    DataProvider.Instance.Database.SaveChanges();
+                    msg.Message = "Cập nhật thành công";
+                }
+
+                catch (System.Exception ex)
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                    }
+                    msg.Message = "Có vấn đề trong cập nhật dữ liệu";
+                }
+               
+                
             }
+            Messenger.Default.Send<UserMessage>(msg);
+            ClearTextBox();
         }
 
         #endregion Constructor

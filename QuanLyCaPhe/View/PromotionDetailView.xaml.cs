@@ -9,9 +9,13 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GalaSoft.MvvmLight.Messaging;
+using QuanLyCaPhe.Message;
+using QuanLyCaPhe.ViewModel;
 
 namespace QuanLyCaPhe.View
 {
@@ -23,6 +27,15 @@ namespace QuanLyCaPhe.View
         public PromotionDetailView()
         {
             InitializeComponent();
+            Messenger.Default.Register<UserMessage>(this, (action) => ReceiveUserMessage(action));
+            this.DataContext = new PromotionDetailViewModel();
+        }
+        private void ReceiveUserMessage(UserMessage msg)
+        {
+            UIMessage.Opacity = 1;
+            UIMessage.Text = msg.Message;
+            Storyboard sb = (Storyboard)this.FindResource("FadeUIMessage");
+            sb.Begin();
         }
     }
 }

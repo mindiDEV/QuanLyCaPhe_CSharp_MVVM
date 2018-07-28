@@ -4,9 +4,12 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using QuanLyCaPhe.Message;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace QuanLyCaPhe.ViewModel
 {
@@ -212,6 +215,27 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        private bool _isEnabledMaMon;
+
+        public bool IsEnabledMaMon
+        {
+            get
+            {
+                return _isEnabledMaMon;
+            }
+            set
+            {
+                if (_isEnabledMaMon != value)
+                {
+                    _isEnabledMaMon = value;
+                    RaisePropertyChanged("IsEnabledMaMon");
+                }
+            }
+        }
+
+
+        
+
         private string _tenNhomThucDon;
 
         public string TenNhomThucDon
@@ -251,6 +275,7 @@ namespace QuanLyCaPhe.ViewModel
                         SelectedMenuGroup = SelectedItem.NhomThucDon;
                         SelectedUnit = SelectedItem.DonViTinh;
                         SelectedMenuType = SelectedMenuGroup.LoaiThucDon;
+                        IsEnabledMaMon = false;
                     }
                 }
             }
@@ -376,17 +401,34 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        private bool _daXoa = false;
+        public bool DaXoa
+        {
+            get
+            {
+                return _daXoa;
+            }
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value;
+                    RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
+
         private ObservableCollection<ThucDon> _List;
-        public ObservableCollection<ThucDon> List { get => _List; set { _List = value; } }
+        public ObservableCollection<ThucDon> List { get => _List; set { _List = value; RaisePropertyChanged("List"); } }
 
         private ObservableCollection<LoaiThucDon> _menuTypeList;
-        public ObservableCollection<LoaiThucDon> MenuTypeList { get => _menuTypeList; set { _menuTypeList = value; } }
+        public ObservableCollection<LoaiThucDon> MenuTypeList { get => _menuTypeList; set { _menuTypeList = value; RaisePropertyChanged("MenuTypeList"); } }
 
         private ObservableCollection<NhomThucDon> _MenuGroupList;
-        public ObservableCollection<NhomThucDon> MenuGroupList { get => _MenuGroupList; set { _MenuGroupList = value; } }
+        public ObservableCollection<NhomThucDon> MenuGroupList { get => _MenuGroupList; set { _MenuGroupList = value; RaisePropertyChanged("MenuGroupList"); } }
 
         private ObservableCollection<DonViTinh> _UnitList;
-        public ObservableCollection<DonViTinh> UnitList { get => _UnitList; set { _UnitList = value; } }
+        public ObservableCollection<DonViTinh> UnitList { get => _UnitList; set { _UnitList = value; RaisePropertyChanged("UnitList"); } }
 
         public string fileName_Image { get; set; }
 
@@ -418,37 +460,34 @@ namespace QuanLyCaPhe.ViewModel
 
         public MenuViewModel()
         {
+
+            IsEnabledMaMon = true;
+
             MaHienThi_ThucDon = "Mã món ( * )";
 
             TenHienThi_ThucDon = "Tên món ( * )";
 
             TenHienThi_LoaiThucDon = "Loại thực đơn ( * )";
 
-            //Get list and display on listview
-            GetListOfMenu();
-
-            //Get list and display on combobox of menu group
-            GetListOfMenuGroup();
-
-            //Get list and display on comboxbox of menu type
-            GetListOfMenuType();
-
-            //Get list and dis
-            GetListOfUnit();
+            LoadAll();
 
             AddMenuCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaMon) || string.IsNullOrEmpty(TenMon) || GiaBan == 0 || string.IsNullOrEmpty(GhiChu))
+                if (string.IsNullOrEmpty(MaMon) || string.IsNullOrEmpty(TenMon) || SelectedUnit == null || SelectedMenuType == null || SelectedMenuGroup == null)
 
                 {
                     return false;
                 }
-                if (!isSymbol(MaMon))
+
+                if (!isSymbolAndNumber(MaMon))
+                {
+                    return false;
+                }
+                if (DataProvider.Instance.Database.ThucDons.Where(x => x.MaMon == MaMon).Count() != 0)
                 {
                     return false;
                 }
 
-                
                 return true;
             }, (p) =>
             {
@@ -457,22 +496,21 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdateMenuCommand = new RelayCommand<object>((p) =>
             {
-                if (SelectedItem == null || SelectedMenuType == null || SelectedMenuGroup == null || SelectedUnit == null)
+                if (string.IsNullOrEmpty(MaMon) || string.IsNullOrEmpty(TenMon) || SelectedUnit == null || SelectedMenuType == null || SelectedMenuGroup == null)
+
                 {
                     return false;
                 }
 
-                if (!isSymbol(MaMon))
+                if (!isSymbolAndNumber(MaMon))
                 {
                     return false;
                 }
-
-                var list = DataProvider.Instance.Database.ThucDons.Where(x => x.TenMon == TenMon && x.MaMon == MaMon && x.GiaBan == Convert.ToDecimal(GiaBan)).Count();
-                if (list != 0)
-                {
-                    return false;
-                }
-
+                //var list = DataProvider.Instance.Database.ThucDons.Where(x => x.TenMon == TenMon && x.MaMon == MaMon && x.MaNhomThucDon == SelectedMenuGroup.MaNhomThucDon && x.MaDonViTinh == SelectedUnit.MaDonViTinh && x.GiaBan == (decimal)GiaBan && x.GhiChu == GhiChu).Count();
+                //if (list != 0)
+                //{
+                //    return false;
+                //}
                 return true;
             }, (p) =>
             {
@@ -481,7 +519,7 @@ namespace QuanLyCaPhe.ViewModel
 
             DeleteMenuCommand = new RelayCommand<object>((p) =>
             {
-                if (SelectedItem == null && SelectedMenuType == null && SelectedUnit == null && SelectedMenuGroup == null)
+                if (SelectedItem == null || SelectedMenuType == null || SelectedUnit == null || SelectedMenuGroup == null)
                 {
                     return false;
                 }
@@ -505,12 +543,8 @@ namespace QuanLyCaPhe.ViewModel
 
             OpenExplorerCommand = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(MaMon) || string.IsNullOrEmpty(TenMon) || GiaBan == 0 || string.IsNullOrEmpty(GhiChu))
+                if (string.IsNullOrEmpty(MaMon) || string.IsNullOrEmpty(TenMon) || GiaBan == 0)
 
-                {
-                    return false;
-                }
-                if (!isSymbol(MaMon))
                 {
                     return false;
                 }
@@ -577,128 +611,193 @@ namespace QuanLyCaPhe.ViewModel
             });
         }
 
+        private void LoadAll()
+        {
+            //Get list and display on listview
+            GetListOfMenu();
+
+            //Get list and display on combobox of menu group
+            GetListOfMenuGroup();
+
+            //Get list and display on comboxbox of menu type
+            GetListOfMenuType();
+
+            //Get list and dis
+            GetListOfUnit();
+        }
+
         #endregion Constructor
 
         #region Methods
 
         private bool GetListOfMenuGroup()
         {
-            if (MenuGroupList == null)
-            {
-                MenuGroupList = new ObservableCollection<NhomThucDon>(DataProvider.Instance.Database.NhomThucDons);
-                return true;
-            }
-            return false;
+
+            MenuGroupList = new ObservableCollection<NhomThucDon>(DataProvider.Instance.Database.NhomThucDons.Where(x => x.DaXoa == DaXoa).ToList());
+            return true;
         }
 
         private bool GetListOfMenuType()
         {
-            if (MenuTypeList == null)
-            {
-                MenuTypeList = new ObservableCollection<LoaiThucDon>(DataProvider.Instance.Database.LoaiThucDons);
-                return true;
-            }
-            return false;
+
+            MenuTypeList = new ObservableCollection<LoaiThucDon>(DataProvider.Instance.Database.LoaiThucDons.Where(x => x.DaXoa == DaXoa).ToList());
+            return true;
         }
 
         private bool GetListOfUnit()
         {
-            if (UnitList == null)
-            {
-                UnitList = new ObservableCollection<DonViTinh>(DataProvider.Instance.Database.DonViTinhs);
-                return true;
-            }
-            return false;
+            UnitList = new ObservableCollection<DonViTinh>(DataProvider.Instance.Database.DonViTinhs.Where(x => x.DaXoa == DaXoa).ToList());
+            return true;
+
         }
 
         private void GetListOfMenu()
         {
-            List = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons);
+            List = new ObservableCollection<ThucDon>(DataProvider.Instance.Database.ThucDons.Where(x=>x.DaXoa == DaXoa).ToList());
         }
 
         private void AddMenu_Execute()
-        {
+        { 
             ThucDon td = new ThucDon();
 
-            if (td != null && fileName_Image!=null)
+            UserMessage msg = new UserMessage();
+ 
+            try
             {
-
-                FileStream fs = new FileStream(fileName_Image, FileMode.Open, FileAccess.Read);
-                string tmp;
-                tmp = ImageToByte(fs);
-                td.HinhDaiDien = Convert.FromBase64String(tmp);
-            }
-            else
-            {
-                if(fileName_Image == null)
+                if (td != null && fileName_Image != null)
                 {
-                    fileName_Image = @"..\Imagines\defaultimage.jpg";
+
                     FileStream fs = new FileStream(fileName_Image, FileMode.Open, FileAccess.Read);
                     string tmp;
                     tmp = ImageToByte(fs);
                     td.HinhDaiDien = Convert.FromBase64String(tmp);
                 }
-            }
+                else
+                {
+                    if (fileName_Image == null)
+                    {
+                        //Nếu không thêm ảnh thì sẽ lấy ảnh mặc định
+                        fileName_Image = @"..\Imagines\defaultimage.jpg";
+                        FileStream fs = new FileStream(fileName_Image, FileMode.Open, FileAccess.Read);
+                        string tmp;
+                        tmp = ImageToByte(fs);
+                        td.HinhDaiDien = Convert.FromBase64String(tmp);
+                    }
+                }
+                var menu = new ThucDon()
+                {
+                    MaMon = MaMon,
+                    TenMon = TenMon,
+                    GiaBan = Convert.ToDecimal(GiaBan),
+                    HinhDaiDien = td.HinhDaiDien,
+                    GhiChu = GhiChu,
+                    MaDonViTinh = SelectedUnit.MaDonViTinh,
+                    MaNhomThucDon = SelectedMenuGroup.MaNhomThucDon,
+                    DaXoa = DaXoa,
+                };
+                if (menu.GhiChu == "")
+                {
+                    menu.GhiChu = @"Không có";
+                }
 
-            var menu = new ThucDon() { MaMon = MaMon, TenMon = TenMon, GiaBan = Convert.ToDecimal(GiaBan), HinhDaiDien = td.HinhDaiDien, GhiChu = GhiChu, MaDonViTinh = SelectedUnit.MaDonViTinh, MaNhomThucDon = SelectedMenuGroup.MaNhomThucDon };
-            DataProvider.Instance.Database.ThucDons.Add(menu);
-            DataProvider.Instance.Database.SaveChanges();
-            List.Add(menu);
+                DataProvider.Instance.Database.ThucDons.Add(menu);
+                DataProvider.Instance.Database.SaveChanges();
+                List.Add(menu);
+                msg.Message = "Thêm dữ liệu thành công";
+
+            }
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong thêm dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         private void UpdateMenu_Execute()
         {
+
             ThucDon td = new ThucDon();
-            if (ImageSource != null)
+
+            UserMessage msg = new UserMessage();
+
+            try
             {
-                if (!string.IsNullOrEmpty(fileName_Image))
+                if (ImageSource != null)
                 {
-                    FileStream _fs = new FileStream(fileName_Image, FileMode.Open, FileAccess.Read);
-                    string tmp;
-                    tmp = ImageToByte(_fs);
-                    td.HinhDaiDien = Convert.FromBase64String(tmp);
+                    
+                    if (!string.IsNullOrEmpty(fileName_Image))
+                    {
+                        FileStream fs = new FileStream(fileName_Image, FileMode.Open, FileAccess.Read);
+                        string tmp = ImageToByte(fs);
+                        td.HinhDaiDien = Convert.FromBase64String(tmp);
+                    }   
+                }
+                var res = DataProvider.Instance.Database.ThucDons.SingleOrDefault(x => x.MaMon == SelectedItem.MaMon);
+                if (res != null)
+                {
+
+                    res.MaMon = MaMon;
+                    res.TenMon = TenMon;
+                    res.GiaBan = Convert.ToDecimal(GiaBan);
+                    res.GhiChu = GhiChu;
+                    res.HinhDaiDien = td.HinhDaiDien;
+                    res.MaNhomThucDon = SelectedMenuGroup.MaNhomThucDon;
+                    res.MaDonViTinh = SelectedUnit.MaDonViTinh;
+                    DataProvider.Instance.Database.SaveChanges();
+                    msg.Message = "Cập nhật thành công";
                 }
             }
-
-            var res = DataProvider.Instance.Database.ThucDons.SingleOrDefault(x => x.MaMon == SelectedItem.MaMon);
-            if (res != null)
+            catch (System.Exception ex)
             {
-                res.MaMon = MaMon;  
-                res.TenMon = TenMon;
-                res.GiaBan = Convert.ToDecimal(GiaBan);
-                res.GhiChu = GhiChu;
-                res.HinhDaiDien = td.HinhDaiDien;
-                res.MaNhomThucDon = SelectedMenuGroup.MaNhomThucDon;
-                res.MaDonViTinh = SelectedUnit.MaDonViTinh;
-                DataProvider.Instance.Database.SaveChanges();
-                ClearTextBox();
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong cập nhật dữ liệu";
             }
+
+            Messenger.Default.Send<UserMessage>(msg);
+            ClearTextBox();
+
         }
 
         private void DeleteMenu_Execute()
         {
-            WarningDialogs("Dữ liệu không thể xoá vì đang có ràng buộc. Xin vui lòng thử lại vào dịp khác!!!");
+            UserMessage msg = new UserMessage();
+            if (ConfirmDialog("Bạn có chắc chắn muốn xoá thực đơn <<" + SelectedItem.TenMon + ">> không ? "))
+            {
+                var menu = DataProvider.Instance.Database.ThucDons.SingleOrDefault(x => x.MaMon == SelectedItem.MaMon);
+                List.Remove(menu);
+                menu.DaXoa = true;
+                DataProvider.Instance.Database.SaveChanges();
+                RaisePropertyChanged("List");
+                msg.Message = "Dữ liệu đã xoá thành công";
+
+            }
+
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         public bool ClearTextBox()
         {
-            if (MaMon != null)
-            {
-                MaMon = string.Empty;
-                TenMon = string.Empty;
-                GhiChu = string.Empty;
-                GiaBan = 0;
-                ImageSource = null;
-                HinhDaiDien = null;
-                SelectedUnit = null;
-                SelectedItem = null;
-                SelectedMenuType = null;
-                SelectedMenuGroup = null;
-                return true;
-            }
-            return false;
+            MaMon = string.Empty;
+            TenMon = string.Empty;
+            GhiChu = string.Empty;
+            GiaBan = 0;
+            ImageSource = null;
+            HinhDaiDien = null;
+            SelectedUnit = null;
+            SelectedItem = null;
+            SelectedMenuType = null;
+            SelectedMenuGroup = null;
+            IsEnabledMaMon = true;
+            return true;
         }
 
         public ImageSource ByteToImage(byte[] hinhDaiDien)

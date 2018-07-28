@@ -18,6 +18,7 @@ namespace QuanLyCaPhe.Model
         public TaiKhoan()
         {
             this.NhatKyDangNhaps = new HashSet<NhatKyDangNhap>();
+            this.QuanHeNguoiDung_QuyenHan = new HashSet<QuanHeNguoiDung_QuyenHan>();
         }
     
         public string TenTaiKhoan { get; set; }
@@ -28,5 +29,7 @@ namespace QuanLyCaPhe.Model
         public virtual NhanVien NhanVien { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NhatKyDangNhap> NhatKyDangNhaps { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<QuanHeNguoiDung_QuyenHan> QuanHeNguoiDung_QuyenHan { get; set; }
     }
 }

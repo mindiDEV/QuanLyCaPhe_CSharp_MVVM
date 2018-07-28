@@ -9,6 +9,15 @@
              mc:Ignorable="d"
              DataContext="{StaticResource CustomerViewModel}"
              Name="customerView">
+    
+    <UserControl.Resources>
+        <Storyboard x:Key="FadeUIMessage">
+            <DoubleAnimation 
+                Storyboard.TargetName="UIMessage"
+                Storyboard.TargetProperty="(TextBlock.Opacity)" 
+                From="1" To="0" Duration="0:0:4" />
+        </Storyboard>
+    </UserControl.Resources>
 
     <Grid Background="#293541">
         <Grid>
@@ -81,14 +90,10 @@
                             BorderBrush="{x:Null}"
                             Foreground="#F2F4F5" />
 
-                            <!--Help-->
-                            <Button
-                        Width="150"
-                        Content="Trợ giúp"
-                        Height="50"
-                        Background="{x:Null}"
-                        BorderBrush="{x:Null}"
-                        Foreground="#F2F4F5" />
+                            <!--Message-->
+                            <TextBlock x:Name="UIMessage" Text="" Margin="450 0 0 0"  FontSize="14"  HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Light"  Foreground="{DynamicResource LightBorderBrush}"/>
+
+
                         </StackPanel>
 
                         <!--Move bar-->

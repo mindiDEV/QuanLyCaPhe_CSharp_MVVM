@@ -6,6 +6,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using QuanLyCaPhe.Message;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace QuanLyCaPhe.ViewModel
 {
@@ -14,7 +16,7 @@ namespace QuanLyCaPhe.ViewModel
         #region Property
 
         private ObservableCollection<DonViTinh> _List;
-        public ObservableCollection<DonViTinh> List { get => _List; set { _List = value; } }
+        public ObservableCollection<DonViTinh> List { get => _List; set { _List = value; RaisePropertyChanged("List"); } }
 
         private string _tenDonViTinh;
 
@@ -77,6 +79,22 @@ namespace QuanLyCaPhe.ViewModel
             }
         }
 
+        private bool _daXoa = false;
+        public bool DaXoa
+        {
+            get
+            {
+                return _daXoa;
+            }
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value; RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
+
         #endregion Property
 
         #region Command Property
@@ -114,7 +132,7 @@ namespace QuanLyCaPhe.ViewModel
                     return false;
                 }
 
-                if (!isSymbolAndNumber(MaDonViTinh) && (!isSymbolAndNumber(TenDonViTinh)))
+                if (!isSymbol(MaDonViTinh) || !isSymbolAndNumber(TenDonViTinh))
                 {
                     return false;
                 }
@@ -132,10 +150,10 @@ namespace QuanLyCaPhe.ViewModel
 
             UpdateUnitCommand = new RelayCommand<object>((p) =>
             {
-                if (((string.IsNullOrEmpty(MaDonViTinh) && string.IsNullOrEmpty(TenDonViTinh)) || SelectedItem == null))
+                if (((string.IsNullOrEmpty(MaDonViTinh) || string.IsNullOrEmpty(TenDonViTinh)) || SelectedItem == null))
                     return false;
 
-                if (!isSymbolAndNumber(MaDonViTinh) && (!isSymbolAndNumber(TenDonViTinh)))
+                if (!isSymbol(MaDonViTinh) || !isSymbolAndNumber(TenDonViTinh))
                 {
                     return false;
                 }
@@ -185,11 +203,11 @@ namespace QuanLyCaPhe.ViewModel
         #region Methods
         private void LoadUnitList()
         {
-            List = new ObservableCollection<DonViTinh>(DataProvider.Instance.Database.DonViTinhs);
+            List = new ObservableCollection<DonViTinh>(DataProvider.Instance.Database.DonViTinhs.Where(x => x.DaXoa == DaXoa).ToList());
         }
-        private bool ClearTextBox()
+        public bool ClearTextBox()
         {
-            if (MaDonViTinh != null)
+            try
             {
                 MaDonViTinh = "DVT";
                 TenDonViTinh = string.Empty;
@@ -198,51 +216,83 @@ namespace QuanLyCaPhe.ViewModel
                 SelectedItem = null;
                 return true;
             }
-            return false;
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
         private void AddUnit_Execute()
         {
-            var unit = new DonViTinh() { MaDonViTinh = MaDonViTinh, TenDonViTinh = TenDonViTinh, GhiChu = GhiChu };
-            if(unit.GhiChu == null)
+            UserMessage msg = new UserMessage();
+            try
             {
-                unit.GhiChu = "Không có";
+                var unit = new DonViTinh() { MaDonViTinh = MaDonViTinh, TenDonViTinh = TenDonViTinh, GhiChu = GhiChu, DaXoa = DaXoa };
+                if (unit.GhiChu == "")
+                {
+                    unit.GhiChu = "Không có";
+                }
+                DataProvider.Instance.Database.DonViTinhs.Add(unit);
+                DataProvider.Instance.Database.SaveChanges();
+                List.Add(unit);
+                msg.Message = "Thêm dữ liệu thành công";
             }
-            DataProvider.Instance.Database.DonViTinhs.Add(unit);
-            DataProvider.Instance.Database.SaveChanges();
-            List.Add(unit);
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                }
+                msg.Message = "Có vấn đề trong thêm dữ liệu";
+            }
+            Messenger.Default.Send<UserMessage>(msg);
             ClearTextBox();
         }
 
         private void UpdateUnit_Execute()
         {
+            UserMessage msg = new UserMessage();
             var res = DataProvider.Instance.Database.DonViTinhs.SingleOrDefault(x => x.MaDonViTinh == SelectedItem.MaDonViTinh);
             if (res != null)
             {
-                
-                res.TenDonViTinh = TenDonViTinh;
-                res.GhiChu = GhiChu;
-                DataProvider.Instance.Database.SaveChanges();
-                ClearTextBox();
+                try
+                {
+                    res.TenDonViTinh = TenDonViTinh;
+                    res.GhiChu = GhiChu;
+                    DataProvider.Instance.Database.SaveChanges();
+                    msg.Message = "Cập nhật thành công";
+                    
+                }
+                catch (System.Exception ex)
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        MessageBox.Show(ex.InnerException.GetBaseException().ToString());
+                    }
+                    msg.Message = "Có vấn đề trong cập nhật dữ liệu";
+                }
             }
+            Messenger.Default.Send<UserMessage>(msg);
+            ClearTextBox();
         }
 
         private void DeleteUnit_Execute()
         {
+            UserMessage msg = new UserMessage();
             if (ConfirmDialog("Bạn có chắc chắn muốn xoá đơn vị tính <<" + SelectedItem.TenDonViTinh + ">> không ? "))
             {
                 var unit = DataProvider.Instance.Database.DonViTinhs.SingleOrDefault(x => x.MaDonViTinh == SelectedItem.MaDonViTinh);
                 List.Remove(unit);
-
-                DataProvider.Instance.Database.DonViTinhs.Remove(unit);
+                unit.DaXoa = true;
                 DataProvider.Instance.Database.SaveChanges();
                 RaisePropertyChanged("List");
-                ClearTextBox();
+                msg.Message = "Dữ liệu đã xoá thành công";
+               
             }
-            else
-            {
-                ClearTextBox();
-            }
+           
+            Messenger.Default.Send<UserMessage>(msg);
+            ClearTextBox();
         }
 
         #endregion Methods
