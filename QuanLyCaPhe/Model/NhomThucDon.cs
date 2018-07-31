@@ -9,24 +9,115 @@
 
 namespace QuanLyCaPhe.Model
 {
+    using QuanLyCaPhe.ViewModel;
     using System;
     using System.Collections.Generic;
-    
-    public partial class NhomThucDon
+
+    public partial class NhomThucDon : BaseViewModel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public NhomThucDon()
         {
             this.ThucDons = new HashSet<ThucDon>();
         }
-    
-        public string MaNhomThucDon { get; set; }
-        public string TenNhomThucDon { get; set; }
-        public string GhiChu { get; set; }
-        public string MaLoaiThucDon { get; set; }
-        public Nullable<bool> DaXoa { get; set; }
-    
-        public virtual LoaiThucDon LoaiThucDon { get; set; }
+
+        private string _maNhomThucDon;
+        private string _tenNhomThucDon;
+        private string _ghiChu;
+        private string _maLoaiThucDon;
+        private bool _daXoa;
+        public string MaNhomThucDon
+        {
+            get
+            {
+                return _maNhomThucDon;
+            }
+            set
+            {
+                if (_maNhomThucDon != value)
+                {
+                    _maNhomThucDon = value;
+                    RaisePropertyChanged("MaNhomThucDon");
+                }
+            }
+        }
+        public string TenNhomThucDon
+        {
+            get
+            {
+                return _tenNhomThucDon;
+            }
+            set
+            {
+                if (_tenNhomThucDon != value)
+                {
+                    _tenNhomThucDon = value;
+                    RaisePropertyChanged("TenNhomThucDon");
+                }
+            }
+        }
+        public string GhiChu
+        {
+            get
+            {
+                return _ghiChu;
+            }
+            set
+            {
+                if (_ghiChu != value)
+                {
+                    _ghiChu = value;
+                    RaisePropertyChanged("GhiChu");
+                }
+            }
+        }
+        public string MaLoaiThucDon
+        {
+            get
+            {
+                return _maLoaiThucDon;
+            }
+            set
+            {
+                if (_maLoaiThucDon != value)
+                {
+                    _maLoaiThucDon = value;
+                    RaisePropertyChanged("MaLoaiThucDon");
+                }
+            }
+        }
+        private LoaiThucDon _loaiThucDon;
+        public virtual LoaiThucDon LoaiThucDon
+        {
+            get
+            {
+                return _loaiThucDon;
+            }
+            set
+            {
+                if (_loaiThucDon != value)
+                {
+                    _loaiThucDon = value;
+                    RaisePropertyChanged("LoaiThucDon");
+                }
+            }
+        }
+        public bool DaXoa
+        {
+            get
+            {
+                return _daXoa;
+            }
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value;
+                    RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ThucDon> ThucDons { get; set; }
     }

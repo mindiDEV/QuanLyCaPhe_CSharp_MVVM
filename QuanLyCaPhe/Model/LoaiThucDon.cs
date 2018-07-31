@@ -9,21 +9,67 @@
 
 namespace QuanLyCaPhe.Model
 {
+    using QuanLyCaPhe.ViewModel;
     using System;
     using System.Collections.Generic;
-    
-    public partial class LoaiThucDon
+
+    public partial class LoaiThucDon : BaseViewModel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LoaiThucDon()
         {
             this.NhomThucDons = new HashSet<NhomThucDon>();
         }
-    
-        public string MaLoaiThucDon { get; set; }
-        public string TenLoaiThucDon { get; set; }
-        public Nullable<bool> DaXoa { get; set; }
-    
+
+        private string _maLoaiThucDon;
+        private string _tenLoaiThucDon;
+        private bool _daXoa;
+        public string MaLoaiThucDon
+        {
+            get
+            {
+                return _maLoaiThucDon;
+            }
+            set
+            {
+                if (_maLoaiThucDon != value)
+                {
+                    _maLoaiThucDon = value;
+                    RaisePropertyChanged("MaLoaiThucDon");
+                }
+            }
+        }
+        public string TenLoaiThucDon
+        {
+            get
+            {
+                return _tenLoaiThucDon;
+            }
+            set
+            {
+                if (_tenLoaiThucDon != value)
+                {
+                    _tenLoaiThucDon = value;
+                    RaisePropertyChanged("TenLoaiThucDon");
+                }
+            }
+        }
+        public bool DaXoa
+        {
+            get
+            {
+                return _daXoa;
+            }
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value;
+                    RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NhomThucDon> NhomThucDons { get; set; }
     }

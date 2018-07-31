@@ -9,22 +9,85 @@
 
 namespace QuanLyCaPhe.Model
 {
+    using QuanLyCaPhe.ViewModel;
     using System;
     using System.Collections.Generic;
-    
-    public partial class DonViTinh
+
+    public partial class DonViTinh : BaseViewModel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DonViTinh()
         {
             this.ThucDons = new HashSet<ThucDon>();
         }
-    
-        public string MaDonViTinh { get; set; }
-        public string TenDonViTinh { get; set; }
-        public string GhiChu { get; set; }
-        public Nullable<bool> DaXoa { get; set; }
-    
+        private string _maDonViTinh;
+        private string _tenDonViTinh;
+        private string _ghiChu;
+        private bool _daXoa;
+        public string MaDonViTinh
+        {
+            get
+            {
+                return _maDonViTinh;
+            }
+            set
+            {
+                if (_maDonViTinh != value)
+                {
+                    _maDonViTinh = value;
+                    RaisePropertyChanged("MaDonViTinh");
+                }
+            }
+        }
+
+
+        public string TenDonViTinh
+        {
+            get
+            {
+                return _tenDonViTinh;
+            }
+            set
+            {
+                if (_tenDonViTinh != value)
+                {
+                    _tenDonViTinh = value;
+                    RaisePropertyChanged("TenDonViTinh");
+                }
+            }
+        }
+
+        public string GhiChu
+        {
+            get
+            {
+                return _ghiChu;
+            }
+            set
+            {
+                if (_ghiChu != value)
+                {
+                    _ghiChu = value;
+                    RaisePropertyChanged("GhiChu");
+                }
+            }
+        }
+        public bool DaXoa
+        {
+            get
+            {
+                return _daXoa;
+            }
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value;
+                    RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ThucDon> ThucDons { get; set; }
     }

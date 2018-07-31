@@ -9,22 +9,85 @@
 
 namespace QuanLyCaPhe.Model
 {
+    using QuanLyCaPhe.ViewModel;
     using System;
     using System.Collections.Generic;
     
-    public partial class LoaiKhachHang
+    public partial class LoaiKhachHang:BaseViewModel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LoaiKhachHang()
         {
             this.KhachHangs = new HashSet<KhachHang>();
         }
+
+        private string _maLoaiKhachHang;
+        private string _tenLoaiKhachHang;
+        private string _ghiChu;
+        private Nullable<bool> _daXoa;
+
     
-        public string MaLoaiKhachHang { get; set; }
-        public string TenLoaiKhachHang { get; set; }
-        public string GhiChu { get; set; }
-        public Nullable<bool> DaXoa { get; set; }
-    
+        public string MaLoaiKhachHang
+        {
+            get
+            {
+                return _maLoaiKhachHang;
+            }
+            set
+            {
+                if (_maLoaiKhachHang != value)
+                {
+                    _maLoaiKhachHang = value;
+                    RaisePropertyChanged("MaLoaiKhachHang");
+                }
+            }
+        }
+        public string TenLoaiKhachHang
+        {
+            get
+            {
+                return _tenLoaiKhachHang;
+            }
+            set
+            {
+                if (_tenLoaiKhachHang != value)
+                {
+                    _tenLoaiKhachHang = value;
+                    RaisePropertyChanged("TenLoaiKhachHang");
+                }
+            }
+        }
+        public string GhiChu
+        {
+            get
+            {
+                return _ghiChu;
+            }
+            set
+            {
+                if (_ghiChu != value)
+                {
+                    _ghiChu = value;
+                    RaisePropertyChanged("GhiChu");
+                }
+            }
+        }
+        public Nullable<bool> DaXoa
+        {
+            get
+            {
+                return _daXoa;
+            }
+            set
+            {
+                if (_daXoa != value)
+                {
+                    _daXoa = value;
+                    RaisePropertyChanged("DaXoa");
+                }
+            }
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<KhachHang> KhachHangs { get; set; }
     }

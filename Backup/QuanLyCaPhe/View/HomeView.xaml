@@ -1,0 +1,425 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:QuanLyCaPhe.View"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts" xmlns:dxga="http://schemas.devexpress.com/winfx/2008
+    xaml/gauges" xmlns:dxca="http://schemas.devexpress.com/winfx/2008/xaml/carousel" x:Class="QuanLyCaPhe.View.HomeView"
+    mc:Ignorable="d"
+    DataContext="{StaticResource HomeViewModel}"
+    d:DesignHeight="800" d:DesignWidth="1200"
+    Name="homeViewModel">
+    <Grid Background="#E1DDDF">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <WrapPanel>
+                <TextBlock
+                Text="HỆ THỐNG BÁN HÀNG"
+                FontSize="25"
+                FontFamily="Consolas"
+                Margin="20 20 0 0" />
+                <Grid Grid.Row="1">
+                    <WrapPanel>
+                        <DatePicker
+                            Width="200"
+                            FontSize="13"
+                            Margin="30 20 0 0"
+                            materialDesign:HintAssist.Hint="Ngày bắt đầu"
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                            SelectedDate="{Binding NgayBatDau,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectedDateChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectedChangedNgayBatDau}" CommandParameter="{Binding ElementName=homeViewModel}"></i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </DatePicker>
+
+                        <DatePicker
+                            Width="200"
+                            FontSize="13"
+                            Margin="30 20 0 0"
+                            materialDesign:HintAssist.Hint="Ngày kết thúc"
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                            SelectedDate="{Binding NgayKetThuc,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectedDateChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectedChangedNgayKetThuc}" CommandParameter="{Binding ElementName=homeViewModel}"></i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </DatePicker>
+
+                        <ComboBox materialDesign:HintAssist.Hint="Loại khách hàng ( * )"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Width="200"
+                                      FontSize="13"
+                                      ItemsSource="{Binding CustomerTypeList, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedItem="{Binding SelectedCustomerType, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMemberPath="TenLoaiKhachHang"
+                                      IsEditable="False"
+                                      Margin="30 5 15 0">
+                        </ComboBox>
+
+                    </WrapPanel>
+                </Grid>
+            </WrapPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" HorizontalAlignment="Center" Margin="0 20 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Button Height="200"
+                        Command="{Binding ReportCustomer,UpdateSourceTrigger=PropertyChanged}"
+                        CommandParameter="{Binding ElementName=homeViewModel,UpdateSourceTrigger=PropertyChanged}"
+                        Width="180"
+                        Background="#E1DDDF"
+                        BorderBrush="Black"
+                        BorderThickness="0.7"
+                        Margin="0 0 0 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0"
+                              VerticalAlignment="Top">
+                            <TextBlock
+                                Margin="10 0 10 0"
+                                Foreground="Black"
+                                FontSize="18"
+                                FontFamily="Segoe UI Light"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Text="Khách hàng" />
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Image
+                                Margin="10 0 10 10"
+                                Stretch="UniformToFill"
+                                Source="/Imagines/Clientes.png" VerticalAlignment="Top" />
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <TextBlock
+                                Foreground="Black"
+                                Margin="0 -10 0 0"
+                                FontSize="20"
+                                FontFamily="Segoe UI Historic"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Center"
+                                Text="{Binding CountCustomer,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Grid>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Button Height="200"
+                        Command="{Binding ReportEmployee,UpdateSourceTrigger=PropertyChanged}"
+                        CommandParameter="{Binding ElementName=homeViewModel,UpdateSourceTrigger=PropertyChanged}"
+                        Width="180"
+                        Background="#E1DDDF"
+                        BorderBrush="Black"
+                        BorderThickness="0.7"
+                        Margin="20 0 0 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0"
+                              VerticalAlignment="Top">
+                            <TextBlock
+                                Margin="10 0 10 0"
+                                Foreground="Black"
+                                FontSize="18"
+                                FontFamily="Segoe UI Light"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Text="Nhân viên" />
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Image
+                                Margin="10 0 10 10"
+                                Stretch="UniformToFill"
+                                Source="/Imagines/empleados.png" VerticalAlignment="Top" />
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <TextBlock
+                                Foreground="Black"
+                                Margin="0 -10 0 0"
+                                FontSize="20"
+                                FontFamily="Segoe UI Historic"
+                                FontWeight="DemiBold"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Center"
+                                Text="{Binding CountEmployee,UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Grid>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Button Height="200"
+                        Command ="{Binding ReportBill,UpdateSourceTrigger=PropertyChanged}"
+                        CommandParameter ="{Binding ElementName=homeViewModel}"
+                        Width="180"
+                        Background="#E1DDDF"
+                        BorderBrush="Black"
+                        BorderThickness="0.7"
+                        Margin="20 0 0 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0"
+                              VerticalAlignment="Top">
+                            <TextBlock
+                                Margin="10 0 10 0"
+                                Foreground="Black"
+                                FontSize="18"
+                                FontFamily="Segoe UI Light"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Text="Hoá đơn" />
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Image
+                                Margin="10 0 10 10"
+                                Stretch="UniformToFill"
+                                Source="/Imagines/pagos.png" VerticalAlignment="Top" />
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <TextBlock
+                                Foreground="Black"
+                                Margin="0 -10 0 0"
+                                FontSize="20"
+                                FontFamily="Segoe UI Historic"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Center"
+                                Text="{Binding CountBill,UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Grid>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Column="3">
+                <Button Height="200"
+                        Command ="{Binding ReportPromotion,UpdateSourceTrigger=PropertyChanged}"
+                        CommandParameter ="{Binding ElementName=homeViewModel}"
+                        Width="180"
+                        Background="#E1DDDF"
+                        BorderBrush="Black"
+                        BorderThickness="0.7"
+                        Margin="20 0 0 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0"
+                              VerticalAlignment="Top">
+                            <TextBlock
+                                Margin="10 0 10 0"
+                                Foreground="Black"
+                                FontSize="18"
+                                FontFamily="Segoe UI Light"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Text="Khuyến mãi" />
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Image
+                                Margin="10 0 10 10"
+                                Stretch="UniformToFill"
+                                Source="/Imagines/ventas.png" VerticalAlignment="Top" />
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <TextBlock
+                                Foreground="Black"
+                                Margin="0 -10 0 0"
+                                FontSize="20"
+                                FontFamily="Segoe UI Historic"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Center"
+                                Text="{Binding CountPromotion,UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Grid>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Column="4"/>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Border BorderBrush="Black" BorderThickness="1" Margin="20 20 20 0"></Border>
+            <ListView Margin="40 30 40 10"
+                      BorderBrush="Black"
+                      HorizontalAlignment="Stretch"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ItemsSource="{Binding ListBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="STT."
+                                        Width="auto"
+                                        DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ListViewItem}},Converter={StaticResource IndexConverter}}">
+                        </GridViewColumn>
+
+                        <GridViewColumn  Header="Mã hoá đơn"
+                                         Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaHoaDon}"
+                                               TextAlignment="Left"
+                                               Width="140" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Ngày xuất"
+                                        Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding NgayXuatHoaDon,StringFormat=dd/MM/yyyy}"
+                                               TextAlignment="Left"
+                                               Width="100" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn  Header="Mã khách hàng"
+                                         Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaKhachHang}"
+                                               TextAlignment="Center"
+                                               Width="100" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn  Header="Mã nhân viên"
+                                         Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaNhanVien}"
+                                               TextAlignment="Center"
+                                               Width="100" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn  Header="Tổng hoá đôn"
+                                         Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding TongHoaDon,StringFormat={}{0:n0} VND}"
+                                               TextAlignment="Left"
+                                               Width="140" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0 0 0 10">
+            <Border BorderBrush="Black" BorderThickness="1" Margin="20 20 20 0"></Border>
+            <ListView Margin="40 30 40 10"
+                      BorderBrush="Black"
+                      HorizontalAlignment="Stretch"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ItemsSource="{Binding ListCustomer,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                <ListView.View>
+                    <GridView>
+
+                        <GridViewColumn  Header="Mã khách hàng"
+                                         Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaKhachHang}"
+                                               TextAlignment="Left"
+                                               Width="140" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Tên khách hàng"
+                                        Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding TenKhachHang}"
+                                               TextAlignment="Left"
+                                               Width="140"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn  Header="Địa chỉ"
+                                         Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DiaChi}"
+                                               TextAlignment="Center"
+                                               Width="150" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn  Header="Giới tính"
+                                         Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding GioiTinh}"
+                                               TextAlignment="Center"
+                                               Width="100" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn  Header="Điện thoại"
+                                         Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DienThoaiDiDong}"
+                                               TextAlignment="Left"
+                                               Width="140" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Loại khách hàng"
+                                        Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding LoaiKhachHang.TenLoaiKhachHang}" TextAlignment="Left" Width="140"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </Grid>
+</UserControl>

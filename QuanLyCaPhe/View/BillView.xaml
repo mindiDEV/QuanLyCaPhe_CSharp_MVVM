@@ -436,7 +436,12 @@
                                                             DisplayMemberBinding="{Binding SanPhamTang}">
                                         </GridViewColumn>
 
-                                        
+                                        <GridViewColumn Header="Giảm giá" 
+                                                            Width="auto" 
+                                                            DisplayMemberBinding="{Binding GiamGia}">
+                                        </GridViewColumn>
+
+
 
                                         <GridViewColumn Header="Ngày bắt đầu" Width="auto" DisplayMemberBinding="{Binding NgayBDKM,StringFormat=dd/MM/yyyy}"></GridViewColumn>
 

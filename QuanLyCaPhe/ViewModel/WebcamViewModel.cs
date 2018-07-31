@@ -206,6 +206,8 @@ namespace QuanLyCaPhe.ViewModel
                    // IsLoginByQrCode = true;
 
                     dispatcherTime.Stop();
+                   
+                    
 
                 }
                 else
@@ -263,6 +265,7 @@ namespace QuanLyCaPhe.ViewModel
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            
             StopWebcam();
             tmp.Close();
             WebcamView.ProgressBarView.Value = 0;
@@ -292,11 +295,12 @@ namespace QuanLyCaPhe.ViewModel
                 bi.Freeze();
                 System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)(() => { WebcamView.VideoPlayerView.Source = bi; }));
             }
-            catch (System.Exception ex)
+            catch
             {
-                MessageBox.Show("Error on _videoSource_NewFrame:\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 StopWebcam();
+                
                 tmp.Close();
+                return;
             }
         }
 

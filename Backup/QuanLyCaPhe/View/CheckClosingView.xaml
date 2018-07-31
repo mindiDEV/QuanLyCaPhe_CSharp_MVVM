@@ -1,0 +1,97 @@
+﻿<Window x:Class="QuanLyCaPhe.View.CheckClosingView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:local="clr-namespace:QuanLyCaPhe.View"
+        xmlns:passwordBehaviours="clr-namespace:QuanLyCaPhe.ClassSupport"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Name="checkClosingView"
+        DataContext="{StaticResource CheckClosingViewModel}"
+        Title="CheckClosingView" Height="250" Width="350">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Button
+                    Command="{Binding CloseWindowCommand,UpdateSourceTrigger=PropertyChanged}"
+                    CommandParameter="{Binding ElementName=checkClosingView}"
+                    Content="X" Height="25"
+                    Margin="0 0 0 0"
+                    Width="40"
+                    FontSize="14"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    Foreground="Black"
+                    BorderBrush="Transparent" 
+                    HorizontalAlignment="Right">
+            </Button>
+        </Grid>
+        <!--Username-->
+        <Grid Grid.Row="1" Grid.RowSpan="2">
+            <WrapPanel>
+                <materialDesign:PackIcon Kind="AccountCircle"
+                                                     VerticalAlignment="Center"
+                                                     Margin="10 30 0 0"
+                                                     Foreground="Blue" />
+                <TextBox materialDesign:HintAssist.Hint="Tên tài khoản"
+                                     Width="270"
+                                     Text="{Binding TenTaiKhoan,UpdateSourceTrigger=PropertyChanged}"
+                                     FontSize="15"
+                                     Margin="10 30 0 0" />
+            </WrapPanel>
+        </Grid>
+
+        <!--Password-->
+        <Grid Grid.Row="3">
+            <WrapPanel>
+                <materialDesign:PackIcon Kind="Key"
+                                                     VerticalAlignment="Center"
+                                                     Margin="10 30 0 0"
+                                                     Foreground="Blue" />
+                <PasswordBox x:Name="FloatingPasswordBox"
+                                         passwordBehaviours:PasswordBehaviors.IsClear="False"
+                                         materialDesign:HintAssist.Hint="Mật khẩu"
+                                         Margin="10 30 0 0"
+                                         Width="270"
+                                         FontSize="15"
+                                         Style="{StaticResource MaterialDesignFloatingHintPasswordBox}">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PasswordChanged">
+                            <i:InvokeCommandAction Command="{Binding PasswordChangedCommand,UpdateSourceTrigger=PropertyChanged}"
+                                   CommandParameter="{Binding ElementName=FloatingPasswordBox}" />
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+
+                </PasswordBox>
+            </WrapPanel>
+        </Grid>
+
+        <!--Button Login-->
+        <Grid Grid.Row="4">
+            <Button Command="{Binding CheckAccountCommand}"
+                                CommandParameter="{Binding ElementName=checkClosingView}"
+                                HorizontalAlignment="Left"
+                                Content="KIỂM TRA"
+                                IsDefault="True"
+                                FontFamily="Calibri Light"
+                                FontSize="17"
+                                Width="270"
+                                Margin="20 30 0 0"
+                                Background="#FF307CD6"
+                                BorderBrush="#FF307CD6" />
+        </Grid>
+    </Grid>
+</Window>
